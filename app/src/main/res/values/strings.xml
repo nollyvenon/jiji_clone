@@ -1,0 +1,38 @@
+<resources>
+    <string name="app_name">Finder</string>
+    <string name="search_icon">search icon</string>
+    <string name="_13_aremu_street_ikeja_lagos">13, Aremu Street, Ikeja, Lagos</string>
+    <string name="oshodi_market">e.g Oshodi Market</string>
+    <string name="years_of_business_experience">Years of business experience</string>
+    <string name="market_area">Market Area</string>
+    <string name="office_location">Office Location</string>
+    <string name="_15_years">15 years</string>
+    <string name="full_name">Full Name</string>
+    <string name="oluwasegun_aremu">Oluwasegun Aremu</string>
+    <string name="business_name">Business Name</string>
+    <string name="akent_furnitures">AKent Furnitures</string>
+    <string name="description_of_what_you_do_30_words">Description of what you do (30 words)</string>
+    <string name="we_are_into">We are into...</string>
+    <string name="other_phone_address">Other Phone Address</string>
+    <string name="_2348187448888">2348187448888</string>
+    <string name="account_number">Account Number</string>
+    <string name="ads_reg_form">Profile Update</string>
+    <string name="upload_logo">Upload Logo</string>
+    <string name="select">Select</string>
+    <string name="register">Register</string>
+    <string name="how_do_you_provide_your_services">How do you provide your services</string>
+    <string name="we_are_into_vehicle_rewiring_balancing_and_alignment">e.g \nWe are into vehicle rewiring, \nbalancing and alignment...</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="read_more">Read more</string>
+    <string name="sample">I am an experienced Full stack developer with 8+ years of experience. My skill set includes Wordpress, Drupal, Woocommerce Laravel, Codeigniter, Ajax, Jquery, PHP, HTML, CSS, JavaScript and MYSQL. Please come to chat to discuss more. Regards Shahid j</string>
+    <string name="describe_what_you_need_to_do_for_this_client">Describe what you need to do for this client</string>
+    <string name="enter_your_description_here">Enter your description here</string>
+    <string name="additional_benefit_you_can_offer">Additional benefit you can offer</string>
+    <string name="enter_your_benefit_here">Enter your benefit here</string>
+    <string name="place_bid">Place Bid</string>
+    <string name="place_bid_on_this_project">Place Bid On This Project</string>
+    <string name="project_details">Project Details</string>
+    <string name="delete">Delete</string>
+</resources>

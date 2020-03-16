@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    android:id="@+id/ad_item"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="4dp"
+    android:foreground="?android:selectableItemBackground">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingTop="4dp"
+        android:paddingEnd="8dp"
+        android:paddingStart="8dp"
+        android:paddingBottom="2dp"
+        android:layout_marginBottom="10dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:textColor="@color/light_black"
+            android:textSize="16sp"
+            android:fontFamily="sans-serif"
+            android:textFontWeight="700"/>
+
+        <TextView
+            android:id="@+id/description"
+            style="@style/TextAppearance.AppCompat.Body1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_below="@id/title"
+            android:ellipsize="end"
+            android:maxLines="3"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/description"
+            android:layout_alignParentStart="true"
+            android:layout_marginTop="8dp"
+            android:padding="8dp"
+            android:background="@color/light_grey"
+            android:textColor="@color/light_black"
+            android:textSize="14sp"
+            android:fontFamily="sans-serif"
+            android:textFontWeight="600"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/description"
+            android:layout_toStartOf="@id/views"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="20dp"
+            android:drawableStart="@drawable/icon_delete"
+            android:drawablePadding="2dp"
+            android:textColor="@color/red"
+            android:text="Delete"
+            android:textSize="14sp"
+            android:fontFamily="sans-serif" />
+
+        <TextView
+            android:id="@+id/views"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/description"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="20dp"
+            android:layout_toStartOf="@id/likes"
+            android:drawableStart="@drawable/icon_view"
+            android:drawableTint="#6A6A6A"
+            android:drawablePadding="2dp"
+            android:textColor="@color/light_black"
+            android:textSize="14sp"
+            android:fontFamily="sans-serif"/>
+
+        <TextView
+            android:id="@+id/likes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/description"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="16dp"
+            android:drawableStart="@drawable/icon_like"
+            android:drawableTint="#6A6A6A"
+            android:drawablePadding="2dp"
+            android:textColor="@color/light_black"
+            android:textSize="14sp"
+            android:fontFamily="sans-serif"/>
+
+    </RelativeLayout>
+
+</androidx.cardview.widget.CardView>

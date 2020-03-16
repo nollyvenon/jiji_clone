@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.finder">
+
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CAMERA" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity android:name=".MyWorks"></activity>
+        <activity android:name=".MessagePanel" />
+        <activity android:name=".MessageList" />
+        <activity android:name=".AdDetail" />
+        <activity android:name=".Profile" />
+        <activity android:name=".CategoryMembers" />
+        <activity android:name=".FindDetail" />
+        <activity android:name=".FindPostForm" />
+        <activity android:name=".AdPostForm" />
+        <activity android:name=".FindPosterRegistration" />
+        <activity android:name=".AdPosterRegistration" />
+        <activity android:name=".PhoneNumberVerification" />
+        <activity android:name=".CategoryList" />
+        <activity
+            android:name=".MainActivity"
+            android:theme="@style/splashTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+    </application>
+
+</manifest>
