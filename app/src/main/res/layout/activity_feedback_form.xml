@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:orientation="vertical"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/light_grey"
+    tools:context=".FeedbackForm">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white">
+
+        <ImageView
+            android:onClick="goBack"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:layout_marginStart="8dp"
+            android:src="@drawable/icon_arrow_left"
+            android:tint="@color/colorPrimary" />
+
+        <TextView
+            android:id="@+id/page_name"
+            style="@style/TextAppearance.AppCompat.Headline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:padding="0dp"
+            android:textColor="@color/colorPrimary"
+            android:text="Leave Feedback"
+            android:fontFamily="sans-serif"
+            android:textFontWeight="600"
+            android:textSize="18sp" />
+
+    </androidx.appcompat.widget.Toolbar>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:orientation="vertical">
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:id="@+id/proposal_form"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif"
+                    android:padding="10dp"
+                    android:text="Share your experience"
+                    android:textColor="@color/lighter_black"
+                    android:textFontWeight="600"
+                    android:textSize="18sp" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="2dp"
+                    android:layout_marginTop="3dp"
+                    android:background="@color/dark_grey" />
+
+                <GridLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:columnCount="3"
+                    android:padding="10dp"
+                    android:rowOrderPreserved="false"
+                    android:columnOrderPreserved="false"
+                    android:useDefaultMargins="true"
+                    android:layout_height="wrap_content">
+
+                    <Button
+                        android:id="@+id/excellence"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                        android:text="Excellent"
+                       android:textColor="@color/green"/>
+
+                    <Button
+                        android:id="@+id/good"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Good"
+                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"/>
+
+                    <Button
+                        android:id="@+id/neutral"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                        android:text="Neutral"
+                        android:textColor="@color/lightest_black"/>
+
+                    <Button
+                        android:id="@+id/fair"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                        android:text="Fair"
+                        android:textColor="@color/light_red"/>
+
+                    <Button
+                        android:id="@+id/poor"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                        android:textColor="@color/red"
+                        android:text="Poor"/>
+
+                </GridLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:fontFamily="sans-serif"
+                    android:padding="10dp"
+                    android:text="Detailed Feedback"
+                    android:textColor="@color/lighter_black"
+                    android:textFontWeight="600"
+                    android:textSize="16sp" />
+
+                <EditText
+                    android:id="@+id/feedback"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="0dp"
+                    android:layout_marginRight="10dp"
+                    android:background="@color/light_grey"
+                    android:fontFamily="sans-serif"
+                    android:gravity="start"
+                    android:hint="@string/enter_your_benefit_here"
+                    android:inputType="textMultiLine"
+                    android:lines="4"
+                    android:maxLines="4"
+                    android:padding="4dp"
+                    android:textColor="@color/lighter_black"
+                    android:textSize="16sp" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:onClick="sendFeedback"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:layout_margin="10dp"
+                    android:text="Send Feedback" />
+
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
+
+    </LinearLayout>
+
+</LinearLayout>
