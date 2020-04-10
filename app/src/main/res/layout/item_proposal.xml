@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginLeft="6dp"
@@ -33,7 +34,8 @@
             android:layout_alignParentEnd="true"
             android:layout_alignParentTop="true"
             android:textSize="12sp"
-            android:text="Start Chat" />
+            android:text="@string/chat"
+            android:visibility="gone"/>
 
         <TextView
             android:id="@+id/name"
@@ -44,7 +46,6 @@
             android:layout_marginBottom="2dp"
             android:layout_toEndOf="@id/profile_image"
             android:fontFamily="sans-serif"
-            android:text="Convergent Infoware"
             android:textColor="@color/lighter_black"
             android:textFontWeight="600"
             android:textSize="16sp" />
@@ -105,13 +106,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:paddingRight="4dp"
+            android:paddingEnd="4dp"
             android:layout_below="@id/description"
             android:layout_alignParentEnd="true"
             android:fontFamily="sans-serif"
             android:textFontWeight="600"
             android:src="@drawable/icon_expand"
-            android:textSize="12sp" />
+            android:textSize="12sp"
+            tools:ignore="RtlSymmetry" />
 
     </RelativeLayout>
 </androidx.cardview.widget.CardView>

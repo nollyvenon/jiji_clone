@@ -2,6 +2,7 @@ package adapters;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -29,16 +30,24 @@ public class FindDetailPagerAdapter extends FragmentPagerAdapter {
             case 0:
                 FindDetailFragment findDetailFragment = new FindDetailFragment();
                 Bundle bundle = new Bundle();
+                bundle.putString("id", intent.getStringExtra("id"));
                 bundle.putString("category", intent.getStringExtra("category"));
                 bundle.putString("title", intent.getStringExtra("title"));
                 bundle.putString("price", intent.getStringExtra("price"));
                 bundle.putString("timeLeft", intent.getStringExtra("timeLeft"));
+                bundle.putString("bidEnd", intent.getStringExtra("bidEnd"));
                 bundle.putString("description", intent.getStringExtra("description"));
-                bundle.putString("title", intent.getStringExtra("title"));
+                bundle.putString("name", intent.getStringExtra("name"));
+                bundle.putString("promotion", intent.getStringExtra("promotion"));
+                bundle.putString("auth", intent.getStringExtra("auth"));
                 findDetailFragment.setArguments(bundle);
                 return findDetailFragment;
             case 1:
-                return new FindProposalFragment();
+                FindProposalFragment findProposalFragment = new FindProposalFragment();
+                Bundle b = new Bundle();
+                b.putString("id", intent.getStringExtra("id"));
+                findProposalFragment.setArguments(b);
+                return findProposalFragment;
             default:
                 return new FindDetailFragment();
         }

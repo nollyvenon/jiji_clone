@@ -1,33 +1,45 @@
 package adapters;
 
-        import android.content.Context;
+import android.content.Context;
         import android.content.Intent;
         import android.view.LayoutInflater;
         import android.view.View;
         import android.view.ViewGroup;
-        import android.widget.RatingBar;
-        import android.widget.TextView;
-        import android.widget.Toast;
+import android.widget.TextView;
 
-        import androidx.annotation.NonNull;
+import androidx.annotation.NonNull;
         import androidx.cardview.widget.CardView;
         import androidx.recyclerview.widget.RecyclerView;
 
         import com.example.finder.FindDetail;
         import com.example.finder.R;
 
-        import java.util.List;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.util.List;
 
-        import data.Finds;
+import Database.DatabaseOpenHelper;
+import data.AdPoster;
+import data.Finds;
 
 public class FindsRecyclerViewAdapter extends RecyclerView.Adapter<FindsRecyclerViewAdapter.ViewHolder> {
 
-    Context context;
-    List<Finds> data;
+    private Context context;
+    private List<Finds> data;
+    private DatabaseOpenHelper dbo;
+    private AdPoster adPoster;
 
     public FindsRecyclerViewAdapter(Context context, List<Finds> data) {
         this.context = context;
         this.data = data;
+
+        dbo = new DatabaseOpenHelper(context);
+        adPoster = dbo.getAdPoster();
+    }
+
+    public void setData(List<Finds> data){
+        this.data = data;
+        notifyDataSetChanged();
     }
 
     @NonNull
@@ -35,27 +47,35 @@ public class FindsRecyclerViewAdapter extends RecyclerView.Adapter<FindsRecycler
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view;
         LayoutInflater inflater = LayoutInflater.from(context);
-        view = inflater.inflate(R.layout.finds_item, parent, false);
+        view = inflater.inflate(R.layout.item_finds, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
-        holder.price.setText("N"+data.get(position).getPrice());
+    public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
+        holder.price.setText(new StringBuilder().append("N").append(data.get(position).getPrice()).toString());
         holder.description.setText(data.get(position).getDescription());
         holder.title.setText(data.get(position).getTitle());
+
+        double dPrice = Double.parseDouble(data.get(position).getPrice());
+        NumberFormat format = new DecimalFormat("#,###");
+        String fPrice = format.format(dPrice);
+        holder.price.setText(new StringBuilder().append("N").append(fPrice));
 
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context, FindDetail.class);
+                intent.putExtra("id", data.get(position).getId());
                 intent.putExtra("title", data.get(position).getTitle());
                 intent.putExtra("price", data.get(position).getPrice());
                 intent.putExtra("description", data.get(position).getDescription());
                 intent.putExtra("name", data.get(position).getFinderName());
-                intent.putExtra("timeLeft", data.get(position).getTimeLeft());
+                intent.putExtra("timeLeft", data.get(position).getCreatedAt());
+                intent.putExtra("bidEnd", data.get(position).getBidEnd());
                 intent.putExtra("category", data.get(position).getCategory());
-                intent.putExtra("promotion", data.get(position).getPromotion());
+                intent.putExtra("promotion", data.get(position).getBenefit());
+                intent.putExtra("auth", data.get(position).getAuth());
                 context.startActivity(intent);
             }
         });

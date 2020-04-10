@@ -4,7 +4,8 @@
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.CAMERA" /> <!-- Internet Permission -->
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
@@ -12,23 +13,42 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
-        <activity android:name=".MyWorks"></activity>
-        <activity android:name=".MessagePanel" />
-        <activity android:name=".MessageList" />
+        android:theme="@style/AppTheme"
+        android:usesCleartextTraffic="true">
+        <activity android:name=".FeedbackForm"></activity>
+        <activity android:name=".Search" />
+        <activity android:name=".AllAds" />
+        <activity android:name=".AllFind" />
+        <activity
+            android:name=".MessagePanel"
+            android:windowSoftInputMode="stateHidden" />
+        <activity
+            android:name=".MessageList"
+            android:windowSoftInputMode="stateHidden" />
         <activity android:name=".AdDetail" />
         <activity android:name=".Profile" />
         <activity android:name=".CategoryMembers" />
-        <activity android:name=".FindDetail" />
-        <activity android:name=".FindPostForm" />
-        <activity android:name=".AdPostForm" />
-        <activity android:name=".FindPosterRegistration" />
-        <activity android:name=".AdPosterRegistration" />
+        <activity
+            android:name=".FindDetail"
+            android:windowSoftInputMode="stateHidden" />
+        <activity
+            android:name=".FindPostForm"
+            android:windowSoftInputMode="stateHidden" />
+        <activity
+            android:name=".AdPostForm"
+            android:windowSoftInputMode="stateHidden" />
+        <activity
+            android:name=".FindPosterRegistration"
+            android:windowSoftInputMode="stateHidden" />
+        <activity
+            android:name=".AdPosterRegistration"
+            android:windowSoftInputMode="stateHidden" />
         <activity android:name=".PhoneNumberVerification" />
         <activity android:name=".CategoryList" />
         <activity
             android:name=".MainActivity"
-            android:theme="@style/splashTheme">
+            android:theme="@style/splashTheme"
+            android:windowSoftInputMode="stateHidden">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

@@ -1,5 +1,8 @@
 package adapters;
 
+import android.content.Intent;
+import android.os.Bundle;
+
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -10,11 +13,14 @@ import com.example.finder.CategoryFindFragment;
 import com.example.finder.CategoryMemberFragment;
 
 public class CategoryMemberPagerAdapter extends FragmentPagerAdapter {
-    int tabNumber;
+    private int tabNumber;
+    private Intent intent;
+    private Bundle b = new Bundle();
 
-    public CategoryMemberPagerAdapter(@NonNull FragmentManager fm, int behavior) {
+    public CategoryMemberPagerAdapter(@NonNull FragmentManager fm, int behavior, Intent intent) {
         super(fm, behavior);
         tabNumber = behavior;
+        this.intent = intent;
     }
 
     @NonNull
@@ -22,9 +28,15 @@ public class CategoryMemberPagerAdapter extends FragmentPagerAdapter {
     public Fragment getItem(int position) {
         switch (position) {
             case 0:
-                return new CategoryMemberFragment();
+                CategoryMemberFragment categoryMemberFragment = new CategoryMemberFragment();
+                b.putString("id", intent.getStringExtra("id"));
+                categoryMemberFragment.setArguments(b);
+                return categoryMemberFragment;
             case 1:
-                return new CategoryFindFragment();
+                CategoryFindFragment categoryFindFragment = new CategoryFindFragment();
+                b.putString("id", intent.getStringExtra("id"));
+                categoryFindFragment.setArguments(b);
+                return categoryFindFragment;
             default:
                 return null;
         }

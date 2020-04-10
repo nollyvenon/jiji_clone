@@ -14,4 +14,6 @@
 
     </androidx.recyclerview.widget.RecyclerView>
 
+    <include layout="@layout/progress_bar" />
+
 </LinearLayout>

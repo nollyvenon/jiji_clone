@@ -7,6 +7,16 @@ public class FindPoster {
     private String phoneNumber;
     private String createdAt;
 
+    public String getBidEnd() {
+        return bidEnd;
+    }
+
+    public void setBidEnd(String bidEnd) {
+        this.bidEnd = bidEnd;
+    }
+
+    private String bidEnd;
+
     public int getId() {
         return id;
     }

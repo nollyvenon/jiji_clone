@@ -6,9 +6,12 @@ import androidx.viewpager.widget.ViewPager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.tabs.TabLayout;
 
 import adapters.FindDetailPagerAdapter;
@@ -22,9 +25,17 @@ public class FindDetail extends AppCompatActivity {
         setContentView(R.layout.activity_find_detail);
 
         Intent intent = getIntent();
-        String category = intent.getStringExtra("category");
+        String category = intent.getStringExtra("title");
         TextView pageName = findViewById(R.id.page_name);
         pageName.setText(category);
+
+        ImageView search = findViewById(R.id.search);
+        search.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                BottomAppBarEvent.goToSearchActivity(FindDetail.this);
+            }
+        });
 
         TabLayout tabLayout = findViewById(R.id.find_detail_tab_layout);
 

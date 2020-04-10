@@ -3,7 +3,7 @@ package data;
 public class AdPoster {
 
     private int id;
-    private byte[] profileImage;
+    private String profileImage;
     private String location;
     private String marketArea;
     private String businessYear;
@@ -13,6 +13,87 @@ public class AdPoster {
     private String serviceDescription;
     private String phoneNumber;
     private String accountNumber;
+    private String password;
+    private String verifiedPhoneNumber;
+    private String status;
+    private String userType;
+    private String auth;
+    private String ads;
+    private String finds;
+
+    public String getRating() {
+        return rating;
+    }
+
+    public void setRating(String rating) {
+        this.rating = rating;
+    }
+
+    private String rating;
+
+    public String getAds() {
+        return ads;
+    }
+
+    public void setAds(String ads) {
+        this.ads = ads;
+    }
+
+    public String getFinds() {
+        return finds;
+    }
+
+    public void setFinds(String finds) {
+        this.finds = finds;
+    }
+
+    public String getUserType() {
+        return userType;
+    }
+
+    public void setUserType(String userType) {
+        this.userType = userType;
+    }
+
+    public String getAuth() {
+        return auth;
+    }
+
+    public void setAuth(String auth) {
+        this.auth = auth;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getVerifiedPhoneNumber() {
+        return verifiedPhoneNumber;
+    }
+
+    public void setVerifiedPhoneNumber(String verifiedPhoneNumber) {
+        this.verifiedPhoneNumber = verifiedPhoneNumber;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
     public String getCreatedAt() {
         return createdAt;
@@ -32,11 +113,11 @@ public class AdPoster {
         this.id = finderID;
     }
 
-    public byte[] getProfileImage() {
+    public String getProfileImage() {
         return profileImage;
     }
 
-    public void setProfileImage(byte[] profile_image) {
+    public void setProfileImage(String profile_image) {
         this.profileImage = profile_image;
     }
 

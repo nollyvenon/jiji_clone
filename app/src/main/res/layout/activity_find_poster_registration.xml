@@ -101,6 +101,47 @@
                 android:textSize="14sp"
                 android:padding="10dp" />
 
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:text="@string/password"
+                android:textColor="@color/white"
+                android:textFontWeight="700" />
+
+            <EditText
+                android:id="@+id/password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:background="@drawable/edit_text_middle"
+                android:hint="@string/password"
+                tools:ignore="Autofill"
+                android:inputType="textPassword"
+                android:textSize="14sp"
+                android:padding="10dp" />
+
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:text="@string/confirm_password"
+                android:textColor="@color/white"
+                android:textFontWeight="700" />
+
+            <EditText
+                android:id="@+id/comfirm_password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:background="@drawable/edit_text_bottom_1"
+                android:hint="@string/confirm_password"
+                tools:ignore="Autofill"
+                android:inputType="textPassword"
+                android:textSize="14sp"
+                android:padding="10dp" />
+
             <Button
                 android:id="@+id/save_ad_poster"
                 android:layout_width="match_parent"
@@ -117,11 +158,6 @@
         </LinearLayout>
 
     </androidx.core.widget.NestedScrollView>
-
-    <include
-        layout="@layout/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
 
     <com.google.android.material.bottomappbar.BottomAppBar
         android:id="@+id/bottom_appbar"

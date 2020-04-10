@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RatingBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -15,6 +14,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.finder.AdDetail;
 import com.example.finder.R;
 
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.List;
 
 import data.Ads;
@@ -29,27 +30,38 @@ public class AdsRecyclerViewAdapter extends RecyclerView.Adapter<AdsRecyclerView
         this.data = data;
     }
 
+    public void setData(List<Ads> data) {
+        this.data = data;
+        notifyDataSetChanged();
+    }
+
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view;
         LayoutInflater inflater = LayoutInflater.from(context);
-        view = inflater.inflate(R.layout.ads_item, parent, false);
+        view = inflater.inflate(R.layout.item_ads, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
         holder.description.setText(data.get(position).getDescription());
         holder.title.setText(data.get(position).getTitle());
-        holder.price.setText(data.get(position).getPrice());
-        holder.views.setText(data.get(position).getViews());
-        holder.likes.setText(data.get(position).getLikes());
+
+        double dPrice = Double.parseDouble(data.get(position).getPrice());
+        NumberFormat format = new DecimalFormat("#,###");
+        String fPrice = format.format(dPrice);
+        holder.price.setText(new StringBuilder().append("N").append(fPrice));
+
+        //holder.views.setText(data.get(position).getViews());
 
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context, AdDetail.class);
+                intent.putExtra("id", data.get(position).getId());
+                intent.putExtra("auth", data.get(position).getAuth());
                 context.startActivity(intent);
             }
         });
@@ -76,7 +88,7 @@ public class AdsRecyclerViewAdapter extends RecyclerView.Adapter<AdsRecyclerView
             description = itemView.findViewById(R.id.description);
             title = itemView.findViewById(R.id.title);
             price = itemView.findViewById(R.id.price);
-            views = itemView.findViewById(R.id.views);
+            //views = itemView.findViewById(R.id.views);
             likes = itemView.findViewById(R.id.likes);
         }
     }

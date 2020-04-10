@@ -77,6 +77,7 @@
                 android:layout_marginTop="5dp"
                 android:background="@drawable/edit_text_top_1"
                 android:hint="@string/_13_aremu_street_ikeja_lagos"
+                tools:ignore="Autofill"
                 android:textSize="14sp"
                 android:inputType="text"
                 android:padding="10dp" />
@@ -97,6 +98,7 @@
                 android:layout_marginTop="5dp"
                 android:background="@drawable/edit_text_middle"
                 android:hint="@string/oshodi_market"
+                tools:ignore="Autofill"
                 android:textSize="14sp"
                 android:inputType="text"
                 android:padding="10dp" />
@@ -117,6 +119,7 @@
                 android:layout_marginTop="5dp"
                 android:background="@drawable/edit_text_middle"
                 android:hint="@string/_15_years"
+                tools:ignore="Autofill"
                 android:textSize="14sp"
                 android:inputType="number"
                 android:padding="10dp" />
@@ -137,6 +140,7 @@
                 android:layout_marginTop="5dp"
                 android:background="@drawable/edit_text_middle"
                 android:hint="@string/oluwasegun_aremu"
+                tools:ignore="Autofill"
                 android:textSize="14sp"
                 android:inputType="text"
                 android:padding="10dp" />
@@ -157,6 +161,7 @@
                 android:layout_marginTop="5dp"
                 android:background="@drawable/edit_text_middle"
                 android:hint="@string/akent_furnitures"
+                tools:ignore="Autofill"
                 android:textSize="14sp"
                 android:inputType="text"
                 android:padding="10dp" />
@@ -177,6 +182,8 @@
                 android:layout_marginTop="5dp"
                 android:background="@drawable/edit_text_middle"
                 android:hint="@string/we_are_into"
+                android:gravity="top"
+                tools:ignore="Autofill"
                 android:inputType="textMultiLine"
                 android:maxLength="300"
                 android:maxLines="3"
@@ -198,7 +205,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
                 android:background="@drawable/edit_text_middle"
+                android:gravity="top"
                 android:hint="@string/we_are_into_vehicle_rewiring_balancing_and_alignment"
+                tools:ignore="Autofill"
                 android:inputType="textMultiLine"
                 android:maxLength="300"
                 android:lines="3"
@@ -222,6 +231,7 @@
                 android:layout_marginTop="5dp"
                 android:background="@drawable/edit_text_middle"
                 android:hint="@string/_2348187448888"
+                tools:ignore="Autofill"
                 android:inputType="phone"
                 android:textSize="14sp"
                 android:padding="10dp" />
@@ -240,9 +250,54 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
-                android:background="@drawable/edit_text_bottom_1"
+                android:background="@drawable/edit_text_middle"
                 android:hint="@string/account_number"
+                tools:ignore="Autofill"
                 android:inputType="number"
+                android:textSize="14sp"
+                android:padding="10dp" />
+
+
+            <TextView
+                android:id="@+id/pwd"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:text="@string/password"
+                android:textColor="@color/white"
+                android:textFontWeight="700" />
+
+            <EditText
+                android:id="@+id/password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:background="@drawable/edit_text_middle"
+                android:hint="@string/password"
+                tools:ignore="Autofill"
+                android:inputType="textPassword"
+                android:textSize="14sp"
+                android:padding="10dp" />
+
+
+            <TextView
+                android:id="@+id/cpwd"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:text="@string/confirm_password"
+                android:textColor="@color/white"
+                android:textFontWeight="700" />
+
+            <EditText
+                android:id="@+id/comfirm_password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:background="@drawable/edit_text_bottom_1"
+                android:hint="@string/confirm_password"
+                tools:ignore="Autofill"
+                android:inputType="textPassword"
                 android:textSize="14sp"
                 android:padding="10dp" />
 

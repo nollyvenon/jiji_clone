@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 import android.widget.Toast;
 
 import java.text.DateFormat;
@@ -17,7 +18,6 @@ import data.AdPoster;
 public class DatabaseOpenHelper extends SQLiteOpenHelper {
 
     Context context;
-    ArrayList<AdPoster> adPosters = new ArrayList<>();
 
     public DatabaseOpenHelper(Context context) {
         super(context, Constants.DBNAME, null, Constants.VERSION);
@@ -27,10 +27,8 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         String createdTable = "CREATE TABLE IF NOT EXISTS " + Constants.DBTABLE + "(" +
-                Constants.DBID + " INTEGER PRIMARY KEY, " + Constants.DBDATE + " LONG, " + Constants.DBLOGO + " INTEGER, " +
-                Constants.DBLOCATION + " TEXT, " + Constants.DBMARKETAREA + " TEXT, " + Constants.DBBUSINESEXP + " TEXT, " +
-                Constants.DBUSERNAME + " TEXT, " + Constants.DBBUSINESSNAME + " TEXT," + Constants.DBBUSINESSDES + " TEXT, " +
-                Constants.DBPHONE + " TEXT, " + Constants.DBSERVICEDES + " TEXT, " + Constants.DBACCOUNTNUM + " TEXT );";
+                Constants.DBID + " INTEGER PRIMARY KEY, " + Constants.DBADS + " TEXT, " + Constants.DBFINDS + " TEXT, " +
+                Constants.DBPHONE + " TEXT, " + Constants.DBAUTH + " TEXT, " + Constants.DBUSERTYPE + " TEXT );";
         db.execSQL(createdTable);
     }
 
@@ -43,33 +41,32 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
     public void saveAdPoster(AdPoster adPosters) {
         SQLiteDatabase db = this.getWritableDatabase();
 
-        String location = adPosters.getLocation();
-        String marketArea = adPosters.getMarketArea();
-        String businessYear = adPosters.getBusinessYear();
-        String username = adPosters.getUsername();
-        String businessName = adPosters.getBusinessName();
-        String businessDescription = adPosters.getBusinessDescription();
-        String serviceDescription = adPosters.getServiceDescription();
-        String phoneNumber = adPosters.getPhoneNumber();
-        String accountNumber = adPosters.getAccountNumber();
+        String userType = adPosters.getUserType();
+        String phoneNumber = adPosters.getVerifiedPhoneNumber();
+        String auth = adPosters.getAuth();
 
         ContentValues values = new ContentValues();
-        values.put(Constants.DBLOCATION, location);
-        values.put(Constants.DBMARKETAREA, marketArea);
-        values.put(Constants.DBBUSINESEXP, businessYear);
-        values.put(Constants.DBUSERNAME, username);
-        values.put(Constants.DBBUSINESSNAME, businessName);
-        values.put(Constants.DBBUSINESSDES, businessDescription);
-        values.put(Constants.DBSERVICEDES, serviceDescription);
         values.put(Constants.DBPHONE, phoneNumber);
-        values.put(Constants.DBACCOUNTNUM, accountNumber);
-        values.put(Constants.DBDATE, System.currentTimeMillis());
+        values.put(Constants.DBAUTH, auth);
+        values.put(Constants.DBUSERTYPE, userType);
+
+        if (userType != null){
+            if (userType.equals(Constants.ADS)) {
+                values.put(Constants.DBADS, userType);
+                values.put(Constants.DBFINDS, "");
+            }
+
+            if (userType.equals(Constants.FINDS)) {
+                values.put(Constants.DBFINDS, userType);
+                values.put(Constants.DBADS, "");
+            }
+        }
 
         long isInserted = db.insert(Constants.DBTABLE, null, values);
         if (isInserted != -1) {
-            Toast.makeText(context, "Profile Update Successful", Toast.LENGTH_LONG).show();
+            Log.d("b40", "success");
         } else {
-            Toast.makeText(context, "Profile Update Failed", Toast.LENGTH_LONG).show();
+            Log.d("b40", "failed");
         }
         db.close();
     }
@@ -77,63 +74,51 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
     public void updateAdPoster(AdPoster adPoster) {
         SQLiteDatabase db = this.getWritableDatabase();
 
-        String location = adPoster.getLocation();
-        String marketArea = adPoster.getMarketArea();
-        String businessYear = adPoster.getBusinessYear();
-        String username = adPoster.getUsername();
-        String businessName = adPoster.getBusinessName();
-        String businessDescription = adPoster.getBusinessDescription();
-        String serviceDescription = adPoster.getServiceDescription();
-        String phoneNumber = adPoster.getPhoneNumber();
-        String accountNumber = adPoster.getAccountNumber();
+        String auth = adPoster.getAuth();
+        String phoneNumber = adPoster.getVerifiedPhoneNumber();
+        String userType = adPoster.getUserType();
 
         ContentValues values = new ContentValues();
-        values.put(Constants.DBLOCATION, location);
-        values.put(Constants.DBMARKETAREA, marketArea);
-        values.put(Constants.DBBUSINESEXP, businessYear);
-        values.put(Constants.DBUSERNAME, username);
-        values.put(Constants.DBBUSINESSNAME, businessName);
-        values.put(Constants.DBBUSINESSDES, businessDescription);
-        values.put(Constants.DBSERVICEDES, serviceDescription);
-        values.put(Constants.DBPHONE, phoneNumber);
-        values.put(Constants.DBACCOUNTNUM, accountNumber);
-        values.put(Constants.DBDATE, System.currentTimeMillis());
 
-        db.update(Constants.DBTABLE, values, Constants.DBID + " = ?", new String[]{"0"});
+        if(phoneNumber != null) values.put(Constants.DBPHONE, phoneNumber);
+        if(auth != null) values.put(Constants.DBAUTH, auth);
+
+        if (userType != null) {
+            values.put(Constants.DBUSERTYPE, userType);
+            if (userType.equals(Constants.ADS)) {
+                values.put(Constants.DBADS, userType);
+                values.put(Constants.DBFINDS, "");
+            }
+
+            if (userType.equals(Constants.FINDS)) {
+                values.put(Constants.DBFINDS, userType);
+                values.put(Constants.DBADS, "");
+            }
+        }
+
+        db.update(Constants.DBTABLE, values, Constants.DBID + "= 1", null);
         db.close();
     }
 
-    public ArrayList<AdPoster> getAdPoster() {
+    public AdPoster getAdPoster() {
+        AdPoster finder = new AdPoster();
         SQLiteDatabase db = this.getReadableDatabase();
 
-        Cursor cursor = db.query(Constants.DBTABLE, new String[]{Constants.DBID, Constants.DBDATE, Constants.DBBUSINESSNAME,
-                        Constants.DBLOCATION, Constants.DBMARKETAREA, Constants.DBBUSINESEXP, Constants.DBUSERNAME,
-                        Constants.DBBUSINESSDES, Constants.DBSERVICEDES, Constants.DBPHONE, Constants.DBACCOUNTNUM},
-                null, null, null,
-                null, Constants.DBDATE + " DESC ");
+        Cursor cursor = db.query(Constants.DBTABLE, new String[]{Constants.DBID, Constants.DBPHONE,
+                        Constants.DBAUTH, Constants.DBUSERTYPE, Constants.DBADS, Constants.DBFINDS},
+                null, null, null, null, null);
 
         if (cursor.moveToFirst()) {
-            AdPoster finder = new AdPoster();
             finder.setID(cursor.getInt(cursor.getColumnIndex(Constants.DBID)));
-            finder.setLocation(cursor.getString(cursor.getColumnIndex(Constants.DBLOCATION)));
-            finder.setMarketArea(cursor.getString(cursor.getColumnIndex(Constants.DBMARKETAREA)));
-            finder.setBusinessYear(cursor.getString(cursor.getColumnIndex(Constants.DBBUSINESEXP)));
-            finder.setUsername(cursor.getString(cursor.getColumnIndex(Constants.DBUSERNAME)));
-            finder.setBusinessDescription(cursor.getString(cursor.getColumnIndex(Constants.DBBUSINESSDES)));
-            finder.setServiceDescription(cursor.getString(cursor.getColumnIndex(Constants.DBSERVICEDES)));
-            finder.setPhoneNumber(cursor.getString(cursor.getColumnIndex(Constants.DBPHONE)));
-            finder.setAccountNumber(cursor.getString(cursor.getColumnIndex(Constants.DBACCOUNTNUM)));
-            finder.setBusinessName(cursor.getString(cursor.getColumnIndex(Constants.DBBUSINESSNAME)));
-
-            DateFormat dateFormat = DateFormat.getDateInstance();
-            String createdAt = dateFormat.format(new Date(cursor.getLong(cursor.getColumnIndex(Constants.DBDATE))).getTime());
-            finder.setCreatedAt(createdAt);
-
-            adPosters.add(finder);
+            finder.setVerifiedPhoneNumber(cursor.getString(cursor.getColumnIndex(Constants.DBPHONE)));
+            finder.setAuth(cursor.getString(cursor.getColumnIndex(Constants.DBAUTH)));
+            finder.setUserType(cursor.getString(cursor.getColumnIndex(Constants.DBUSERTYPE)));
+            finder.setAds(cursor.getString(cursor.getColumnIndex(Constants.DBADS)));
+            finder.setFinds(cursor.getString(cursor.getColumnIndex(Constants.DBFINDS)));
         }
 
         db.close();
-        return adPosters;
+        return finder;
     }
 
     public void removeAdPoster(int id) {

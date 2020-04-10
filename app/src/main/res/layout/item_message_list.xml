@@ -28,7 +28,6 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/sender"
             android:layout_marginBottom="2dp"
-            android:text="If you are connected but behind a firewall, check that Firefox has permission to access the Web."
             android:textSize="14sp"
             android:textColor="@color/lighter_black"
             android:fontFamily="sans-serif"/>

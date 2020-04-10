@@ -6,6 +6,7 @@ import androidx.viewpager.widget.ViewPager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.android.material.tabs.TabLayout;
@@ -25,11 +26,20 @@ public class CategoryMembers extends AppCompatActivity {
         TextView pageName = findViewById(R.id.page_name);
         pageName.setText(category);
 
+        ImageView search = findViewById(R.id.search);
+        search.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                BottomAppBarEvent.goToSearchActivity(CategoryMembers.this);
+            }
+        });
+
         TabLayout tabLayout = findViewById(R.id.category_member_tab_layout);
 
         final ViewPager viewPager = findViewById(R.id.category_member_pager);
-        CategoryMemberPagerAdapter findDetailPagerAdapter = new CategoryMemberPagerAdapter(getSupportFragmentManager(), tabLayout.getTabCount());
-        viewPager.setAdapter(findDetailPagerAdapter);
+        CategoryMemberPagerAdapter categoryMemberPagerAdapter =
+                new CategoryMemberPagerAdapter(getSupportFragmentManager(), tabLayout.getTabCount(), intent);
+        viewPager.setAdapter(categoryMemberPagerAdapter);
 
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override

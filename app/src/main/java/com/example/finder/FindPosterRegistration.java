@@ -10,13 +10,12 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Base64;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,29 +23,38 @@ import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 
-import Database.DatabaseFinderHelper;
+import Database.DatabaseOpenHelper;
+import data.AdPoster;
 import data.FindPoster;
 import de.hdodenhof.circleimageview.CircleImageView;
 import others.BottomAppBarEvent;
+import others.Constants;
+import retrofit.ApiClient;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class FindPosterRegistration extends AppCompatActivity {
 
-    DatabaseFinderHelper dbo;
+    AdPoster adPoster = new AdPoster();
+
+    DatabaseOpenHelper dbo;
+    Bitmap bitmap;
     private static final int REQUEST_CODE_GALLERY = 999;
     Button uploadImage, addFinder;
     CircleImageView profileImage;
 
-    EditText username;
-    EditText phoneNumber;
+    EditText username, phoneNumber, password, confirmPassword;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_find_poster_registration);
 
-        dbo = new DatabaseFinderHelper(this);
-        TextView pageName = findViewById(R.id.page_name);
-        pageName.setText(this.capitalise("Profile Update"));
+        dbo = new DatabaseOpenHelper(this);
+
+        AdPoster a = dbo.getAdPoster();
+        adPoster.setVerifiedPhoneNumber(a.getVerifiedPhoneNumber());
 
         this.initViews();
 
@@ -86,6 +94,8 @@ public class FindPosterRegistration extends AppCompatActivity {
         profileImage = findViewById(R.id.profile_image);
         username = findViewById(R.id.username);
         phoneNumber = findViewById(R.id.phone_number);
+        password = findViewById(R.id.password);
+        confirmPassword = findViewById(R.id.comfirm_password);
     }
 
     @Override
@@ -110,7 +120,7 @@ public class FindPosterRegistration extends AppCompatActivity {
             Uri uri = data.getData();
             try {
                 InputStream inputStream = getContentResolver().openInputStream(uri);
-                Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
+                bitmap = BitmapFactory.decodeStream(inputStream);
                 profileImage.setImageBitmap(bitmap);
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
@@ -118,20 +128,21 @@ public class FindPosterRegistration extends AppCompatActivity {
         }
     }
 
-//    private byte[] imageToByte(ImageView logo) {
-//        Bitmap bitmap = ((BitmapDrawable) logo.getDrawable()).getBitmap();
-//        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-//        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
-//        byte[] bytes = stream.toByteArray();
-//        return bytes;
-//    }
+    private String imageToString() {
+        if(bitmap == null) return "";
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+        byte[] bytes = stream.toByteArray();
+        return Base64.encodeToString(bytes, Base64.DEFAULT);
+    }
 
     public void saveToDB() {
-        if(dbo.fetchFindPoster().size() > 0)  return;
 
-        FindPoster findPoster = new FindPoster();
-        findPoster.setPhoneNumber(phoneNumber.getText().toString());
-        findPoster.setUsername(username.getText().toString());
+        adPoster.setProfileImage(imageToString());
+        adPoster.setPhoneNumber(phoneNumber.getText().toString());
+        adPoster.setUsername(username.getText().toString());
+        adPoster.setPassword(password.getText().toString());
+        adPoster.setUserType(Constants.FINDS);
 
         if (username.getText().toString().isEmpty()) {
             username.setError("Enter Your FullName");
@@ -139,8 +150,48 @@ public class FindPosterRegistration extends AppCompatActivity {
             return;
         }
 
-        dbo.saveFindPoster(findPoster);
-        dbo.close();
+        if (adPoster.getPassword().isEmpty() || !adPoster.getPassword().equals(confirmPassword.getText().toString())) {
+            password.setError("Password does not match");
+            confirmPassword.setError("Password does not match");
+            password.requestFocus();
+            confirmPassword.requestFocus();
+            return;
+        }
+
+        Call<AdPoster> call = ApiClient.connect().registerFind(
+                adPoster.getProfileImage(), adPoster.getPhoneNumber(), adPoster.getVerifiedPhoneNumber(),
+                adPoster.getUsername(), adPoster.getPassword(), adPoster.getUserType()
+        );
+
+        call.enqueue(new Callback<AdPoster>() {
+            @Override
+            public void onResponse(Call<AdPoster> call, Response<AdPoster> response) {
+                if (!response.isSuccessful()) {
+                    Toast.makeText(FindPosterRegistration.this, "" + response.code(), Toast.LENGTH_LONG).show();
+                    return;
+                }
+
+                AdPoster ad = response.body();
+                assert ad != null;
+                if (Boolean.parseBoolean(ad.getStatus())) {
+                    adPoster.setAuth(ad.getAuth());
+                    dbo.updateAdPoster(adPoster);
+                    dbo.close();
+                    Intent intent = new Intent(FindPosterRegistration.this, AdPostForm.class);
+                    startActivity(intent);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<AdPoster> call, Throwable t) {
+                Toast.makeText(FindPosterRegistration.this, t.toString(), Toast.LENGTH_LONG).show();
+            }
+        });
+
+    }
+
+    public void goBack(View view) {
+        finish();
     }
 
     public void postAd(View view) {

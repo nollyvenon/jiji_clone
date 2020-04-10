@@ -2,36 +2,72 @@ package data;
 
 public class Proposal {
 
-    private int profileImage;
-    private String username;
+    private String profileImage;
+    private String businessName;
     private String rating;
     private String reviewCount;
     private String description;
     private String benefit;
+    private String findId;
+    private String finderId;
+    private String adId;
+    private String id;
+    private String status;
+    private String auth;
 
-    public Proposal(int profileImage, String username, String rating, String reviewCount, String description, String benefit) {
+    public Proposal(String profileImage, String businessName, String rating, String reviewCount,
+                    String description, String benefit, String id, String findId, String adId, String auth, String finderId) {
         this.profileImage = profileImage;
-        this.username = username;
+        this.businessName = businessName;
         this.rating = rating;
         this.reviewCount = reviewCount;
         this.description = description;
         this.benefit = benefit;
+        this.id = id;
+        this.findId = findId;
+        this.finderId = finderId;
+        this.adId = adId;
+        this.auth = auth;
     }
 
-    public int getProfileImage() {
+    public String getFindId() {
+        return findId;
+    }
+
+    public String getFinderId() {
+        return finderId;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public String getAuth() {
+        return auth;
+    }
+
+    public String getAdId() {
+        return adId;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public String getProfileImage() {
         return profileImage;
     }
 
-    public String getUsername() {
-        return username;
+    public String getBusinessName() {
+        return businessName;
     }
 
-    public float getRating() {
-        return Float.parseFloat(rating);
+    public String getRating() {
+        return rating;
     }
 
     public String getReviewCount() {
-        return "(" + reviewCount + " reviews)";
+        return reviewCount;
     }
 
     public String getDescription() {

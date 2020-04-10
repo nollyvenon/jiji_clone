@@ -37,7 +37,7 @@
                     android:textFontWeight="600"
                     android:textSize="18sp" />
 
-                    <TextView
+                    <ImageView
                         android:id="@+id/delete"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -45,17 +45,15 @@
                         android:layout_alignParentEnd="true"
                         android:layout_marginTop="10dp"
                         android:layout_marginEnd="10dp"
-                        android:drawableStart="@drawable/icon_delete"
-                        android:drawablePadding="2dp"
-                        android:textColor="@color/red"
-                        android:text="Delete"
-                        android:textSize="14sp"
+                        android:tint="@color/darkest_grey"
+                        android:src="@drawable/icon_delete"
+                        android:visibility="gone"
                         android:fontFamily="sans-serif" />
 
                 <View
                     android:id="@+id/divider"
                     android:layout_width="match_parent"
-                    android:layout_height="2dp"
+                    android:layout_height="1dp"
                     android:layout_marginTop="3dp"
                     android:layout_below="@id/header"
                     android:background="@color/dark_grey" />
@@ -69,7 +67,7 @@
                     android:paddingStart="8dp"
                     android:paddingEnd="8dp"
                     android:layout_below="@id/divider"
-                    android:textColor="@color/lighter_black"
+                    android:textColor="@color/colorPrimary"
                     android:textFontWeight="700"
                     android:textSize="16sp" />
 
@@ -121,9 +119,11 @@
                 android:layout_marginTop="10dp">
 
                 <LinearLayout
+                    android:id="@+id/proposal_form"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:visibility="gone">
 
                     <TextView
                         android:layout_width="match_parent"
@@ -154,6 +154,7 @@
                         android:textSize="16sp" />
 
                     <EditText
+                        android:id="@+id/bid_description"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="10dp"
@@ -182,6 +183,7 @@
                         android:textSize="16sp" />
 
                     <EditText
+                        android:id="@+id/bid_benefit"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="10dp"
@@ -199,6 +201,7 @@
                         android:textColor="@color/lighter_black" />
 
                     <com.google.android.material.button.MaterialButton
+                        android:id="@+id/submit"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="end"

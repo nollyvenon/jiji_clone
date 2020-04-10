@@ -2,22 +2,50 @@ package data;
 
 public class Finds {
 
+    private String id;
     private String price;
     private String description;
     private String finderName;
     private String category;
     private String title;
-    private String promotion;
+    private String benefit;
     private String timeLeft;
+    private String status;
+    private String createdAt;
+    private String auth;
+    private String bidEnd;
 
-    public Finds(String price, String description, String finderName, String category, String title, String promotion, String timeLeft) {
+    public Finds(String id, String price, String description, String title,
+                 String category, String benefit, String createdAt, String bidEnd, String auth) {
+        this.id = id;
         this.price = price;
         this.description = description;
-        this.finderName = finderName;
         this.category = category;
         this.title = title;
-        this.promotion = promotion;
-        this.timeLeft = timeLeft;
+        this.benefit = benefit;
+        this.createdAt = createdAt;
+        this.auth = auth;
+        this.bidEnd = bidEnd;
+    }
+
+    public String getBidEnd() {
+        return bidEnd;
+    }
+
+    public String getAuth() {
+        return auth;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public String getCreatedAt() {
+        return createdAt;
+    }
+
+    public String getStatus() {
+        return status;
     }
 
     public String getPrice() {
@@ -40,8 +68,8 @@ public class Finds {
         return title;
     }
 
-    public String getPromotion() {
-        return promotion;
+    public String getBenefit() {
+        return benefit;
     }
 
     public String getTimeLeft() {

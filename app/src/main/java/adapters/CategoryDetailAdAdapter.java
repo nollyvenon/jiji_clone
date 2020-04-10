@@ -13,12 +13,14 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.finder.Profile;
 import com.example.finder.R;
 
 import java.util.List;
 
 import data.Ads;
+import others.Constants;
 
 public class CategoryDetailAdAdapter extends RecyclerView.Adapter<CategoryDetailAdAdapter.ViewHolder> {
 
@@ -30,21 +32,30 @@ public class CategoryDetailAdAdapter extends RecyclerView.Adapter<CategoryDetail
         this.data = data;
     }
 
+    public void setData(List<Ads> data){
+        this.data = data;
+        notifyDataSetChanged();
+    }
+
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view;
         LayoutInflater inflater = LayoutInflater.from(context);
-        view = inflater.inflate(R.layout.category_member_item, parent, false);
+        view = inflater.inflate(R.layout.item_category_member, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         holder.review.setText(data.get(position).getReview());
-        holder.profileImage.setImageResource(data.get(position).getProfileImage());
-        holder.companyName.setText(data.get(position).getCompanyName());
-        holder.rating.setRating(data.get(position).getRating());
+        if(data.get(position).getImage().isEmpty()) {
+            holder.profileImage.setImageResource(R.drawable.bg2);
+        } else {
+            Glide.with(context.getApplicationContext()).load(Constants.BASE_URL + data.get(position).getImage()).into(holder.profileImage);
+        }
+        holder.companyName.setText(data.get(position).getBusinessName());
+        holder.rating.setRating(Float.parseFloat(data.get(position).getRating()));
 
         holder.wrap.setOnClickListener(new View.OnClickListener() {
             @Override

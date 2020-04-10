@@ -2,26 +2,32 @@ package data;
 
 public class CategoryListData {
 
-    int categoryImage;
-    String categoryName;
-    String categoryCount;
+    String image;
+    String id;
+    String name;
+    String count;
 
-    public CategoryListData(int categoryImage, String categoryName, String categoryCount) {
-        this.categoryImage = categoryImage;
-        this.categoryName = categoryName;
-        this.categoryCount = categoryCount;
+    public CategoryListData(String id, String image, String name, String count) {
+        this.id = id;
+        this.image = image;
+        this.name = name;
+        this.count = count;
     }
 
-    public int getCategoryImage() {
-        return categoryImage;
+    public String getId() {
+        return id;
     }
 
-    public String getCategoryName() {
-        return categoryName;
+    public String getImage() {
+        return image;
     }
 
-    public String getCategoryCount() {
-        return categoryCount;
+    public String getName() {
+        return name;
+    }
+
+    public String getCount() {
+        return count;
     }
 
 }

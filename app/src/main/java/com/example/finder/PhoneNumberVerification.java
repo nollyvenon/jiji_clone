@@ -24,15 +24,19 @@ import com.google.firebase.auth.PhoneAuthProvider;
 
 import java.util.concurrent.TimeUnit;
 
-import Database.DatabasePhoneHelper;
-import data.VerifiedPhoneNumber;
+import Database.DatabaseOpenHelper;
+import data.AdPoster;
 import others.BottomAppBarEvent;
 import others.Constants;
+import retrofit.ApiClient;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class PhoneNumberVerification extends AppCompatActivity {
 
-    VerifiedPhoneNumber verifiedPhoneNumber = new VerifiedPhoneNumber();
-    DatabasePhoneHelper dbo = new DatabasePhoneHelper(this);
+    AdPoster adPoster = new AdPoster();
+    DatabaseOpenHelper dbo = new DatabaseOpenHelper(this);
 
     EditText editTextTel, editTextCode;
     Button activateSMS, sendCode;
@@ -57,7 +61,7 @@ public class PhoneNumberVerification extends AppCompatActivity {
         editTextCode = findViewById(R.id.edit_set_code);
 
         Intent intent = getIntent();
-        userType = intent.getStringExtra("user_type");
+        userType = intent.getStringExtra("userType");
 
         activateSMS.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -86,14 +90,8 @@ public class PhoneNumberVerification extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            if(userType.equals(Constants.ADS)) {
-                                Intent intent = new Intent(getApplicationContext(), AdPosterRegistration.class);
-                                startActivity(intent);
-                            } else if(userType.equals(Constants.FINDS)) {
-                                Intent intent = new Intent(getApplicationContext(), FindPosterRegistration.class);
-                                startActivity(intent);
-                            }
                             saveToDB();
+                            checkType();
                         } else {
                             if (task.getException() instanceof FirebaseAuthInvalidCredentialsException) {
                                 Toast.makeText(getApplicationContext(), "Incorrect verification code", Toast.LENGTH_LONG).show();
@@ -104,8 +102,51 @@ public class PhoneNumberVerification extends AppCompatActivity {
                 });
     }
 
+    public void checkType() {
+        Log.d("b40", adPoster.getVerifiedPhoneNumber());
+        Call<AdPoster> call = ApiClient.connect().getStatus(adPoster.getVerifiedPhoneNumber());
+        call.enqueue(new Callback<AdPoster>() {
+            @Override
+            public void onResponse(Call<AdPoster> call, Response<AdPoster> response) {
+                Log.d("b40", "opo");
+                if (!response.isSuccessful()) {
+                    Log.d("b40", "opo1");
+                    Toast.makeText(PhoneNumberVerification.this, "" + response.code(), Toast.LENGTH_LONG).show();
+                    return;
+                }
+
+                Log.d("b40", "opo2");
+                Log.d("b40", adPoster.getVerifiedPhoneNumber());
+                AdPoster ad = response.body();
+                assert ad != null;
+
+                if (Boolean.parseBoolean(ad.getStatus())) {
+                    adPoster.setAuth(ad.getAuth());
+                    adPoster.setUserType(ad.getUserType());
+                }
+
+                if(userType.equals(Constants.ADS)) {
+                    checkAd(ad);
+                } else {
+                    checkFind(ad);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<AdPoster> call, Throwable t) {
+                Log.d("b40", "opo3");
+                Toast.makeText(PhoneNumberVerification.this, t.toString(), Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
     private void sendVerificationCode() {
-        phoneNumber = "+" + editTextTel.getText().toString();
+        String num = editTextTel.getText().toString();
+        if(num.length() == 11) {
+            phoneNumber = "+234" + num.substring(1);
+        } else {
+            phoneNumber = num;
+        }
 
         if (phoneNumber.isEmpty()) {
             editTextTel.setError("Telephone number is required");
@@ -154,14 +195,53 @@ public class PhoneNumberVerification extends AppCompatActivity {
     };
 
     public void saveToDB() {
-        verifiedPhoneNumber.setUserType(userType);
-        verifiedPhoneNumber.setPhoneNumber(phoneNumber);
-        if(dbo.getVerifiedPhone().size() > 0) {
-            dbo.updateVerifiedPhone(verifiedPhoneNumber);
+        adPoster.setVerifiedPhoneNumber(phoneNumber);
+        if(dbo.getAdPoster().getVerifiedPhoneNumber() != null) {
+            dbo.updateAdPoster(adPoster);
         } else {
-            dbo.saveVerifiedPhone(verifiedPhoneNumber);
+            dbo.saveAdPoster(adPoster);
         }
         dbo.close();
+    }
+
+    public void checkFind(AdPoster ad) {
+        adPoster.setFinds(Constants.FINDS);
+        if(ad.getUserType() != null) {
+            if (ad.getUserType().equals(Constants.FINDS) || ad.getUserType().equals(Constants.ADS)) {
+                saveToDB();
+                Intent intent = new Intent(getApplicationContext(), FindPostForm.class);
+                startActivity(intent);
+            }
+        }
+
+        if(!Boolean.parseBoolean(ad.getStatus())) {
+            Intent intent = new Intent(getApplicationContext(), FindPosterRegistration.class);
+            startActivity(intent);
+        }
+    }
+
+    public void checkAd(AdPoster ad) {
+        adPoster.setAds(Constants.ADS);
+        if(ad.getUserType() != null) {
+            if (ad.getUserType().equals(Constants.ADS)) {
+                saveToDB();
+                Intent intent = new Intent(getApplicationContext(), AdPostForm.class);
+                startActivity(intent);
+            } else if ((ad.getUserType().equals(Constants.FINDS) && ad.getBusinessName().isEmpty()) || !Boolean.parseBoolean(ad.getStatus())) {
+                Intent intent = new Intent(getApplicationContext(), AdPosterRegistration.class);
+                intent.putExtra("username", "ad.getUsername()");
+                intent.putExtra("phoneNumber", ad.getPhoneNumber());
+                intent.putExtra("hide", "hide");
+                startActivity(intent);
+            }
+        }   else {
+            Intent intent = new Intent(getApplicationContext(), AdPosterRegistration.class);
+            startActivity(intent);
+        }
+    }
+
+    public void goBack(View view) {
+        finish();
     }
 
     public void goToHomeActivity(View view) {

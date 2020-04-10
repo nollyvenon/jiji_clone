@@ -8,50 +8,51 @@ import androidx.core.app.ActivityCompat;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.io.ByteArrayInputStream;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.transition.Transition;
+
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
-import java.util.ArrayList;
+import java.util.List;
 
 import Database.DatabaseOpenHelper;
-import Database.DatabasePhoneHelper;
 import data.AdPoster;
-import data.VerifiedPhoneNumber;
 import de.hdodenhof.circleimageview.CircleImageView;
 import others.BottomAppBarEvent;
+import others.Constants;
+import retrofit.ApiClient;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class AdPosterRegistration extends AppCompatActivity {
     AdPoster adPoster = new AdPoster();
     DatabaseOpenHelper dbo = new DatabaseOpenHelper(this);
+    Bitmap bitmap;
+    Intent intent;
 
     private static final int REQUEST_CODE_GALLERY = 999;
-    Button uploadImage, addFinder;
+    Button uploadImage, addPoster;
     CircleImageView profileImage;
 
-    EditText location;
-    EditText marketArea;
-    EditText businessYear;
-    EditText username;
-    EditText businessName;
-    EditText businessDescription;
-    EditText serviceDescription;
-    EditText phoneNumber;
-    EditText accountNumber;
+    EditText location, marketArea, businessYear;
+    EditText username, businessName, businessDescription, serviceDescription;
+    EditText phoneNumber, accountNumber, password, confirmPassword;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +60,10 @@ public class AdPosterRegistration extends AppCompatActivity {
         setContentView(R.layout.activity_ad_poster_registration);
 
         this.initViews();
+
+        AdPoster a = dbo.getAdPoster();
+        adPoster.setAuth(a.getAuth());
+        adPoster.setVerifiedPhoneNumber(a.getVerifiedPhoneNumber());
 
         uploadImage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -69,56 +74,75 @@ public class AdPosterRegistration extends AppCompatActivity {
             }
         });
 
-        addFinder.setOnClickListener(new View.OnClickListener() {
+        addPoster.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 saveToDB();
             }
         });
 
-        Intent intent = getIntent();
-        if(!intent.getStringExtra("userType").isEmpty()) {
-            ArrayList<AdPoster> adPoster = dbo.getAdPoster();
-            editAdProfile(adPoster);
+        intent = getIntent();
+        if (intent.getStringExtra("hide") != null) {
+            this.setEditText();
         }
     }
 
-    private void editAdProfile(ArrayList<AdPoster> adPoster) {
-        if(adPoster.size() > 0) {
+    private void setEditText() {
+        Call<AdPoster> call = ApiClient.connect().getUserByAuth(adPoster.getAuth());
+        call.enqueue(new Callback<AdPoster>() {
+            @Override
+            public void onResponse(Call<AdPoster> call, Response<AdPoster> response) {
+                if (!response.isSuccessful()) {
+                    Toast.makeText(AdPosterRegistration.this, "" + response.code(), Toast.LENGTH_LONG).show();
+                    return;
+                }
 
-            byte[] bitmapByteAry = adPoster.get(0).getProfileImage();
-            if(bitmapByteAry != null) {
-                Bitmap bitmap = BitmapFactory.decodeByteArray(bitmapByteAry, 0, bitmapByteAry.length);
-                profileImage.setImageBitmap(bitmap);
+                AdPoster ad = response.body();
+                assert ad != null;
+
+                Glide.with(AdPosterRegistration.this)
+                        .asBitmap()
+                        .load(Constants.BASE_URL + ad.getProfileImage())
+                        .into(new SimpleTarget<Bitmap>() {
+                            @Override
+                            public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+                                bitmap = resource;
+                                profileImage.setImageBitmap(resource);
+                            }
+                        });
+
+                phoneNumber.setText(ad.getPhoneNumber());
+                username.setText(ad.getUsername());
+                location.setText(ad.getLocation());
+                marketArea.setText(ad.getMarketArea());
+                businessYear.setText(ad.getBusinessYear());
+                businessName.setText(ad.getBusinessName());
+                businessDescription.setText(ad.getBusinessDescription());
+                serviceDescription.setText(ad.getServiceDescription());
+                accountNumber.setText(ad.getAccountNumber());
+
+                password.setVisibility(View.INVISIBLE);
+                confirmPassword.setVisibility(View.INVISIBLE);
+                TextView pwd = findViewById(R.id.pwd);
+                pwd.setVisibility(View.INVISIBLE);
+                TextView cpwd = findViewById(R.id.cpwd);
+                cpwd.setVisibility(View.INVISIBLE);
+
+                LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) addPoster.getLayoutParams();
+                params.topMargin = -250;
+                addPoster.setLayoutParams(params);
             }
-            location.setText(adPoster.get(0).getLocation());
-            marketArea.setText(adPoster.get(0).getMarketArea());
-            businessYear.setText(adPoster.get(0).getBusinessYear());
-            businessName.setText(adPoster.get(0).getBusinessName());
-            businessDescription.setText(adPoster.get(0).getBusinessDescription());
-            serviceDescription.setText(adPoster.get(0).getServiceDescription());
-            phoneNumber.setText(adPoster.get(0).getPhoneNumber());
-            accountNumber.setText(adPoster.get(0).getAccountNumber());
-            username.setText(adPoster.get(0).getUsername());
 
-        }
-    }
-
-    private String capitalise(String string) {
-        String str = string;
-        String[] strArray = str.split(" ");
-        StringBuilder builder = new StringBuilder();
-        for (String s : strArray) {
-            String cap = s.substring(0, 1).toUpperCase() + s.substring(1);
-            builder.append(cap + " ");
-        }
-        return builder.toString();
+            @Override
+            public void onFailure(Call<AdPoster> call, Throwable t) {
+            }
+        });
     }
 
     private void initViews() {
         uploadImage = findViewById(R.id.upload_btn);
         profileImage = findViewById(R.id.profile_image);
-        addFinder = findViewById(R.id.save_ad_poster);
+        addPoster = findViewById(R.id.save_ad_poster);
 
         profileImage = findViewById(R.id.profile_image);
         location = findViewById(R.id.location);
@@ -130,6 +154,8 @@ public class AdPosterRegistration extends AppCompatActivity {
         serviceDescription = findViewById(R.id.service_description);
         phoneNumber = findViewById(R.id.phone_number);
         accountNumber = findViewById(R.id.account_number);
+        password = findViewById(R.id.password);
+        confirmPassword = findViewById(R.id.comfirm_password);
     }
 
     @Override
@@ -154,7 +180,7 @@ public class AdPosterRegistration extends AppCompatActivity {
             Uri uri = data.getData();
             try {
                 InputStream inputStream = getContentResolver().openInputStream(uri);
-                Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
+                bitmap = BitmapFactory.decodeStream(inputStream);
                 profileImage.setImageBitmap(bitmap);
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
@@ -162,18 +188,17 @@ public class AdPosterRegistration extends AppCompatActivity {
         }
     }
 
-    private byte[] imageToByte(ImageView logo) {
-        Bitmap bitmap = ((BitmapDrawable) logo.getDrawable()).getBitmap();
+    private String imageToString() {
+        if (bitmap == null) return "";
+
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
         byte[] bytes = stream.toByteArray();
-        return bytes;
+        return Base64.encodeToString(bytes, Base64.DEFAULT);
     }
 
     public void saveToDB() {
-        if(dbo.getAdPoster().size() > 0)  return;
-
-        adPoster.setProfileImage(imageToByte(profileImage));
+        adPoster.setProfileImage(imageToString());
         adPoster.setLocation(location.getText().toString());
         adPoster.setMarketArea(marketArea.getText().toString());
         adPoster.setBusinessYear(businessYear.getText().toString());
@@ -183,60 +208,109 @@ public class AdPosterRegistration extends AppCompatActivity {
         adPoster.setPhoneNumber(phoneNumber.getText().toString());
         adPoster.setAccountNumber(accountNumber.getText().toString());
         adPoster.setUsername(username.getText().toString());
+        adPoster.setPassword(password.getText().toString());
+        adPoster.setUserType(Constants.ADS);
 
-        if (location.getText().toString().isEmpty()) {
+        this.validate(adPoster);
+
+        Call<AdPoster> call = ApiClient.connect().register(
+                adPoster.getProfileImage(), adPoster.getLocation(), adPoster.getMarketArea(),
+                adPoster.getBusinessYear(), adPoster.getBusinessName(), adPoster.getBusinessDescription(),
+                adPoster.getServiceDescription(), adPoster.getPhoneNumber(), adPoster.getVerifiedPhoneNumber(),
+                adPoster.getAccountNumber(), adPoster.getUsername(), adPoster.getPassword(), adPoster.getUserType()
+        );
+
+        call.enqueue(new Callback<AdPoster>() {
+            @Override
+            public void onResponse(Call<AdPoster> call, Response<AdPoster> response) {
+                if (!response.isSuccessful()) {
+                    Toast.makeText(AdPosterRegistration.this, "" + response.code(), Toast.LENGTH_LONG).show();
+                    return;
+                }
+
+                AdPoster ad = response.body();
+                assert ad != null;
+                if (Boolean.parseBoolean(ad.getStatus())) {
+                    adPoster.setAuth(ad.getAuth());
+                    dbo.updateAdPoster(adPoster);
+                    dbo.close();
+                    Intent i;
+                    if (intent.getStringExtra("hide") != null) {
+                        i = new Intent(AdPosterRegistration.this, Profile.class);
+                        i.putExtra("id", String.valueOf(ad.getId()));
+                    } else {
+                        i = new Intent(AdPosterRegistration.this, AdPostForm.class);
+                    }
+                    startActivity(i);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<AdPoster> call, Throwable t) {
+            }
+        });
+    }
+
+    public void goBack(View view) {
+        finish();
+    }
+
+    private void validate(AdPoster adPoster) {
+        if (adPoster.getLocation().isEmpty()) {
             location.setError("Please Enter Office Location");
             location.requestFocus();
             return;
         }
 
-        if (marketArea.getText().toString().isEmpty()) {
+        if (adPoster.getMarketArea().isEmpty()) {
             marketArea.setError("Please Enter Market Area");
             marketArea.requestFocus();
             return;
         }
 
-        if (businessYear.getText().toString().isEmpty()) {
+        if (adPoster.getBusinessYear().isEmpty()) {
             businessYear.setError("Please Enter Years of Business Existence");
             businessYear.requestFocus();
             return;
         }
 
-        if (businessName.getText().toString().isEmpty()) {
+        if (adPoster.getBusinessName().isEmpty()) {
             businessName.setError("Please Enter Business Name");
             businessName.requestFocus();
             return;
         }
 
-        if (businessDescription.getText().toString().isEmpty()) {
+        if (adPoster.getBusinessDescription().isEmpty()) {
             businessDescription.setError("Give The Description of Business");
             businessDescription.requestFocus();
             return;
         }
 
-        if (serviceDescription.getText().toString().isEmpty()) {
+        if (adPoster.getServiceDescription().isEmpty()) {
             serviceDescription.setError("Service Description is Empty");
             serviceDescription.requestFocus();
             return;
         }
 
-        if (accountNumber.getText().toString().isEmpty()) {
+        if (adPoster.getAccountNumber().isEmpty()) {
             accountNumber.setError("Enter Your Account Number");
             accountNumber.requestFocus();
             return;
         }
 
-        if (username.getText().toString().isEmpty()) {
+        if (adPoster.getUsername().isEmpty()) {
             username.setError("Enter Your FullName");
             username.requestFocus();
             return;
         }
 
-        dbo.saveAdPoster(adPoster);
-        dbo.close();
-
-//        Intent intent = new Intent(this, MainActivity.class);
-//        startActivity(intent);
+        if (adPoster.getPassword().isEmpty() || !adPoster.getPassword().equals(confirmPassword.getText().toString())) {
+            password.setError("Password does not match");
+            confirmPassword.setError("Password does not match");
+            password.requestFocus();
+            confirmPassword.requestFocus();
+            return;
+        }
     }
 
     public void postAd(View view) {

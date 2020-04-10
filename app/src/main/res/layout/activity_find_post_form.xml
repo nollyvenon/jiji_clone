@@ -27,20 +27,20 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="What are you looking for?"
+                    android:text="@string/what_are_you_looking_for"
                     android:textSize="16sp"
                     android:fontFamily="sans-serif"
                     android:textColor="@color/colorPrimary"
                     android:textFontWeight="600" />
 
                 <EditText
-                    android:id="@+id/ad_title"
+                    android:id="@+id/title"
                     android:layout_width="match_parent"
                     android:layout_height="45dp"
                     android:padding="4dp"
                     android:textSize="16sp"
                     android:inputType="text"
-                    android:hint="I need a furniture maker"
+                    android:hint="@string/i_need_a_furniture_maker"
                     android:layout_marginTop="10dp"
                     android:background="@drawable/edit_text_middle" />
 
@@ -55,7 +55,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Select category"
+                    android:text="@string/select_category"
                     android:textSize="16sp"
                     android:fontFamily="sans-serif"
                     android:textColor="@color/colorPrimary"
@@ -79,7 +79,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Budget"
+                    android:text="@string/budget"
                     android:textSize="16sp"
                     android:fontFamily="sans-serif"
                     android:textColor="@color/colorPrimary"
@@ -91,8 +91,8 @@
                     android:layout_height="45dp"
                     android:padding="4dp"
                     android:textSize="16sp"
-                    android:inputType="text"
-                    android:hint="N30,000 - N35,000"
+                    android:inputType="number"
+                    android:hint="@string/hint_price"
                     android:layout_marginTop="10dp"
                     android:background="@drawable/edit_text_middle" />
 
@@ -107,17 +107,17 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Describe the service you are searching for"
+                    android:text="@string/describe_the_service_you_are_searching_for"
                     android:textSize="16sp"
                     android:fontFamily="sans-serif"
                     android:textColor="@color/colorPrimary"
                     android:textFontWeight="600" />
 
                 <EditText
-                    android:id="@+id/ad_description"
+                    android:id="@+id/description"
                     android:layout_width="match_parent"
                     android:layout_height="45dp"
-                    android:hint="I am searching for a good furniture maker..."
+                    android:hint="@string/i_am_searching_for_a_good_furniture_maker"
                     android:inputType="textMultiLine"
                     android:maxLength="300"
                     android:maxLines="4"
@@ -137,7 +137,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
-                    android:text="Promotional offers are you interested in"
+                    android:text="@string/promotional_offers_are_you_interested_in"
                     android:textSize="16sp"
                     android:fontFamily="sans-serif"
                     android:textColor="@color/colorPrimary"
@@ -155,6 +155,7 @@
             </LinearLayout>
 
             <Button
+                android:onClick="addFind"
                 android:id="@+id/post_ad"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

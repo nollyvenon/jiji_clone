@@ -12,18 +12,20 @@
         android:onClick="goToHomeActivity">
 
         <ImageButton
+            android:id="@+id/img_home_bottom_bar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:tint="@color/colorPrimary"
+            android:tint="@color/lightest_black"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:src="@drawable/icon_home"
             android:onClick="goToHomeActivity" />
 
         <TextView
+            android:id="@+id/title_home_bottom_bar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Home"
-            android:textColor="@color/colorPrimary" />
+            android:text="@string/home"
+            android:textColor="@color/lightest_black" />
 
     </LinearLayout>
 
@@ -36,18 +38,20 @@
         android:onClick="goToMessageListActivity">
 
         <ImageButton
+            android:id="@+id/img_msg_bottom_bar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:tint="@color/colorPrimary"
+            android:tint="@color/lightest_black"
             android:background="?attr/selectableItemBackgroundBorderless"
-            android:src="@drawable/icon_message"
+            android:src="@drawable/icon_msg"
             android:onClick="goToMessageListActivity"/>
 
         <TextView
+            android:id="@+id/title_msg_bottom_bar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Message"
-            android:textColor="@color/colorPrimary" />
+            android:text="@string/message"
+            android:textColor="@color/lightest_black" />
 
     </LinearLayout>
 
@@ -60,18 +64,20 @@
         android:onClick="postAd">
 
         <ImageButton
+            android:id="@+id/img_ad_bottom_bar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:tint="@color/colorPrimary"
+            android:tint="@color/lightest_black"
             android:background="?attr/selectableItemBackgroundBorderless"
-            android:src="@drawable/icon_add"
+            android:src="@drawable/icon_ad"
             android:onClick="postAd" />
 
         <TextView
+            android:id="@+id/title_ad_bottom_bar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Post Ad"
-            android:textColor="@color/colorPrimary" />
+            android:text="@string/post_ad"
+            android:textColor="@color/lightest_black" />
 
     </LinearLayout>
 
@@ -81,21 +87,25 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:gravity="center"
+        android:layout_marginTop="1dp"
+        android:layout_marginStart="5dp"
         android:onClick="postFind">
 
         <ImageButton
+            android:id="@+id/img_find_bottom_bar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:tint="@color/colorPrimary"
+            android:tint="@color/lightest_black"
             android:background="?attr/selectableItemBackgroundBorderless"
-            android:src="@drawable/icon_search"
+            android:src="@drawable/icon_find"
             android:onClick="postFind" />
 
         <TextView
+            android:id="@+id/title_find_bottom_bar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Post Find"
-            android:textColor="@color/colorPrimary" />
+            android:text="@string/post_find"
+            android:textColor="@color/lightest_black" />
 
     </LinearLayout>
 
@@ -105,23 +115,26 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:gravity="center"
+        android:layout_marginTop="1dp"
         android:onClick="goToProfileActivity">
 
         <ImageButton
+            android:id="@+id/img_profile_bottom_bar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:tint="@color/colorPrimary"
+            android:tint="@color/lightest_black"
             android:background="?attr/selectableItemBackgroundBorderless"
-            android:src="@drawable/icon_profile"
+            android:src="@drawable/icon_prof"
             android:onClick="goToProfileActivity"/>
 
         <TextView
+            android:id="@+id/title_profile_bottom_bar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Profile"
+            android:text="@string/profile"
             android:textAlignment="center"
             android:gravity="center"
-            android:textColor="@color/colorPrimary" />
+            android:textColor="@color/lightest_black" />
 
     </LinearLayout>
 

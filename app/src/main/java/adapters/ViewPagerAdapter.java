@@ -1,6 +1,7 @@
 package adapters;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,21 +11,27 @@ import android.widget.LinearLayout;
 import androidx.annotation.NonNull;
 import androidx.viewpager.widget.PagerAdapter;
 
+import com.bumptech.glide.Glide;
 import com.example.finder.R;
+
+import java.util.List;
+
+import data.Slides;
+import others.Constants;
 
 public class ViewPagerAdapter extends PagerAdapter {
 
     private Context mContext;
-    private int[] data;
+    private List<Slides> data;
 
-    public ViewPagerAdapter(Context mContext, int[] data) {
+    public ViewPagerAdapter(Context mContext, List<Slides> data) {
         this.mContext = mContext;
         this.data = data;
     }
 
     @Override
     public int getCount() {
-        return data.length;
+        return data.size();
     }
 
     @Override
@@ -39,7 +46,7 @@ public class ViewPagerAdapter extends PagerAdapter {
         assert inflater != null;
         View view = inflater.inflate(R.layout.home_view_pager, container, false);
         ImageView imageView = view.findViewById(R.id.image);
-        imageView.setImageResource(data[position]);
+        Glide.with(mContext).load(Constants.BASE_URL + "public/images/slide/" +  data.get(position).getImage()).into(imageView);
         container.addView(view);
         return view;
     }

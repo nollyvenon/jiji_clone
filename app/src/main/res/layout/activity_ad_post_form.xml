@@ -27,7 +27,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Title of Service"
+                    android:text="@string/title_of_service"
                     android:textSize="16sp"
                     android:fontFamily="sans-serif"
                     android:textColor="@color/colorPrimary"
@@ -40,7 +40,7 @@
                     android:padding="4dp"
                     android:textSize="16sp"
                     android:inputType="text"
-                    android:hint="Furniture"
+                    android:hint="@string/hint_title"
                     android:layout_marginTop="10dp"
                     android:background="@drawable/edit_text_middle" />
 
@@ -55,7 +55,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Pick A Category"
+                    android:text="@string/pick_a_category"
                     android:textSize="16sp"
                     android:fontFamily="sans-serif"
                     android:textColor="@color/colorPrimary"
@@ -79,7 +79,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Description of Service You Render"
+                    android:text="@string/description_of_service_you_render"
                     android:textSize="16sp"
                     android:fontFamily="sans-serif"
                     android:textColor="@color/colorPrimary"
@@ -89,7 +89,7 @@
                     android:id="@+id/ad_description"
                     android:layout_width="match_parent"
                     android:layout_height="45dp"
-                    android:hint="I make furniture for schools, homes etc."
+                    android:hint="@string/hint_description"
                     android:inputType="textMultiLine"
                     android:maxLength="300"
                     android:maxLines="4"
@@ -103,17 +103,132 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
                 android:orientation="vertical">
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
-                    android:text="Promotional Offers"
+                    android:text="@string/average_price"
                     android:textSize="16sp"
                     android:fontFamily="sans-serif"
                     android:textColor="@color/colorPrimary"
-                    android:textFontWeight="600"/>
+                    android:textFontWeight="600" />
+
+                <EditText
+                    android:id="@+id/ad_price"
+                    android:layout_width="match_parent"
+                    android:layout_height="45dp"
+                    android:hint="@string/hint_price"
+                    android:inputType="number"
+                    android:maxLength="12"
+                    android:layout_marginTop="10dp"
+                    android:textSize="16sp"
+                    android:padding="4dp"
+                    android:background="@drawable/edit_text_middle" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp">
+
+                    <TextView
+                        android:id="@+id/tt"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:text="@string/product_service_image"
+                        android:textSize="16sp"
+                        android:fontFamily="sans-serif"
+                        android:textColor="@color/colorPrimary"
+                        android:textFontWeight="600"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginStart="5dp"
+                        android:layout_toEndOf="@id/tt"
+                        android:layout_centerHorizontal="true"
+                        android:text="@string/optional"
+                        android:textSize="12sp"
+                        android:fontFamily="sans-serif"
+                        android:textColor="@color/lighter_black"/>
+
+                    <RelativeLayout
+                        android:id="@+id/profile_image_wrapper"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="40dp">
+
+                        <de.hdodenhof.circleimageview.CircleImageView
+                            android:id="@+id/image"
+                            android:layout_width="120dp"
+                            android:layout_height="120dp"
+                            android:layout_marginTop="5dp"
+                            android:layout_centerInParent="true"
+                            android:src="@drawable/bg_grey"
+                            app:civ_border_color="#FF000000"
+                            app:civ_border_width="0dp" />
+
+                        <Button
+                            android:onClick="uploadImage"
+                            android:id="@+id/upload_btn"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerInParent="true"
+                            android:text="@string/select"
+                            android:textColor="@color/white"
+                            android:textSize="12sp"
+                            android:textStyle="bold" />
+
+                    </RelativeLayout>
+
+                </RelativeLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp">
+
+                    <TextView
+                        android:id="@+id/t"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:text="@string/promotional_offers"
+                        android:textSize="16sp"
+                        android:fontFamily="sans-serif"
+                        android:textColor="@color/colorPrimary"
+                        android:textFontWeight="600"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginStart="5dp"
+                        android:layout_toEndOf="@id/t"
+                        android:layout_centerHorizontal="true"
+                        android:text="@string/optional"
+                        android:textSize="12sp"
+                        android:fontFamily="sans-serif"
+                        android:textColor="@color/lighter_black"/>
+
+                </RelativeLayout>
 
                 <ListView
                     android:id="@+id/promotional_list"
@@ -127,13 +242,14 @@
             </LinearLayout>
 
             <Button
+                android:onClick="addAd"
                 android:id="@+id/post_ad"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:background="@drawable/reg_login_button"
                 android:foreground="?android:attr/selectableItemBackground"
-                android:text="Post Ad"
+                android:text="@string/post_ad"
                 android:textAllCaps="true"
                 android:textColor="@color/white"
                 android:padding="10dp"
