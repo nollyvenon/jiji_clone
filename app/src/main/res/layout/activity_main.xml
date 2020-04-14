@@ -40,7 +40,8 @@
                 android:padding="4dp"
                 android:textColor="@color/lighter_black"
                 android:textColorHint="@color/dark_grey"
-                android:textSize="15sp" />
+                android:textSize="15sp"
+                tools:targetApi="m" />
 
 
             <LinearLayout
@@ -103,7 +104,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="4dp"
-                    android:backgroundTint="@color/colorPrimary">
+                    android:backgroundTint="@color/colorPrimary"
+                    tools:targetApi="lollipop">
 
                     <RelativeLayout
                         android:layout_width="match_parent"
@@ -210,7 +212,7 @@
                 android:layout_marginTop="5dp"
                 android:layout_marginBottom="5dp"
                 android:onClick="viewCategoryPage"
-                android:text="Browse" />
+                android:text="@string/browse" />
 
         </LinearLayout>
 

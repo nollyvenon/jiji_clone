@@ -1,6 +1,7 @@
 package adapters;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.finder.R;
 
+import java.util.Arrays;
 import java.util.List;
 
 import Database.DatabaseOpenHelper;
@@ -57,7 +59,7 @@ public class MessagePanelAdapter extends RecyclerView.Adapter<MessagePanelAdapte
                 LinearLayout.LayoutParams.WRAP_CONTENT
         );
 
-        if(data.get(position).getAuth().equals(adPoster.getAuth())) {
+        if(!data.get(position).getId().equals(data.get(position).getSender())) {
             holder.wrap.setBackgroundColor(context.getResources().getColor(R.color.light_purple));
             holder.sender.setText(R.string.you);
             params.setMargins(0, 5, 80, 5);

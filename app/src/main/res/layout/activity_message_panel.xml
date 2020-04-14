@@ -64,7 +64,7 @@
                     android:gravity="top"
                     android:lines="2"
                     android:maxLines="3"
-                    android:hint="Type a message"
+                    android:hint="@string/type_a_message"
                     android:textColorHint="@color/dark_grey"
                     android:background="@drawable/edit_text_middle_border"/>
 
@@ -82,7 +82,7 @@
                 android:id="@+id/send"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Send" />
+                android:text="@string/send" />
 
         </LinearLayout>
     </LinearLayout>

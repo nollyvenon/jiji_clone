@@ -33,6 +33,7 @@ import java.util.List;
 import Database.DatabaseOpenHelper;
 import data.AdPoster;
 import data.Ads;
+import data.Benefit;
 import data.CategoryListData;
 import de.hdodenhof.circleimageview.CircleImageView;
 import others.BottomAppBarEvent;
@@ -51,6 +52,7 @@ public class AdPostForm extends AppCompatActivity {
     String categoryText;
     HashMap<Integer, String> checkedList;
     List<String> categoryList;
+    ArrayList<String> promotionData = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,29 +91,7 @@ public class AdPostForm extends AppCompatActivity {
             }
         });
 
-        ArrayList<String> promotionData = new ArrayList<>();
-        promotionData.add("Free Delivery");
-        promotionData.add("Get Two, One free");
-        promotionData.add("50% discount");
-        promotionData.add("10% discount");
-
-        final ListView promotionalList = findViewById(R.id.promotional_list);
-        promotionalList.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
-        ArrayAdapter<String> promotionalAdapter = new ArrayAdapter<>(this, R.layout.item_promotional, R.id.promotion, promotionData);
-
-        checkedList = new HashMap<>();
-        promotionalList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if (checkedList.containsKey(position)) {
-                    checkedList.remove(position);
-                } else {
-                    checkedList.put(position, promotionalList.getItemAtPosition(position).toString());
-                }
-            }
-        });
-
-        promotionalList.setAdapter(promotionalAdapter);
+        getBenefits();
 
         ImageView search = findViewById(R.id.search);
         search.setOnClickListener(new View.OnClickListener() {
@@ -122,11 +102,53 @@ public class AdPostForm extends AppCompatActivity {
         });
     }
 
+    private void getBenefits() {
+        Call<List<Benefit>> call = ApiClient.connect().getBenefits();
+        call.enqueue(new Callback<List<Benefit>>() {
+            @Override
+            public void onResponse(@NonNull Call<List<Benefit>> call, @NonNull Response<List<Benefit>> response) {
+                if (!response.isSuccessful()) {
+                    Toast.makeText(AdPostForm.this, "" + response.code(), Toast.LENGTH_LONG).show();
+                    return;
+                }
+
+                List<Benefit> benefits = response.body();
+
+                assert benefits != null;
+                for(Benefit benefit : benefits) {
+                    promotionData.add(benefit.getBenefit());
+                }
+
+                final ListView promotionalList = findViewById(R.id.promotional_list);
+                promotionalList.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
+                ArrayAdapter<String> promotionalAdapter = new ArrayAdapter<>(AdPostForm.this, R.layout.item_promotional, R.id.promotion, promotionData);
+
+                checkedList = new HashMap<>();
+                promotionalList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        if (checkedList.containsKey(position)) {
+                            checkedList.remove(position);
+                        } else {
+                            checkedList.put(position, promotionalList.getItemAtPosition(position).toString());
+                        }
+                    }
+                });
+
+                promotionalList.setAdapter(promotionalAdapter);
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<List<Benefit>> call, @NonNull Throwable t) {
+            }
+        });
+    }
+
     private void showCategories() {
         Call<List<CategoryListData>> call = ApiClient.connect().getCategories();
         call.enqueue(new Callback<List<CategoryListData>>() {
             @Override
-            public void onResponse(Call<List<CategoryListData>> call, Response<List<CategoryListData>> response) {
+            public void onResponse(@NonNull Call<List<CategoryListData>> call, @NonNull Response<List<CategoryListData>> response) {
                 if (!response.isSuccessful()) {
                     Toast.makeText(AdPostForm.this, "" + response.code(), Toast.LENGTH_LONG).show();
                     return;
@@ -134,13 +156,14 @@ public class AdPostForm extends AppCompatActivity {
 
                 List<CategoryListData> categories = response.body();
 
+                assert categories != null;
                 for(CategoryListData category : categories) {
                     categoryList.add(category.getName());
                 }
             }
 
             @Override
-            public void onFailure(Call<List<CategoryListData>> call, Throwable t) {
+            public void onFailure(@NonNull Call<List<CategoryListData>> call, @NonNull Throwable t) {
             }
         });
     }
@@ -159,8 +182,18 @@ public class AdPostForm extends AppCompatActivity {
         String priceText = price.getText().toString();
         String benefit = "";
 
-        if (descriptionText.isEmpty() || titleText.isEmpty() || priceText.isEmpty() || categoryText.isEmpty()) {
-            Toast.makeText(this, "All fields are compulsory", Toast.LENGTH_LONG).show();
+        if (descriptionText.isEmpty()) {
+            Toast.makeText(this, "Description field is compulsory", Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        if (titleText.isEmpty()) {
+            Toast.makeText(this, "Title field is compulsory", Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        if (categoryText.isEmpty()) {
+            Toast.makeText(this, "Category field is compulsory", Toast.LENGTH_LONG).show();
             return;
         }
 
@@ -177,7 +210,7 @@ public class AdPostForm extends AppCompatActivity {
         );
         call.enqueue(new Callback<Ads>() {
             @Override
-            public void onResponse(Call<Ads> call, Response<Ads> response) {
+            public void onResponse(@NonNull Call<Ads> call, @NonNull Response<Ads> response) {
                 if (!response.isSuccessful()) {
                     Toast.makeText(AdPostForm.this, "" + response.code(), Toast.LENGTH_LONG).show();
                     return;
@@ -192,7 +225,7 @@ public class AdPostForm extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<Ads> call, Throwable t) {
+            public void onFailure(@NonNull Call<Ads> call, @NonNull Throwable t) {
             }
         });
     }
@@ -225,6 +258,7 @@ public class AdPostForm extends AppCompatActivity {
         if (requestCode == REQUEST_CODE_GALLERY && resultCode == RESULT_OK && data != null) {
             Uri uri = data.getData();
             try {
+                assert uri != null;
                 InputStream inputStream = getContentResolver().openInputStream(uri);
                 bitmap = BitmapFactory.decodeStream(inputStream);
                 image.setImageBitmap(bitmap);

@@ -29,7 +29,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:gravity="center"
-                android:text="Upload Profile Image"
+                android:text="@string/upload_profile_image"
                 android:textColor="@color/white"
                 android:textSize="18sp"
                 android:textFontWeight="700" />
@@ -153,7 +153,8 @@
                 android:textAllCaps="true"
                 android:textColor="@color/white"
                 android:padding="10dp"
-                android:textSize="14sp" />
+                android:textSize="14sp"
+                tools:targetApi="m" />
 
         </LinearLayout>
 

@@ -24,6 +24,7 @@
             android:id="@+id/title_home_bottom_bar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textSize="12sp"
             android:text="@string/home"
             android:textColor="@color/lightest_black" />
 
@@ -50,6 +51,7 @@
             android:id="@+id/title_msg_bottom_bar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textSize="12sp"
             android:text="@string/message"
             android:textColor="@color/lightest_black" />
 
@@ -76,6 +78,7 @@
             android:id="@+id/title_ad_bottom_bar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textSize="12sp"
             android:text="@string/post_ad"
             android:textColor="@color/lightest_black" />
 
@@ -104,6 +107,7 @@
             android:id="@+id/title_find_bottom_bar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textSize="12sp"
             android:text="@string/post_find"
             android:textColor="@color/lightest_black" />
 
@@ -132,6 +136,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/profile"
+            android:textSize="12sp"
             android:textAlignment="center"
             android:gravity="center"
             android:textColor="@color/lightest_black" />

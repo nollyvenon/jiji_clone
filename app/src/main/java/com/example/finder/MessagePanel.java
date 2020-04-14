@@ -39,6 +39,7 @@ public class MessagePanel extends AppCompatActivity {
     MaterialButton send;
     MessagePanelAdapter adapter;
     List<Messages> messagesList;
+    AdPoster adPoster;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +52,9 @@ public class MessagePanel extends AppCompatActivity {
         TextView bottomBarTitle = findViewById(R.id.title_msg_bottom_bar);
         bottomBarImg.setColorFilter(getResources().getColor(R.color.colorPrimary));
         bottomBarTitle.setTextColor(getResources().getColor(R.color.colorPrimary));
+
+        DatabaseOpenHelper dbo = new DatabaseOpenHelper(this);
+        adPoster = dbo.getAdPoster();
 
         message = findViewById(R.id.message);
         send = findViewById(R.id.send);
@@ -84,7 +88,7 @@ public class MessagePanel extends AppCompatActivity {
     private void fetchMessages() {
         Intent intent = getIntent();
 
-        Call<List<Messages>> call = ApiClient.connect().getUniqueMessage(intent.getStringExtra("uniqueId"));
+        Call<List<Messages>> call = ApiClient.connect().getUniqueMessage(intent.getStringExtra("uniqueId"), adPoster.getAuth());
         call.enqueue(new Callback<List<Messages>>() {
             @Override
             public void onResponse(@NonNull Call<List<Messages>> call, @NonNull Response<List<Messages>> response) {
@@ -118,9 +122,6 @@ public class MessagePanel extends AppCompatActivity {
         String findId = intent.getStringExtra("fid");
 
         if(messageText.isEmpty()) return;
-
-        DatabaseOpenHelper dbo = new DatabaseOpenHelper(this);
-        AdPoster adPoster = dbo.getAdPoster();
 
         Call<Messages> call = ApiClient.connect().addMessage(
                 messageText, adId + "-" + findId, findId, adId, adPoster.getAuth()

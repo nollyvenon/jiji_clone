@@ -1,5 +1,6 @@
 package com.example.finder;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -79,35 +80,35 @@ public class FindPostForm extends AppCompatActivity {
             }
         });
 
-        ArrayList<String> promotionData = new ArrayList<>();
-        promotionData.add("Free Delivery");
-        promotionData.add("Get Two, One free");
-        promotionData.add("50% discount");
-        promotionData.add("10% discount");
-        final ListView promotionalList = findViewById(R.id.promotional_list);
-        promotionalList.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
-        ArrayAdapter<String> promotionalAdapter = new ArrayAdapter<>(this, R.layout.item_promotional, R.id.promotion, promotionData);
-
-        checkedList = new HashMap<>();
-        promotionalList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if (checkedList.containsKey(position)) {
-                    checkedList.remove(position);
-                } else {
-                    checkedList.put(position, promotionalList.getItemAtPosition(position).toString());
-                }
-            }
-        });
-
-        promotionalList.setAdapter(promotionalAdapter);
+//        ArrayList<String> promotionData = new ArrayList<>();
+//        promotionData.add("Free Delivery");
+//        promotionData.add("Get Two, One free");
+//        promotionData.add("50% discount");
+//        promotionData.add("10% discount");
+//        final ListView promotionalList = findViewById(R.id.promotional_list);
+//        promotionalList.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
+//        ArrayAdapter<String> promotionalAdapter = new ArrayAdapter<>(this, R.layout.item_promotional, R.id.promotion, promotionData);
+//
+//        checkedList = new HashMap<>();
+//        promotionalList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                if (checkedList.containsKey(position)) {
+//                    checkedList.remove(position);
+//                } else {
+//                    checkedList.put(position, promotionalList.getItemAtPosition(position).toString());
+//                }
+//            }
+//        });
+//
+//        promotionalList.setAdapter(promotionalAdapter);
     }
 
     private void showCategories() {
         Call<List<CategoryListData>> call = ApiClient.connect().getCategories();
         call.enqueue(new Callback<List<CategoryListData>>() {
             @Override
-            public void onResponse(Call<List<CategoryListData>> call, Response<List<CategoryListData>> response) {
+            public void onResponse(@NonNull Call<List<CategoryListData>> call, @NonNull Response<List<CategoryListData>> response) {
                 if (!response.isSuccessful()) {
                     Toast.makeText(FindPostForm.this, "" + response.code(), Toast.LENGTH_LONG).show();
                     return;
@@ -115,13 +116,14 @@ public class FindPostForm extends AppCompatActivity {
 
                 List<CategoryListData> categories = response.body();
 
+                assert categories != null;
                 for(CategoryListData category : categories) {
                     categoryList.add(category.getName());
                 }
             }
 
             @Override
-            public void onFailure(Call<List<CategoryListData>> call, Throwable t) {
+            public void onFailure(@NonNull Call<List<CategoryListData>> call, @NonNull Throwable t) {
                 //Toast.makeText(FindPostForm.this, t.toString(), Toast.LENGTH_LONG).show();
             }
         });
@@ -145,26 +147,27 @@ public class FindPostForm extends AppCompatActivity {
             Toast.makeText(this, "All fields are compulsory", Toast.LENGTH_LONG).show();
             return;
         }
-        for (String checked : checkedList.values()) {
-            benefit = benefit + checked + ",";
-        }
+//        for (String checked : checkedList.values()) {
+//            benefit = benefit + checked + ",";
+//        }
 
         DatabaseOpenHelper dbo = new DatabaseOpenHelper(this);
         AdPoster a = dbo.getAdPoster();
 
         Call<Finds> call = ApiClient.connect().addFind(
-                descriptionText, titleText, priceText, benefit.substring(0, benefit.length() - 1), categoryText,
+                descriptionText, titleText, priceText, "" /*benefit.substring(0, benefit.length() - 1)*/, categoryText,
                 a.getAuth()
         );
         call.enqueue(new Callback<Finds>() {
             @Override
-            public void onResponse(Call<Finds> call, Response<Finds> response) {
+            public void onResponse(@NonNull Call<Finds> call, @NonNull Response<Finds> response) {
                 if (!response.isSuccessful()) {
                     Toast.makeText(FindPostForm.this, "" + response.code(), Toast.LENGTH_LONG).show();
                     return;
                 }
 
                 Finds find = response.body();
+                assert find != null;
                 if (Boolean.parseBoolean(find.getStatus())) {
                     Intent intent = new Intent(FindPostForm.this, MainActivity.class);
                     startActivity(intent);
@@ -172,7 +175,7 @@ public class FindPostForm extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<Finds> call, Throwable t) {
+            public void onFailure(@NonNull Call<Finds> call, @NonNull Throwable t) {
                 Toast.makeText(FindPostForm.this, t.toString(), Toast.LENGTH_LONG).show();
             }
         });

@@ -128,31 +128,31 @@
 
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
+<!--            <LinearLayout-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:orientation="vertical">-->
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
-                    android:text="@string/promotional_offers_are_you_interested_in"
-                    android:textSize="16sp"
-                    android:fontFamily="sans-serif"
-                    android:textColor="@color/colorPrimary"
-                    android:textFontWeight="600"/>
+<!--                <TextView-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_marginTop="20dp"-->
+<!--                    android:text="@string/promotional_offers_are_you_interested_in"-->
+<!--                    android:textSize="16sp"-->
+<!--                    android:fontFamily="sans-serif"-->
+<!--                    android:textColor="@color/colorPrimary"-->
+<!--                    android:textFontWeight="600"/>-->
 
-                <ListView
-                    android:id="@+id/promotional_list"
-                    android:layout_width="200dp"
-                    android:layout_height="150dp"
-                    android:layout_marginTop="10dp"
-                    android:divider="@color/white" >
+<!--                <ListView-->
+<!--                    android:id="@+id/promotional_list"-->
+<!--                    android:layout_width="200dp"-->
+<!--                    android:layout_height="150dp"-->
+<!--                    android:layout_marginTop="10dp"-->
+<!--                    android:divider="@color/white" >-->
 
-                </ListView>
+<!--                </ListView>-->
 
-            </LinearLayout>
+<!--            </LinearLayout>-->
 
             <Button
                 android:onClick="addFind"
@@ -162,11 +162,12 @@
                 android:layout_marginTop="10dp"
                 android:background="@drawable/reg_login_button"
                 android:foreground="?android:attr/selectableItemBackground"
-                android:text="Post Find"
+                android:text="@string/post_find"
                 android:textAllCaps="true"
                 android:textColor="@color/white"
                 android:padding="10dp"
-                android:textSize="14sp" />
+                android:textSize="14sp"
+                tools:targetApi="m" />
 
         </LinearLayout>
 

@@ -122,7 +122,7 @@ public class AdDetail extends AppCompatActivity {
         call.enqueue(new Callback<Ads>() {
             @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
             @Override
-            public void onResponse(Call<Ads> call, Response<Ads> response) {
+            public void onResponse(@NonNull Call<Ads> call, @NonNull Response<Ads> response) {
                 if (!response.isSuccessful()) {
                     Toast.makeText(AdDetail.this, "" + response.code(), Toast.LENGTH_LONG).show();
                     return;
@@ -157,7 +157,7 @@ public class AdDetail extends AppCompatActivity {
                     }
                 });
 
-                if (!ads.getLiked().isEmpty()) {
+                if (ads.getLiked() != null && !ads.getLiked().isEmpty()) {
                     likes.getCompoundDrawables()[0].setTint(getApplicationContext().getResources().getColor(R.color.duskYellow));
                     likes.setTextColor(getApplicationContext().getResources().getColor(R.color.duskYellow));
                 } else {
@@ -196,19 +196,16 @@ public class AdDetail extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<Ads> call, Throwable t) {
+            public void onFailure(@NonNull Call<Ads> call, @NonNull Throwable t) {
             }
         });
     }
 
     private void showFeedbacks() {
-        DatabaseOpenHelper dbo = new DatabaseOpenHelper(this);
-        AdPoster a = dbo.getAdPoster();
-
         Call<List<Feedback>> call =  ApiClient.connect().getAdFeedback(intent.getStringExtra("id"), adCount);
         call.enqueue(new Callback<List<Feedback>>() {
             @Override
-            public void onResponse(Call<List<Feedback>> call, Response<List<Feedback>> response) {
+            public void onResponse(@NonNull Call<List<Feedback>> call, @NonNull Response<List<Feedback>> response) {
                 if(!response.isSuccessful()) {
                     Toast.makeText(AdDetail.this, response.code(), Toast.LENGTH_LONG).show();
                     return;
@@ -218,6 +215,7 @@ public class AdDetail extends AppCompatActivity {
                 assert fbList != null;
                 if(fbList.size() == 0) progressBar.setVisibility(View.INVISIBLE);
 
+                assert fbs != null;
                 for(Feedback fb : fbs) {
                     fbList.add(new Feedback(fb.getUsername(), fb.getRating(), fb.getFeedback(), fb.getCreatedAt(), fb.getUserId(),
                             fb.getAdId(), fb.getStatus(), fb.getAuth(), fb.getTitle(), fb.getProfileImage(), fb.getFinderId()));
@@ -227,7 +225,7 @@ public class AdDetail extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<List<Feedback>> call, Throwable t) {
+            public void onFailure(@NonNull Call<List<Feedback>> call, @NonNull Throwable t) {
             }
         });
     }
@@ -283,7 +281,7 @@ public class AdDetail extends AppCompatActivity {
         call.enqueue(new Callback<Ads>() {
             @SuppressLint("NewApi")
             @Override
-            public void onResponse(Call<Ads> call, Response<Ads> response) {
+            public void onResponse(@NonNull Call<Ads> call, @NonNull Response<Ads> response) {
                 if (!response.isSuccessful()) {
                     Toast.makeText(AdDetail.this, "" + response.code(), Toast.LENGTH_LONG).show();
                     return;
@@ -305,7 +303,7 @@ public class AdDetail extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<Ads> call, Throwable t) {
+            public void onFailure(@NonNull Call<Ads> call, @NonNull Throwable t) {
             }
         });
     }
@@ -318,7 +316,7 @@ public class AdDetail extends AppCompatActivity {
                         Call<Ads> call = ApiClient.connect().deleteAd(intent.getStringExtra("id"));
                         call.enqueue(new Callback<Ads>() {
                             @Override
-                            public void onResponse(Call<Ads> call, Response<Ads> response) {
+                            public void onResponse(@NonNull Call<Ads> call, @NonNull Response<Ads> response) {
                                 if (!response.isSuccessful()) {
                                     Toast.makeText(AdDetail.this, "" + response.code(), Toast.LENGTH_LONG).show();
                                     return;
@@ -335,7 +333,7 @@ public class AdDetail extends AppCompatActivity {
                             }
 
                             @Override
-                            public void onFailure(Call<Ads> call, Throwable t) {
+                            public void onFailure(@NonNull Call<Ads> call, @NonNull Throwable t) {
                             }
                         });
                     }

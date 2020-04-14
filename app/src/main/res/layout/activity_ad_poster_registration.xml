@@ -312,7 +312,8 @@
                 android:textAllCaps="true"
                 android:textColor="@color/white"
                 android:padding="10dp"
-                android:textSize="14sp" />
+                android:textSize="14sp"
+                tools:targetApi="m" />
 
         </LinearLayout>
 

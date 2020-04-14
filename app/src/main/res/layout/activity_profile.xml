@@ -12,7 +12,8 @@
         android:clipToPadding="false"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         android:nestedScrollingEnabled="true"
-        android:fillViewport="true">
+        android:fillViewport="true"
+        tools:targetApi="lollipop">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -26,27 +27,28 @@
                 android:background="@color/colorPrimary"
                 app:tabIndicatorColor="@color/white"
                 android:elevation="6dp"
-                app:tabTextColor="@color/white">
+                app:tabTextColor="@color/white"
+                tools:targetApi="lollipop">
 
                 <com.google.android.material.tabs.TabItem
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="About" />
+                    android:text="@string/about" />
 
                 <com.google.android.material.tabs.TabItem
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Reviews" />
+                    android:text="@string/reviews" />
 
                 <com.google.android.material.tabs.TabItem
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Ads" />
+                    android:text="@string/ads" />
 
                 <com.google.android.material.tabs.TabItem
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Finds" />
+                    android:text="@string/finds" />
 
             </com.google.android.material.tabs.TabLayout>
 
@@ -136,7 +138,7 @@
                     android:layout_marginTop="5dp"
                     android:layout_below="@id/location"
                     android:layout_toEndOf="@id/profile_image"
-                    android:text="Start Chat"
+                    android:text="@string/start_chat"
                     android:textAllCaps="false"
                     android:textSize="14sp"
                     android:visibility="gone" />
@@ -156,16 +158,15 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="start"
                     android:layout_marginEnd="8dp"
-                    android:layout_marginRight="8dp"
                     android:src="@drawable/icon_arrow_left" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="start"
-                    android:layout_marginLeft="50dp"
+                    android:layout_marginStart="50dp"
                     android:layout_marginBottom="5dp"
-                    android:text="Profile"
+                    android:text="@string/profile"
                     android:textColor="@color/white"
                     android:textFontWeight="600"
                     android:textSize="20sp"
@@ -177,7 +178,6 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="end"
                     android:layout_marginEnd="8dp"
-                    android:layout_marginRight="8dp"
                     android:src="@drawable/icon_search" />
 
                 <ImageView

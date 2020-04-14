@@ -16,6 +16,6 @@ public class Constants {
     public static final String DBUSERTYPE = "userType";
 
     //public static final String BASE_URL = "http://192.168.4.250/crelance/";
-    //public static final String BASE_URL = "http://192.168.43.27/crelance/";
-    public static final String BASE_URL = "http://www.onyxdatasystems.com/crelance/";
+    public static final String BASE_URL = "http://192.168.43.27/crelance/";
+    //public static final String BASE_URL = "http://www.onyxdatasystems.com/crelance/";
 }

@@ -94,7 +94,8 @@ public class PhoneNumberVerification extends AppCompatActivity {
                             checkType();
                         } else {
                             if (task.getException() instanceof FirebaseAuthInvalidCredentialsException) {
-                                Toast.makeText(getApplicationContext(), "Incorrect verification code", Toast.LENGTH_LONG).show();
+                                Toast.makeText(getApplicationContext(),
+                                        "Incorrect verification code, try adding your phone number again", Toast.LENGTH_LONG).show();
                             }
 
                         }
@@ -103,22 +104,19 @@ public class PhoneNumberVerification extends AppCompatActivity {
     }
 
     public void checkType() {
-        Log.d("b40", adPoster.getVerifiedPhoneNumber());
         Call<AdPoster> call = ApiClient.connect().getStatus(adPoster.getVerifiedPhoneNumber());
         call.enqueue(new Callback<AdPoster>() {
             @Override
-            public void onResponse(Call<AdPoster> call, Response<AdPoster> response) {
-                Log.d("b40", "opo");
+            public void onResponse(@NonNull Call<AdPoster> call, @NonNull Response<AdPoster> response) {
                 if (!response.isSuccessful()) {
-                    Log.d("b40", "opo1");
                     Toast.makeText(PhoneNumberVerification.this, "" + response.code(), Toast.LENGTH_LONG).show();
                     return;
                 }
 
-                Log.d("b40", "opo2");
-                Log.d("b40", adPoster.getVerifiedPhoneNumber());
                 AdPoster ad = response.body();
                 assert ad != null;
+
+                if(userType == null) userType = "Finds";
 
                 if (Boolean.parseBoolean(ad.getStatus())) {
                     adPoster.setAuth(ad.getAuth());
@@ -133,9 +131,8 @@ public class PhoneNumberVerification extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<AdPoster> call, Throwable t) {
-                Log.d("b40", "opo3");
-                Toast.makeText(PhoneNumberVerification.this, t.toString(), Toast.LENGTH_LONG).show();
+            public void onFailure(@NonNull Call<AdPoster> call, @NonNull Throwable t) {
+                //Toast.makeText(PhoneNumberVerification.this, t.toString(), Toast.LENGTH_LONG).show();
             }
         });
     }
@@ -164,7 +161,7 @@ public class PhoneNumberVerification extends AppCompatActivity {
         editTextTel.setVisibility(View.INVISIBLE);
         subInfoText.setVisibility(View.INVISIBLE);
 
-        infoText.setText("Enter the 6 digit code sent to you");
+        infoText.setText(R.string.phone_verification_info);
         sendCode.setVisibility(View.VISIBLE);
         editTextCode.setVisibility(View.VISIBLE);
 
@@ -178,17 +175,17 @@ public class PhoneNumberVerification extends AppCompatActivity {
 
     PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallbacks = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
         @Override
-        public void onVerificationCompleted(PhoneAuthCredential phoneAuthCredential) {
+        public void onVerificationCompleted(@NonNull PhoneAuthCredential phoneAuthCredential) {
             signInWithPhoneAuthCredential(phoneAuthCredential);
         }
 
         @Override
-        public void onVerificationFailed(FirebaseException e) {
+        public void onVerificationFailed(@NonNull FirebaseException e) {
 
         }
 
         @Override
-        public void onCodeSent(String s, PhoneAuthProvider.ForceResendingToken forceResendingToken) {
+        public void onCodeSent(@NonNull String s, @NonNull PhoneAuthProvider.ForceResendingToken forceResendingToken) {
             super.onCodeSent(s, forceResendingToken);
             codeSent = s;
         }

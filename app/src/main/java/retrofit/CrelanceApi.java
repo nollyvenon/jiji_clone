@@ -4,6 +4,7 @@ import java.util.List;
 
 import data.AdPoster;
 import data.Ads;
+import data.Benefit;
 import data.CategoryListData;
 import data.Chats;
 import data.Feedback;
@@ -64,6 +65,12 @@ public interface CrelanceApi {
 
     @GET("slide/fetch")
     Call<List<Slides>> getSlides();
+
+
+
+
+    @GET("benefit/fetch")
+    Call<List<Benefit>> getBenefits();
 
 
 
@@ -170,8 +177,8 @@ public interface CrelanceApi {
     @GET("message/fetch/{auth}/{count}")
     Call<List<Messages>> getMessages(@Path("auth") String auth, @Path("count") int count);
 
-    @GET("message/fetchUnique/{uniqueId}")
-    Call<List<Messages>> getUniqueMessage(@Path("uniqueId") String uniqueId);
+    @GET("message/fetchUnique/{uniqueId}/{auth}")
+    Call<List<Messages>> getUniqueMessage(@Path("uniqueId") String uniqueId, @Path("auth") String auth);
 
     @GET("message/remove/{uniqueId}")
     Call<Messages> removeMessage(@Path("uniqueId") String uniqueId);

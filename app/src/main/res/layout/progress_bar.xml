@@ -9,6 +9,6 @@
         android:layout_height="40dp"
         android:layout_gravity="center_horizontal"
         android:progressDrawable="@color/light_grey"
-        android:visibility="invisible"/>
+        android:visibility="visible"/>
 
 </LinearLayout>

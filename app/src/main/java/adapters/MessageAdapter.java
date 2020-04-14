@@ -52,7 +52,11 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
 
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
-        holder.sender.setText(data.get(position).getBusinessName());
+        if(data.get(position).getBusinessName().equals("")) {
+            holder.sender.setText(data.get(position).getUsername());
+        } else {
+            holder.sender.setText(data.get(position).getBusinessName());
+        }
         holder.date.setText(TimeDifference.getDiffTwo(data.get(position).getCreatedAt()));
         holder.content.setText(data.get(position).getMessage());
         holder.delete.setOnClickListener(new View.OnClickListener() {

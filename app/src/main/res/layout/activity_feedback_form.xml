@@ -31,7 +31,7 @@
             android:layout_gravity="center"
             android:padding="0dp"
             android:textColor="@color/colorPrimary"
-            android:text="Leave Feedback"
+            android:text="@string/leave_feedback"
             android:fontFamily="sans-serif"
             android:textFontWeight="600"
             android:textSize="18sp" />
@@ -59,7 +59,7 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="sans-serif"
                     android:padding="10dp"
-                    android:text="Share your experience"
+                    android:text="@string/share_your_experience"
                     android:textColor="@color/lighter_black"
                     android:textFontWeight="600"
                     android:textSize="18sp" />
@@ -85,14 +85,14 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                        android:text="Excellent"
+                        android:text="@string/excellent"
                        android:textColor="@color/green"/>
 
                     <Button
                         android:id="@+id/good"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Good"
+                        android:text="@string/good"
                         style="@style/Widget.MaterialComponents.Button.OutlinedButton"/>
 
                     <Button
@@ -100,7 +100,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                        android:text="Neutral"
+                        android:text="@string/neutral"
                         android:textColor="@color/lightest_black"/>
 
                     <Button
@@ -108,7 +108,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                        android:text="Fair"
+                        android:text="@string/fair"
                         android:textColor="@color/light_red"/>
 
                     <Button
@@ -117,7 +117,7 @@
                         android:layout_height="wrap_content"
                         style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                         android:textColor="@color/red"
-                        android:text="Poor"/>
+                        android:text="@string/poor"/>
 
                 </GridLayout>
 
@@ -127,7 +127,7 @@
                     android:layout_marginTop="5dp"
                     android:fontFamily="sans-serif"
                     android:padding="10dp"
-                    android:text="Detailed Feedback"
+                    android:text="@string/detailed_feedback"
                     android:textColor="@color/lighter_black"
                     android:textFontWeight="600"
                     android:textSize="16sp" />
@@ -156,7 +156,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="end"
                     android:layout_margin="10dp"
-                    android:text="Send Feedback" />
+                    android:text="@string/send_feedback" />
 
             </LinearLayout>
 

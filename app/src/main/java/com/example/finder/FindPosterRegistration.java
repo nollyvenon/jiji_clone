@@ -75,17 +75,6 @@ public class FindPosterRegistration extends AppCompatActivity {
         });
     }
 
-    private String capitalise(String string) {
-        String str = string;
-        String[] strArray = str.split(" ");
-        StringBuilder builder = new StringBuilder();
-        for (String s : strArray) {
-            String cap = s.substring(0, 1).toUpperCase() + s.substring(1);
-            builder.append(cap + " ");
-        }
-        return builder.toString();
-    }
-
     private void initViews() {
         uploadImage = findViewById(R.id.upload_btn);
         profileImage = findViewById(R.id.profile_image);
@@ -119,6 +108,7 @@ public class FindPosterRegistration extends AppCompatActivity {
         if (requestCode == REQUEST_CODE_GALLERY && resultCode == RESULT_OK && data != null) {
             Uri uri = data.getData();
             try {
+                assert uri != null;
                 InputStream inputStream = getContentResolver().openInputStream(uri);
                 bitmap = BitmapFactory.decodeStream(inputStream);
                 profileImage.setImageBitmap(bitmap);
@@ -165,9 +155,9 @@ public class FindPosterRegistration extends AppCompatActivity {
 
         call.enqueue(new Callback<AdPoster>() {
             @Override
-            public void onResponse(Call<AdPoster> call, Response<AdPoster> response) {
+            public void onResponse(@NonNull Call<AdPoster> call, @NonNull Response<AdPoster> response) {
                 if (!response.isSuccessful()) {
-                    Toast.makeText(FindPosterRegistration.this, "" + response.code(), Toast.LENGTH_LONG).show();
+                    //Toast.makeText(FindPosterRegistration.this, "" + response.code(), Toast.LENGTH_LONG).show();
                     return;
                 }
 
@@ -183,8 +173,8 @@ public class FindPosterRegistration extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<AdPoster> call, Throwable t) {
-                Toast.makeText(FindPosterRegistration.this, t.toString(), Toast.LENGTH_LONG).show();
+            public void onFailure(@NonNull Call<AdPoster> call, @NonNull Throwable t) {
+                //Toast.makeText(FindPosterRegistration.this, t.toString(), Toast.LENGTH_LONG).show();
             }
         });
 

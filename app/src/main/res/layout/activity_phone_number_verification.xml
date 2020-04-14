@@ -25,7 +25,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Verification Code"
+                android:text="@string/verification_code"
                 android:textColor="@color/white"
                 android:textFontWeight="700"
                 android:textSize="24sp" />
@@ -35,7 +35,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:text="We will send you a one time SMS message"
+                android:text="@string/we_will_send_you_a_one_time_sms_message"
+                android:gravity="center"
                 android:textColor="@color/white"
                 android:textSize="16sp" />
 
@@ -43,7 +44,8 @@
                 android:id="@+id/sub_info_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="carrier rates may apply"
+                android:text="@string/carrier_rates_may_apply"
+                android:gravity="center"
                 android:textColor="@color/white"
                 android:textSize="16sp" />
 
@@ -80,10 +82,11 @@
                 android:backgroundTint="@color/colorPrimaryDark"
                 android:foreground="?android:attr/selectableItemBackground"
                 android:padding="8dp"
-                android:text="Submit"
+                android:text="@string/submit"
                 android:textAllCaps="true"
                 android:textColor="@color/white"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                tools:targetApi="lollipop" />
 
             <EditText
                 android:id="@+id/edit_set_code"
@@ -92,7 +95,7 @@
                 android:layout_marginTop="-50dp"
                 android:background="@color/light_grey"
                 android:textSize="14sp"
-                android:hint="6 Digits (674728)"
+                android:hint="@string/_6_digits_674728"
                 android:inputType="number"
                 android:padding="10dp"
                 android:visibility="invisible" />
@@ -105,11 +108,12 @@
                 android:backgroundTint="@color/colorPrimaryDark"
                 android:foreground="?android:attr/selectableItemBackground"
                 android:padding="8dp"
-                android:text="Submit"
+                android:text="@string/submit"
                 android:textAllCaps="true"
                 android:textColor="@color/white"
                 android:textSize="16sp"
-                android:visibility="invisible" />
+                android:visibility="invisible"
+                tools:targetApi="lollipop" />
 
         </LinearLayout>
     </RelativeLayout>
