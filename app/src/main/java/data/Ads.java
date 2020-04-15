@@ -32,12 +32,14 @@ public class Ads {
         this.id = id;
     }
 
-    public Ads(String businessName, String rating, String review, String image, String id) {
+    public Ads(String businessName, String rating, String review, String image, String adId, String views, String auth) {
         this.businessName = businessName;
         this.rating = rating;
         this.review = review;
         this.image = image;
-        this.id = id;
+        this.adId = adId;
+        this.views = views;
+        this.auth = auth;
     }
 
 

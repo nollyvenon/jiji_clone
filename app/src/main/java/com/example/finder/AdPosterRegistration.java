@@ -91,7 +91,7 @@ public class AdPosterRegistration extends AppCompatActivity {
         Call<AdPoster> call = ApiClient.connect().getUserByAuth(adPoster.getAuth());
         call.enqueue(new Callback<AdPoster>() {
             @Override
-            public void onResponse(Call<AdPoster> call, Response<AdPoster> response) {
+            public void onResponse(@NonNull Call<AdPoster> call, @NonNull Response<AdPoster> response) {
                 if (!response.isSuccessful()) {
                     Toast.makeText(AdPosterRegistration.this, "" + response.code(), Toast.LENGTH_LONG).show();
                     return;
@@ -134,7 +134,7 @@ public class AdPosterRegistration extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<AdPoster> call, Throwable t) {
+            public void onFailure(@NonNull Call<AdPoster> call, @NonNull Throwable t) {
             }
         });
     }
@@ -179,6 +179,7 @@ public class AdPosterRegistration extends AppCompatActivity {
         if (requestCode == REQUEST_CODE_GALLERY && resultCode == RESULT_OK && data != null) {
             Uri uri = data.getData();
             try {
+                assert uri != null;
                 InputStream inputStream = getContentResolver().openInputStream(uri);
                 bitmap = BitmapFactory.decodeStream(inputStream);
                 profileImage.setImageBitmap(bitmap);
@@ -222,7 +223,7 @@ public class AdPosterRegistration extends AppCompatActivity {
 
         call.enqueue(new Callback<AdPoster>() {
             @Override
-            public void onResponse(Call<AdPoster> call, Response<AdPoster> response) {
+            public void onResponse(@NonNull Call<AdPoster> call, @NonNull Response<AdPoster> response) {
                 if (!response.isSuccessful()) {
                     Toast.makeText(AdPosterRegistration.this, "" + response.code(), Toast.LENGTH_LONG).show();
                     return;
@@ -246,7 +247,7 @@ public class AdPosterRegistration extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<AdPoster> call, Throwable t) {
+            public void onFailure(@NonNull Call<AdPoster> call, @NonNull Throwable t) {
             }
         });
     }
@@ -309,7 +310,6 @@ public class AdPosterRegistration extends AppCompatActivity {
             confirmPassword.setError("Password does not match");
             password.requestFocus();
             confirmPassword.requestFocus();
-            return;
         }
     }
 

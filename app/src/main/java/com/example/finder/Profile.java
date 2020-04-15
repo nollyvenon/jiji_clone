@@ -6,6 +6,7 @@ import androidx.viewpager.widget.ViewPager;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -119,7 +120,12 @@ public class Profile extends AppCompatActivity {
                 final AdPoster adPoster = response.body();
                 assert adPoster != null;
 
-                Glide.with(Profile.this).load(Constants.BASE_URL + adPoster.getProfileImage()).into(profileImage);
+                if(adPoster.getProfileImage().equals("")) {
+                    profileImage.setImageResource(R.drawable.bg2);
+                } else {
+                    Glide.with(Profile.this).load(Constants.BASE_URL + adPoster.getProfileImage()).into(profileImage);
+                }
+
                 location.setText(adPoster.getLocation());
                 businessName.setText(adPoster.getBusinessName());
                 rating.setRating(Float.parseFloat(adPoster.getRating()));

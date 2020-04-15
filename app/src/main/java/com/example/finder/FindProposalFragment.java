@@ -58,7 +58,6 @@ public class FindProposalFragment extends Fragment {
     }
 
     private void getProposal(final String findId) {
-
         Call<List<Proposal>> call = ApiClient.connect().getProposal(findId, adCount);
         call.enqueue(new Callback<List<Proposal>>() {
             @Override

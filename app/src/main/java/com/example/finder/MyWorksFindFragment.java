@@ -44,10 +44,14 @@ public class MyWorksFindFragment extends Fragment {
     private GridLayoutManager manager;
     private int currentItems, totalItems, scrollOutItems;
     private int adCount = 0;
+    private AdPoster a;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+        DatabaseOpenHelper dbo = new DatabaseOpenHelper(getContext());
+        a = dbo.getAdPoster();
 
         this.showFinds();
 
@@ -63,10 +67,6 @@ public class MyWorksFindFragment extends Fragment {
     }
 
     private void showFinds() {
-
-        DatabaseOpenHelper dbo = new DatabaseOpenHelper(getContext());
-        AdPoster a = dbo.getAdPoster();
-
         assert getArguments() != null;
         String auth = getArguments().getString("auth") == null ? a.getAuth() : getArguments().getString("auth");
 

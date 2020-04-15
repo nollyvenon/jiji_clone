@@ -82,7 +82,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void showSlide() {
-
         Call<List<Slides>> call = ApiClient.connect().getSlides();
         call.enqueue(new Callback<List<Slides>>() {
             @Override
@@ -117,7 +116,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void showFinds() {
-
+        final ProgressBar progressBar = findViewById(R.id.progress_circular);
         Call<List<Finds>> call = ApiClient.connect().getRecentFinds();
         call.enqueue(new Callback<List<Finds>>() {
             @Override
@@ -135,6 +134,7 @@ public class MainActivity extends AppCompatActivity {
                     findsList.add(new Finds(find.getId(), find.getPrice(), find.getDescription(), find.getTitle(),
                             find.getCategory(), find.getBenefit(), find.getCreatedAt(), find.getBidEnd(), find.getAuth()));
                 }
+                progressBar.setVisibility(View.INVISIBLE);
 
                 title.setText(R.string.finds);
                 FindsRecyclerViewAdapter findsRecyclerViewAdapter = new FindsRecyclerViewAdapter(MainActivity.this, findsList);
@@ -173,11 +173,12 @@ public class MainActivity extends AppCompatActivity {
                 List<Ads> ads = response.body();
 
                 assert ads != null;
-                if(ads.size() == 0) progressBar.setVisibility(View.INVISIBLE);
 
                 for(Ads ad : ads) {
                     adsList.add(new Ads(ad.getDescription(), ad.getTitle(), ad.getPrice(), ad.getViews(), ad.getLikes(), ad.getId()));
                 }
+
+                progressBar.setVisibility(View.INVISIBLE);
 
                 title.setText(R.string.ads);
                 AdsRecyclerViewAdapter adsRecyclerViewAdapter = new AdsRecyclerViewAdapter(MainActivity.this, adsList);
@@ -199,6 +200,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void showCategories() {
+        final ProgressBar progressBar = findViewById(R.id.progress_circular);
         Call<List<CategoryListData>> call = ApiClient.connect().getCategories();
         call.enqueue(new Callback<List<CategoryListData>>() {
             @Override
@@ -216,6 +218,9 @@ public class MainActivity extends AppCompatActivity {
                 for(CategoryListData category : categories) {
                     categoryListData.add(new CategoryListData(category.getId(), category.getImage(), category.getName(), category.getCount()));
                 }
+
+                progressBar.setVisibility(View.INVISIBLE);
+
                 CategoryListAdapter categoryListAdapter = new CategoryListAdapter(MainActivity.this, categoryListData, "home");
                 categoryItem.setLayoutManager(new GridLayoutManager(MainActivity.this, 3));
                 categoryItem.setAdapter(categoryListAdapter);

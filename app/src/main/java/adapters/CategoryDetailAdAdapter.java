@@ -2,6 +2,7 @@ package adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,7 +48,7 @@ public class CategoryDetailAdAdapter extends RecyclerView.Adapter<CategoryDetail
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
         holder.review.setText(data.get(position).getReview());
         if(data.get(position).getImage().isEmpty()) {
             holder.profileImage.setImageResource(R.drawable.bg2);
@@ -61,6 +62,8 @@ public class CategoryDetailAdAdapter extends RecyclerView.Adapter<CategoryDetail
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context, Profile.class);
+                intent.putExtra("id", data.get(position).getAdId());
+                intent.putExtra("auth", data.get(position).getAuth());
                 context.startActivity(intent);
             }
         });
@@ -79,7 +82,7 @@ public class CategoryDetailAdAdapter extends RecyclerView.Adapter<CategoryDetail
         ImageView profileImage;
         RatingBar rating;
 
-        public ViewHolder(@NonNull View itemView) {
+        ViewHolder(@NonNull View itemView) {
             super(itemView);
 
             wrap = itemView.findViewById(R.id.wrap);
