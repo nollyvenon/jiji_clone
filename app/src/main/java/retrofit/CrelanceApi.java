@@ -183,6 +183,9 @@ public interface CrelanceApi {
     @GET("message/remove/{uniqueId}")
     Call<Messages> removeMessage(@Path("uniqueId") String uniqueId);
 
+    @GET("message/getUnreadCount/{auth}")
+    Call<List<Messages>> getUnreadCount(@Path("auth") String auth);
+
 
 
 

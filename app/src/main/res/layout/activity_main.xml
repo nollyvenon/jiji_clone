@@ -143,6 +143,7 @@
                     android:id="@+id/home_ads"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:paddingBottom="50dp"
                     android:layout_marginTop="-4dp">
 
                 </androidx.recyclerview.widget.RecyclerView>
@@ -205,14 +206,14 @@
 
 <!--            </LinearLayout>-->
 
-            <com.google.android.material.button.MaterialButton
-                android:layout_width="250dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="5dp"
-                android:layout_marginBottom="5dp"
-                android:onClick="viewCategoryPage"
-                android:text="@string/browse" />
+<!--            <com.google.android.material.button.MaterialButton-->
+<!--                android:layout_width="250dp"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_gravity="center_horizontal"-->
+<!--                android:layout_marginTop="5dp"-->
+<!--                android:layout_marginBottom="5dp"-->
+<!--                android:onClick="viewCategoryPage"-->
+<!--                android:text="@string/browse" />-->
 
         </LinearLayout>
 
@@ -229,7 +230,7 @@
         app:fabCradleMargin="5dp"
         app:fabCradleRoundedCornerRadius="10dp"
         app:fabCradleVerticalOffset="5dp"
-        app:hideOnScroll="true">
+        app:hideOnScroll="false">
 
         <include
             layout="@layout/bottom_app_bar"

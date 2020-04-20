@@ -189,7 +189,7 @@
         app:fabCradleMargin="5dp"
         app:fabCradleRoundedCornerRadius="10dp"
         app:fabCradleVerticalOffset="5dp"
-        app:hideOnScroll="true">
+        app:hideOnScroll="false">
 
         <include
             layout="@layout/bottom_app_bar"

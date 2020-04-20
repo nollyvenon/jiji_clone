@@ -3,7 +3,11 @@ package others;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
+import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
 
 import com.example.finder.AdPostForm;
 import com.example.finder.AdPosterRegistration;
@@ -16,22 +20,54 @@ import com.example.finder.Profile;
 import com.example.finder.Search;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import Database.DatabaseOpenHelper;
 import data.AdPoster;
 import data.FindPoster;
+import data.Messages;
 import data.VerifiedPhoneNumber;
+import retrofit.ApiClient;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class BottomAppBarEvent {
-    Context context;
-    String auth;
+    private Context context;
+    private String auth;
+    private String unreadCount = "0";
+    private AdPoster adPoster;
 
     public BottomAppBarEvent(Context context) {
         this.context = context;
 
         DatabaseOpenHelper dbo = new DatabaseOpenHelper(context);
-        AdPoster adPoster = dbo.getAdPoster();
+        adPoster = dbo.getAdPoster();
         auth = adPoster.getAuth();
+    }
+
+    public void getUnreadCount(final TextView v) {
+        final Call<List<Messages>> call = ApiClient.connect().getUnreadCount(auth);
+        call.enqueue(new Callback<List<Messages>>() {
+            @Override
+            public void onResponse(@NonNull Call<List<Messages>> call, @NonNull Response<List<Messages>> response) {
+                if (!response.isSuccessful()) {
+                    //Toast.makeText(context, "" + response.code(), Toast.LENGTH_LONG).show();
+                    return;
+                }
+
+                List<Messages> m = response.body();
+                assert m != null;
+                v.setText(m.get(0).getUnreadCount());
+
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<List<Messages>> call, @NonNull Throwable t) {
+                //Toast.makeText(context, t.toString(), Toast.LENGTH_LONG).show();
+            }
+        });
+
     }
 
     public void postAd() {

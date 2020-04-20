@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -46,17 +47,23 @@ public class AdsRecyclerViewAdapter extends RecyclerView.Adapter<AdsRecyclerView
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
-        holder.description.setText(data.get(position).getDescription());
+        String des = data.get(position).getDescription().substring(0, 50);
+        holder.description.setText(des + "...");
+        holder.price.setText(new StringBuilder().append("N").append(data.get(position).getPrice()).toString());
         holder.title.setText(data.get(position).getTitle());
 
         double dPrice = Double.parseDouble(data.get(position).getPrice());
         NumberFormat format = new DecimalFormat("#,###");
         String fPrice = format.format(dPrice);
-        holder.price.setText(new StringBuilder().append("N").append(fPrice));
+        if(!data.get(position).getPrice().equals("")) {
+            holder.price.setText(new StringBuilder().append("N").append(fPrice));
+        } else {
+            holder.price.setVisibility(View.GONE);
+        }
 
         //holder.views.setText(data.get(position).getViews());
 
-        holder.cardView.setOnClickListener(new View.OnClickListener() {
+        holder.viewDetail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context, AdDetail.class);
@@ -79,6 +86,7 @@ public class AdsRecyclerViewAdapter extends RecyclerView.Adapter<AdsRecyclerView
         TextView title;
         TextView price;
         TextView views;
+        Button viewDetail;
         TextView likes;
 
         ViewHolder(@NonNull View itemView) {
@@ -90,6 +98,7 @@ public class AdsRecyclerViewAdapter extends RecyclerView.Adapter<AdsRecyclerView
             price = itemView.findViewById(R.id.price);
             //views = itemView.findViewById(R.id.views);
             likes = itemView.findViewById(R.id.likes);
+            viewDetail = itemView.findViewById(R.id.view_detail);
         }
     }
 }

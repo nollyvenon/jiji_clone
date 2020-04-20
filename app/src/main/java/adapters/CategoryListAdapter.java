@@ -51,13 +51,13 @@ public class CategoryListAdapter extends RecyclerView.Adapter<CategoryListAdapte
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
-        if(data.get(position).getImage().isEmpty()) {
-            holder.categoryImage.setImageResource(R.drawable.icon_cat);
-        } else {
+//        if(data.get(position).getImage().isEmpty()) {
+//            holder.categoryImage.setImageResource(R.drawable.icon_cat);
+//        } else {
             Glide.with(context)
                     .load(Constants.BASE_URL + "public/images/category/" +  data.get(position).getImage())
                     .into(holder.categoryImage);
-        }
+        //}
 
         holder.categoryName.setText(data.get(position).getName());
 

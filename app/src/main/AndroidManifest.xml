@@ -15,7 +15,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".FeedbackForm"></activity>
+        <activity android:name=".FeedbackForm" />
         <activity android:name=".Search" />
         <activity android:name=".AllAds" />
         <activity android:name=".AllFind" />

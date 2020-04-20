@@ -5,6 +5,7 @@ import android.content.Context;
         import android.view.LayoutInflater;
         import android.view.View;
         import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -53,16 +54,19 @@ public class FindsRecyclerViewAdapter extends RecyclerView.Adapter<FindsRecycler
 
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
-        holder.price.setText(new StringBuilder().append("N").append(data.get(position).getPrice()).toString());
-        holder.description.setText(data.get(position).getDescription());
+        String des = data.get(position).getDescription().substring(0, 50);
+        holder.description.setText(des + "...");
         holder.title.setText(data.get(position).getTitle());
 
-        double dPrice = Double.parseDouble(data.get(position).getPrice());
-        NumberFormat format = new DecimalFormat("#,###");
-        String fPrice = format.format(dPrice);
-        holder.price.setText(new StringBuilder().append("N").append(fPrice));
+        if(!data.get(position).getPrice().equals("")) {
+            NumberFormat format = new DecimalFormat("#,###");
+            String fPrice = format.format(Double.valueOf(data.get(position).getPrice()));
+            holder.price.setText(new StringBuilder().append("N").append(fPrice));
+        } else {
+            holder.price.setVisibility(View.GONE);
+        }
 
-        holder.cardView.setOnClickListener(new View.OnClickListener() {
+        holder.viewDetail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context, FindDetail.class);
@@ -86,20 +90,22 @@ public class FindsRecyclerViewAdapter extends RecyclerView.Adapter<FindsRecycler
         return data.size();
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    static class ViewHolder extends RecyclerView.ViewHolder {
 
         CardView cardView;
         TextView price;
         TextView description;
         TextView title;
+        Button viewDetail;
 
-        public ViewHolder(@NonNull View itemView) {
+        ViewHolder(@NonNull View itemView) {
             super(itemView);
 
             cardView = itemView.findViewById(R.id.find_item);
             price = itemView.findViewById(R.id.price);
             description = itemView.findViewById(R.id.description);
             title = itemView.findViewById(R.id.title);
+            viewDetail = itemView.findViewById(R.id.view_detail);
         }
     }
 }

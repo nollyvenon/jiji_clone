@@ -179,8 +179,22 @@ public class AdDetail extends AppCompatActivity {
 
                 if (!auth.equals(ads.getAuth()) && !auth.equals("")) {
                     MaterialButton startChat = findViewById(R.id.start_chat);
+                    TextView startChat2 = findViewById(R.id.contact_dealer);
                     startChat.setVisibility(View.VISIBLE);
+                    startChat2.setVisibility(View.VISIBLE);
                     startChat.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            BottomAppBarEvent.isRegistered(AdDetail.this);
+                            Intent intent = new Intent(AdDetail.this, MessagePanel.class);
+                            intent.putExtra("aid", ads.getAdId());
+                            intent.putExtra("fid", ads.getFindId());
+                            intent.putExtra("uniqueId", ads.getAdId() + "-" + ads.getFindId());
+                            startActivity(intent);
+                        }
+                    });
+
+                    startChat2.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             BottomAppBarEvent.isRegistered(AdDetail.this);

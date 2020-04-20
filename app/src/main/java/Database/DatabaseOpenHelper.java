@@ -17,7 +17,7 @@ import data.AdPoster;
 
 public class DatabaseOpenHelper extends SQLiteOpenHelper {
 
-    Context context;
+    private Context context;
 
     public DatabaseOpenHelper(Context context) {
         super(context, Constants.DBNAME, null, Constants.VERSION);

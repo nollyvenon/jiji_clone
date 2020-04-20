@@ -121,7 +121,7 @@ public class Profile extends AppCompatActivity {
                 assert adPoster != null;
 
                 if(adPoster.getProfileImage().equals("")) {
-                    profileImage.setImageResource(R.drawable.bg2);
+                    profileImage.setImageResource(R.drawable.avatar);
                 } else {
                     Glide.with(Profile.this).load(Constants.BASE_URL + adPoster.getProfileImage()).into(profileImage);
                 }

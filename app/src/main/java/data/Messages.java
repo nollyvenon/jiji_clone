@@ -14,6 +14,17 @@ public class Messages {
     private String auth;
     private String sender;
     private String receiver;
+    private String id;
+
+    public String getUnreadCount() {
+        return unreadCount;
+    }
+
+    public void setUnreadCount(String unreadCount) {
+        this.unreadCount = unreadCount;
+    }
+
+    private String unreadCount;
 
     public String getId() {
         return id;
@@ -22,8 +33,6 @@ public class Messages {
     public void setId(String id) {
         this.id = id;
     }
-
-    private String id;
 
     public String getUsername() {
         return username;

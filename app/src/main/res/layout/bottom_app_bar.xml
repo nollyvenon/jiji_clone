@@ -30,8 +30,7 @@
 
     </LinearLayout>
 
-    <LinearLayout
-        android:orientation="vertical"
+    <RelativeLayout
         android:layout_weight="1.3"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -42,6 +41,7 @@
             android:id="@+id/img_msg_bottom_bar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
             android:tint="@color/lightest_black"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:src="@drawable/icon_msg"
@@ -51,11 +51,22 @@
             android:id="@+id/title_msg_bottom_bar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_below="@id/img_msg_bottom_bar"
             android:textSize="12sp"
             android:text="@string/message"
             android:textColor="@color/lightest_black" />
 
-    </LinearLayout>
+        <TextView
+            android:id="@+id/unread_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_toEndOf="@id/img_msg_bottom_bar"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:textColor="@color/duskYellow" />
+
+    </RelativeLayout>
 
     <LinearLayout
         android:orientation="vertical"

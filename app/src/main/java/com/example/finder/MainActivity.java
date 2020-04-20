@@ -8,8 +8,10 @@ import androidx.viewpager.widget.ViewPager;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.AnimationUtils;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -40,8 +42,10 @@ public class MainActivity extends AppCompatActivity {
     private ViewPagerAdapter viewPagerAdapter;
     private ViewPager viewPager;
     public String current = "ads";
-    TextView title, viewMore;
-    RecyclerView postView;
+    private BottomAppBarEvent bottomAppBarEvent;
+    private  TextView title, viewMore;
+    private  RecyclerView postView;
+    private  int totalSlide = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,15 +62,54 @@ public class MainActivity extends AppCompatActivity {
 
         viewMore = findViewById(R.id.view_more);
 
+        final TextView msgCount = findViewById(R.id.unread_count);
+        bottomAppBarEvent = new BottomAppBarEvent(MainActivity.this);
+
         this.showSlide();
 
         this.showCategories();
         //this.showFinds();
 
         Timer timer = new Timer();
-        timer.scheduleAtFixedRate(new MyTimerTask(), 2000, 4000);
+
+        final Handler handler = new Handler();
+        final Runnable slidee = new Runnable() {
+            @Override
+            public void run() {
+                    if(viewPager == null) return;
+                    if (viewPager.getCurrentItem() == totalSlide - 1) {
+                        viewPager.setCurrentItem(0);
+                        return;
+                    }
+                    viewPager.setCurrentItem(viewPager.getCurrentItem() + 1, true);
+            }
+        };
+
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                handler.post(slidee);
+            }
+        }, 2000, 4000);
 
         timer.scheduleAtFixedRate(new RecentAdFind(), 2000, 10000);
+
+        bottomAppBarEvent.getUnreadCount(msgCount);
+
+        final Runnable unreadMessageCount = new Runnable() {
+            @Override
+            public void run() {
+                bottomAppBarEvent.getUnreadCount(msgCount);
+            }
+        };
+
+
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                handler.post(unreadMessageCount);
+            }
+        }, 20000, 20000);
 
         EditText search = findViewById(R.id.search);
         search.setOnFocusChangeListener(new View.OnFocusChangeListener() {
@@ -91,12 +134,12 @@ public class MainActivity extends AppCompatActivity {
                     return;
                 }
 
-
                 List<Slides> slides = new ArrayList<>();
                 List<Slides> sl = response.body();
 
                 assert sl != null;
 
+                totalSlide = sl.size();
                 for(Slides s : sl) {
                     slides.add(new Slides(s.getImage()));
                 }
@@ -104,7 +147,6 @@ public class MainActivity extends AppCompatActivity {
                 viewPager = findViewById(R.id.home_viewpager);
                 viewPagerAdapter = new ViewPagerAdapter(MainActivity.this, slides);
                 viewPager.setAdapter(viewPagerAdapter);
-
             }
 
             @Override
@@ -272,26 +314,6 @@ public class MainActivity extends AppCompatActivity {
         bottomAppBarEvent.goToMessageListActivity();
     }
 
-    public class MyTimerTask extends TimerTask {
-
-        @Override
-        public void run() {
-            MainActivity.this.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    if(viewPager == null) return;
-                    if(viewPager.getCurrentItem() == 0) {
-                        viewPager.setCurrentItem(1);
-                    } else if(viewPager.getCurrentItem() == 1) {
-                        viewPager.setCurrentItem(2);
-                    } else {
-                        viewPager.setCurrentItem(0);
-                    }
-                }
-            });
-        }
-    }
-
     public class RecentAdFind extends TimerTask {
 
         @Override
@@ -299,12 +321,14 @@ public class MainActivity extends AppCompatActivity {
             MainActivity.this.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    postView.animate().translationY(0f).alpha(0.9f).setDuration(700);
+                    //postView.animate().translationX(0f).alpha(0.9f).setDuration(700);
                     if(current.equals("ads")) {
                         showAds();
-                        postView.animate().translationY(-30).alpha(0.9f).setDuration(12000);
+                        postView.startAnimation(AnimationUtils.loadAnimation(getApplicationContext(),R.anim.fade_into_view));
+                        //postView.animate().translationX(-30).alpha(0.9f).setDuration(12000);
                     } else {
                         showFinds();
+                        postView.startAnimation(AnimationUtils.loadAnimation(getApplicationContext(),R.anim.fade_into_view));
                     }
                 }
             });

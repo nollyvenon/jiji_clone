@@ -143,10 +143,21 @@ public class FindPostForm extends AppCompatActivity {
         String priceText = price.getText().toString();
         String benefit = "";
 
-        if (descriptionText.isEmpty() || titleText.isEmpty() || priceText.isEmpty() || categoryText.isEmpty()) {
-            Toast.makeText(this, "All fields are compulsory", Toast.LENGTH_LONG).show();
+        if (descriptionText.isEmpty()) {
+            Toast.makeText(this, "Description field is compulsory", Toast.LENGTH_LONG).show();
             return;
         }
+
+        if (titleText.isEmpty()) {
+            Toast.makeText(this, "Title field is compulsory", Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        if (categoryText.isEmpty()) {
+            Toast.makeText(this, "Category field is compulsory", Toast.LENGTH_LONG).show();
+            return;
+        }
+
 //        for (String checked : checkedList.values()) {
 //            benefit = benefit + checked + ",";
 //        }

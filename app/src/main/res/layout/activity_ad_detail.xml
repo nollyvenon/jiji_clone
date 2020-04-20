@@ -64,20 +64,42 @@
                     android:textColor="@color/lighter_black"
                     android:textSize="16sp" />
 
-                <TextView
-                    android:id="@+id/feedback"
+                <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="-4dp"
-                    android:drawableStart="@drawable/icon_feedback"
-                    android:drawablePadding="3dp"
-                    android:fontFamily="sans-serif"
-                    android:textFontWeight="500"
-                    android:onClick="goToFeedbackForm"
-                    android:padding="8dp"
-                    android:text="@string/leave_a_feedback"
-                    android:textColor="@color/colorPrimary"
-                    android:textSize="15sp" />
+                    android:padding="8dp">
+
+                    <TextView
+                        android:id="@+id/feedback"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:drawableStart="@drawable/icon_feedback"
+                        android:drawablePadding="3dp"
+                        android:layout_alignParentStart="true"
+                        android:fontFamily="sans-serif"
+                        android:textFontWeight="500"
+                        android:onClick="goToFeedbackForm"
+                        android:text="@string/leave_a_feedback"
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="15sp" />
+
+                    <TextView
+                        android:id="@+id/contact_dealer"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_toEndOf="@id/feedback"
+                        android:layout_marginStart="10dp"
+                        android:drawableStart="@drawable/icon_message_2"
+                        android:drawablePadding="3dp"
+                        android:fontFamily="sans-serif"
+                        android:textFontWeight="500"
+                        android:text="@string/contact_dealer"
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="15sp"
+                        android:visibility="gone"/>
+
+                </RelativeLayout>
 
             </LinearLayout>
 
@@ -258,7 +280,6 @@
                     android:tint="@color/white"
                     android:visibility="gone" />
 
-
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/start_chat"
                     style="@style/Widget.MaterialComponents.Button.Icon"
@@ -346,7 +367,7 @@
         app:fabCradleMargin="5dp"
         app:fabCradleRoundedCornerRadius="10dp"
         app:fabCradleVerticalOffset="5dp"
-        app:hideOnScroll="true">
+        app:hideOnScroll="false">
 
         <include
             layout="@layout/bottom_app_bar"

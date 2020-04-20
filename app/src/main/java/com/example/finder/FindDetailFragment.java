@@ -63,14 +63,15 @@ public class FindDetailFragment extends Fragment {
         titleView.setText(getArguments().getString("title"));
         timeLeftView.setText(timeLeft);
 
-        double price = Double.parseDouble(Objects.requireNonNull(getArguments().getString("price")));
         NumberFormat format = new DecimalFormat("#,###");
-        String fPrice = format.format(price);
-        priceView.setText(new StringBuilder().append("N").append(fPrice));
+        if(!Objects.equals(getArguments().getString("price"), "")) {
+            String fPrice = format.format(Double.valueOf(Objects.requireNonNull(getArguments().getString("price"))));
+            priceView.setText(new StringBuilder().append("N").append(fPrice));
+        } else {
+            priceView.setVisibility(View.GONE);
+        }
 
         descriptionView.setText(getArguments().getString("description"));
-
-        Log.d("b40", timeLeft);
 
         if (Objects.equals(getArguments().getString("auth"), adPoster.getAuth())) {
             delete.setVisibility(View.VISIBLE);

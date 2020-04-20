@@ -7,7 +7,7 @@ public class Constants {
 
     public static final String DBNAME = "crelance";
     public static final String DBTABLE = "user";
-    public static final int VERSION = 1;
+    public static final int VERSION = 2;
     public static final String DBPHONE = "phone";
     public static final String DBID = "id";
     public static final String DBADS = "Ad";
@@ -17,5 +17,5 @@ public class Constants {
 
     //public static final String BASE_URL = "http://192.168.4.250/crelance/";
     //public static final String BASE_URL = "http://192.168.43.27/crelance/";
-    public static final String BASE_URL = "http://www.onyxdatasystems.com/crelance/";
+    public static final String BASE_URL = "http://crelance.onyxdatasystems.com/";
 }
