@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -54,8 +55,6 @@ public class MyWorksAdFragment extends Fragment {
         DatabaseOpenHelper dbo = new DatabaseOpenHelper(getContext());
         a = dbo.getAdPoster();
 
-        showAds();
-
         // Inflate the layout for this fragment
         LinearLayout linearLayout = (LinearLayout) inflater.inflate(R.layout.fragment_my_works_ad, container, false);
         recyclerView = linearLayout.findViewById(R.id.my_work_ads);
@@ -67,7 +66,7 @@ public class MyWorksAdFragment extends Fragment {
         return linearLayout;
     }
 
-    private void showAds() {
+    private void showAds(final View view) {
         assert getArguments() != null;
         String auth = getArguments().getString("auth") == null ? a.getAuth() : getArguments().getString("auth");
 
@@ -87,6 +86,12 @@ public class MyWorksAdFragment extends Fragment {
                 for(Ads ad : ads) {
                     adsList.add(new Ads(ad.getDescription(), ad.getTitle(), ad.getPrice(), ad.getViews(), ad.getLikes(), ad.getId()));
                 }
+
+                if(adsList.size() == 0) {
+                    RelativeLayout rl = view.findViewById(R.id.no_content);
+                    rl.setVisibility(View.VISIBLE);
+                }
+
                 adapter.setData(adsList);
             }
 
@@ -97,8 +102,10 @@ public class MyWorksAdFragment extends Fragment {
     }
 
     @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull final View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        showAds(view);
 
         progressBar = view.findViewById(R.id.progress_circular);
 
@@ -125,7 +132,7 @@ public class MyWorksAdFragment extends Fragment {
                             @Override
                             public void run() {
                                 adCount = adCount + 10;
-                                showAds();
+                                showAds(view);
                             }
                         }, 5000);
                     }

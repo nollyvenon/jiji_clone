@@ -14,9 +14,11 @@ public class Finds {
     private String createdAt;
     private String auth;
     private String bidEnd;
+    private String attachment;
+    private String chatChoice;
 
-    public Finds(String id, String price, String description, String title,
-                 String category, String benefit, String createdAt, String bidEnd, String auth) {
+    public Finds(String id, String price, String description, String title, String chatChoice,
+                 String category, String benefit, String createdAt, String attachment, String bidEnd, String auth) {
         this.id = id;
         this.price = price;
         this.description = description;
@@ -24,6 +26,8 @@ public class Finds {
         this.title = title;
         this.benefit = benefit;
         this.createdAt = createdAt;
+        this.attachment = attachment;
+        this.chatChoice = chatChoice;
         this.auth = auth;
         this.bidEnd = bidEnd;
     }
@@ -74,5 +78,21 @@ public class Finds {
 
     public String getTimeLeft() {
         return timeLeft;
+    }
+
+    public String getAttachment() {
+        return attachment;
+    }
+
+    public void setAttachment(String attachment) {
+        this.attachment = attachment;
+    }
+
+    public String getChatChoice() {
+        return chatChoice;
+    }
+
+    public void setChatChoice(String chatChoice) {
+        this.chatChoice = chatChoice;
     }
 }

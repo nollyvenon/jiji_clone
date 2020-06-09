@@ -25,8 +25,8 @@ import others.Constants;
 
 public class CategoryDetailAdAdapter extends RecyclerView.Adapter<CategoryDetailAdAdapter.ViewHolder> {
 
-    Context context;
-    List<Ads> data;
+    private Context context;
+    private List<Ads> data;
 
     public CategoryDetailAdAdapter(Context context, List<Ads> data) {
         this.context = context;
@@ -50,10 +50,10 @@ public class CategoryDetailAdAdapter extends RecyclerView.Adapter<CategoryDetail
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
         holder.review.setText(data.get(position).getReview());
-        if(data.get(position).getImage().isEmpty()) {
+        if(data.get(position).getProfileImage().isEmpty()) {
             holder.profileImage.setImageResource(R.drawable.bg2);
         } else {
-            Glide.with(context.getApplicationContext()).load(Constants.BASE_URL + data.get(position).getImage()).into(holder.profileImage);
+            Glide.with(context.getApplicationContext()).load(Constants.BASE_URL + data.get(position).getProfileImage()).into(holder.profileImage);
         }
         holder.companyName.setText(data.get(position).getBusinessName());
         holder.rating.setRating(Float.parseFloat(data.get(position).getRating()));

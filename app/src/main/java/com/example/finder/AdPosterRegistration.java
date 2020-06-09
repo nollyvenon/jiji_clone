@@ -51,7 +51,7 @@ public class AdPosterRegistration extends AppCompatActivity {
     CircleImageView profileImage;
 
     EditText location, marketArea, businessYear;
-    EditText username, businessName, businessDescription, serviceDescription;
+    EditText username, businessName, businessDescription, serviceDescription, email;
     EditText phoneNumber, accountNumber, password, confirmPassword;
 
     @Override
@@ -120,6 +120,7 @@ public class AdPosterRegistration extends AppCompatActivity {
                 businessDescription.setText(ad.getBusinessDescription());
                 serviceDescription.setText(ad.getServiceDescription());
                 accountNumber.setText(ad.getAccountNumber());
+                email.setText(ad.getEmail());
 
                 password.setVisibility(View.INVISIBLE);
                 confirmPassword.setVisibility(View.INVISIBLE);
@@ -152,6 +153,7 @@ public class AdPosterRegistration extends AppCompatActivity {
         businessName = findViewById(R.id.business_name);
         businessDescription = findViewById(R.id.business_description);
         serviceDescription = findViewById(R.id.service_description);
+        email = findViewById(R.id.email);
         phoneNumber = findViewById(R.id.phone_number);
         accountNumber = findViewById(R.id.account_number);
         password = findViewById(R.id.password);
@@ -209,13 +211,16 @@ public class AdPosterRegistration extends AppCompatActivity {
         adPoster.setPhoneNumber(phoneNumber.getText().toString());
         adPoster.setAccountNumber(accountNumber.getText().toString());
         adPoster.setUsername(username.getText().toString());
+        adPoster.setEmail(email.getText().toString());
         adPoster.setPassword(password.getText().toString());
         adPoster.setUserType(Constants.ADS);
 
         this.validate(adPoster);
+        addPoster.setClickable(false);
+        addPoster.setText(R.string.registering);
 
         Call<AdPoster> call = ApiClient.connect().register(
-                adPoster.getProfileImage(), adPoster.getLocation(), adPoster.getMarketArea(),
+                adPoster.getProfileImage(), adPoster.getLocation(), adPoster.getMarketArea(), adPoster.getEmail(),
                 adPoster.getBusinessYear(), adPoster.getBusinessName(), adPoster.getBusinessDescription(),
                 adPoster.getServiceDescription(), adPoster.getPhoneNumber(), adPoster.getVerifiedPhoneNumber(),
                 adPoster.getAccountNumber(), adPoster.getUsername(), adPoster.getPassword(), adPoster.getUserType()
@@ -232,6 +237,9 @@ public class AdPosterRegistration extends AppCompatActivity {
                 AdPoster ad = response.body();
                 assert ad != null;
                 if (Boolean.parseBoolean(ad.getStatus())) {
+                    addPoster.setClickable(true);
+                    addPoster.setText(R.string.register);
+
                     adPoster.setAuth(ad.getAuth());
                     dbo.updateAdPoster(adPoster);
                     dbo.close();
@@ -296,6 +304,12 @@ public class AdPosterRegistration extends AppCompatActivity {
         if (adPoster.getAccountNumber().isEmpty()) {
             accountNumber.setError("Enter Your Account Number");
             accountNumber.requestFocus();
+            return;
+        }
+
+        if (adPoster.getEmail().isEmpty()) {
+            email.setError("Enter Your Email Address");
+            email.requestFocus();
             return;
         }
 

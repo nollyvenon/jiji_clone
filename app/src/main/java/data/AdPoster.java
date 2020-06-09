@@ -20,6 +20,9 @@ public class AdPoster {
     private String auth;
     private String ads;
     private String finds;
+    private String isPremium;
+    private String email;
+    private String banStatus;
 
     public String getRating() {
         return rating;
@@ -193,4 +196,27 @@ public class AdPoster {
         this.serviceDescription = serviceDescription;
     }
 
+    public String getIsPremium() {
+        return isPremium;
+    }
+
+    public void setIsPremium(String isPremium) {
+        this.isPremium = isPremium;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getBanStatus() {
+        return banStatus;
+    }
+
+    public void setBanStatus(String banStatus) {
+        this.banStatus = banStatus;
+    }
 }

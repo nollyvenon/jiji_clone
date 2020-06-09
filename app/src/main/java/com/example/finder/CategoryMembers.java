@@ -61,6 +61,10 @@ public class CategoryMembers extends AppCompatActivity {
         viewPager.addOnPageChangeListener( new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
     }
 
+    public void goBack(View view) {
+        finish();
+    }
+
     public void goToHomeActivity(View view) {
         BottomAppBarEvent bottomAppBarEvent = new BottomAppBarEvent(CategoryMembers.this);
         bottomAppBarEvent.goToHomeActivity();

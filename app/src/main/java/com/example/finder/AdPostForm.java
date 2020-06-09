@@ -8,27 +8,50 @@ import androidx.core.app.ActivityCompat;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.OpenableColumns;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Base64;
+import android.util.Log;
 import android.view.View;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.github.barteksc.pdfviewer.PDFView;
+import com.github.barteksc.pdfviewer.util.FileUtils;
+import com.nbsp.materialfilepicker.MaterialFilePicker;
+import com.nbsp.materialfilepicker.ui.FilePickerActivity;
+
+import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.text.BreakIterator;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
+import java.util.regex.Pattern;
 
 import Database.DatabaseOpenHelper;
 import data.AdPoster;
@@ -37,6 +60,7 @@ import data.Benefit;
 import data.CategoryListData;
 import de.hdodenhof.circleimageview.CircleImageView;
 import others.BottomAppBarEvent;
+import others.Constants;
 import retrofit.ApiClient;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -48,10 +72,15 @@ public class AdPostForm extends AppCompatActivity {
     CircleImageView image;
     Bitmap bitmap;
 
+    public ProgressBar progressBar;
+    public static final int FILE_PICKER_REQUEST_CODE = 1;
+    AdPoster adPoster;
+
     EditText description, price, title;
-    String categoryText;
+    String categoryText, fileString, adsVisibilityText;
     HashMap<Integer, String> checkedList;
     List<String> categoryList;
+    List<String> adVisibility;
     ArrayList<String> promotionData = new ArrayList<>();
 
     @Override
@@ -65,7 +94,7 @@ public class AdPostForm extends AppCompatActivity {
         bottomBarTitle.setTextColor(getResources().getColor(R.color.colorPrimary));
 
         TextView pageName = findViewById(R.id.page_name);
-        pageName.setText("Post Service You Render");
+        pageName.setText(R.string.post_service);
 
         categoryList = new ArrayList<>();
         categoryList.add("Select Category");
@@ -91,6 +120,31 @@ public class AdPostForm extends AppCompatActivity {
             }
         });
 
+        adVisibility = new ArrayList<>();
+        adVisibility.add("Selected Category");
+        adVisibility.add("All Categories (Premium)");
+        adVisibility.add("During Search");
+
+        Spinner adsVisibility = findViewById(R.id.ads_visibility);
+        ArrayAdapter<String> adsVisibilityAdapter = new ArrayAdapter<>(this, R.layout.support_simple_spinner_dropdown_item, adVisibility);
+        adsVisibilityAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        adsVisibility.setAdapter(adsVisibilityAdapter);
+
+        adsVisibility.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (parent.getItemAtPosition(position).toString().contains("All Categories")) {
+                    getUser(parent, position);
+                } else {
+                    adsVisibilityText = parent.getItemAtPosition(position).toString();
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
+
         getBenefits();
 
         ImageView search = findViewById(R.id.search);
@@ -100,6 +154,7 @@ public class AdPostForm extends AppCompatActivity {
                 BottomAppBarEvent.goToSearchActivity(AdPostForm.this);
             }
         });
+
     }
 
     private void getBenefits() {
@@ -115,7 +170,7 @@ public class AdPostForm extends AppCompatActivity {
                 List<Benefit> benefits = response.body();
 
                 assert benefits != null;
-                for(Benefit benefit : benefits) {
+                for (Benefit benefit : benefits) {
                     promotionData.add(benefit.getBenefit());
                 }
 
@@ -157,7 +212,7 @@ public class AdPostForm extends AppCompatActivity {
                 List<CategoryListData> categories = response.body();
 
                 assert categories != null;
-                for(CategoryListData category : categories) {
+                for (CategoryListData category : categories) {
                     categoryList.add(category.getName());
                 }
             }
@@ -174,13 +229,15 @@ public class AdPostForm extends AppCompatActivity {
         price = findViewById(R.id.ad_price);
     }
 
-    public void addAd(View view) {
+    public void addAd(final View view) {
         initForm();
 
         String descriptionText = description.getText().toString();
         String titleText = title.getText().toString();
         String priceText = price.getText().toString();
-        String benefit = "";
+        StringBuilder benefit = new StringBuilder();
+
+        final Button btn = findViewById(R.id.post_ad);
 
         if (descriptionText.isEmpty()) {
             Toast.makeText(this, "Description field is compulsory", Toast.LENGTH_LONG).show();
@@ -197,15 +254,18 @@ public class AdPostForm extends AppCompatActivity {
             return;
         }
 
+        view.setClickable(false);
+        btn.setText(R.string.submitting);
+
         for (String checked : checkedList.values()) {
-            benefit = benefit + checked + ",";
+            benefit.append(checked).append(",");
         }
 
         DatabaseOpenHelper dbo = new DatabaseOpenHelper(this);
         AdPoster a = dbo.getAdPoster();
 
         Call<Ads> call = ApiClient.connect().addAd(
-                descriptionText, titleText, priceText, benefit.substring(0, benefit.length() - 1), imageToString(), categoryText,
+                descriptionText, titleText, priceText, benefit.toString(), imageToString(), categoryText, fileString,
                 a.getAuth()
         );
         call.enqueue(new Callback<Ads>() {
@@ -213,21 +273,53 @@ public class AdPostForm extends AppCompatActivity {
             public void onResponse(@NonNull Call<Ads> call, @NonNull Response<Ads> response) {
                 if (!response.isSuccessful()) {
                     Toast.makeText(AdPostForm.this, "" + response.code(), Toast.LENGTH_LONG).show();
+
+                    view.setClickable(true);
+                    btn.setText(R.string.post_ad);
                     return;
                 }
 
                 Ads ad = response.body();
                 assert ad != null;
-                if (Boolean.parseBoolean(ad.getStatus())) {
+                if (ad.getStatus().equals("exceeded")) {
+                    Toast.makeText(AdPostForm.this, "You have exceeded you Ad limit, Upgrade to premium", Toast.LENGTH_LONG).show();
+                    Intent intent = new Intent(AdPostForm.this, Paystack.class);
+                    intent.putExtra("auth", a.getAuth());
+                    startActivity(intent);
+                    return;
+                }
+
+                if (ad.getStatus().equals("banned")) {
+                    Toast.makeText(AdPostForm.this, "Your account has been banned", Toast.LENGTH_LONG).show();
                     Intent intent = new Intent(AdPostForm.this, MainActivity.class);
                     startActivity(intent);
+                    return;
                 }
+
+                if (ad.getStatus().equals("true")) {
+                    Toast.makeText(AdPostForm.this, "Ad submitted successfully", Toast.LENGTH_LONG).show();
+                    Intent intent = new Intent(AdPostForm.this, MainActivity.class);
+                    startActivity(intent);
+                    return;
+                }
+
+                view.setClickable(true);
+                btn.setText(R.string.post_ad);
             }
 
             @Override
             public void onFailure(@NonNull Call<Ads> call, @NonNull Throwable t) {
+
+                view.setClickable(true);
+                btn.setText(R.string.post_ad);
             }
         });
+    }
+
+    public void launchPicker(View view) {
+        ActivityCompat.requestPermissions(AdPostForm.this,
+                new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                FILE_PICKER_REQUEST_CODE);
     }
 
     public void uploadImage(View view) {
@@ -249,6 +341,18 @@ public class AdPostForm extends AppCompatActivity {
             }
             return;
         }
+
+        if (requestCode == FILE_PICKER_REQUEST_CODE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+                intent.setType("application/pdf/*");
+                startActivityForResult(intent, FILE_PICKER_REQUEST_CODE);
+            } else {
+                Toast.makeText(this, "Permission to access file storage not granted", Toast.LENGTH_LONG).show();
+            }
+            return;
+        }
+
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
@@ -266,15 +370,90 @@ public class AdPostForm extends AppCompatActivity {
                 e.printStackTrace();
             }
         }
+
+        if (requestCode == FILE_PICKER_REQUEST_CODE && resultCode == RESULT_OK) {
+            assert data != null;
+            Uri uri = data.getData();
+            String uriString = data.toString();
+            File file = new File(uriString);
+            String fileName = null;
+
+            if (uriString.contains("content://")) {
+                assert uri != null;
+                try (Cursor cursor = this.getContentResolver().query(uri, null, null, null, null)) {
+                    if (cursor != null && cursor.moveToFirst()) {
+                        fileName = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
+                    }
+                }
+            } else if (uriString.startsWith("file://")) {
+                fileName = file.getName();
+            }
+
+            TextView file_name = findViewById(R.id.file_name);
+            file_name.setText(fileName);
+
+            try {
+                assert uri != null;
+                InputStream is = getContentResolver().openInputStream(uri);
+                assert is != null;
+                fileString = pdfToString(is);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private String pdfToString(InputStream inputStream) throws IOException {
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        int bufferSize = 1024;
+        byte[] buffer = new byte[bufferSize];
+        int len;
+        while ((len = inputStream.read(buffer)) != -1) {
+            byteArrayOutputStream.write(buffer, 0, len);
+        }
+
+        return Base64.encodeToString(byteArrayOutputStream.toByteArray(), Base64.DEFAULT);
     }
 
     private String imageToString() {
-        if(bitmap == null) return "";
+        if (bitmap == null) return "";
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
         byte[] bytes = stream.toByteArray();
         return Base64.encodeToString(bytes, Base64.DEFAULT);
     }
+
+    private void getUser(AdapterView<?> parent, int position) {
+        DatabaseOpenHelper dbo = new DatabaseOpenHelper(AdPostForm.this);
+        AdPoster a = dbo.getAdPoster();
+
+        Call<AdPoster> call = ApiClient.connect().getUserByAuth(a.getAuth());
+        call.enqueue(new Callback<AdPoster>() {
+            @Override
+            public void onResponse(@NonNull Call<AdPoster> call, @NonNull Response<AdPoster> response) {
+                if (!response.isSuccessful()) {
+                    Toast.makeText(AdPostForm.this, "" + response.code(), Toast.LENGTH_LONG).show();
+                    return;
+                }
+
+                adPoster = response.body();
+                assert adPoster != null;
+                if (adPoster.getIsPremium().equals("0")) {
+                    Intent intent = new Intent(AdPostForm.this, Paystack.class);
+                    intent.putExtra("auth", a.getAuth());
+                    startActivity(intent);
+                } else {
+                    adsVisibilityText = parent.getItemAtPosition(0).toString();
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<AdPoster> call, @NonNull Throwable t) {
+                Toast.makeText(AdPostForm.this, t.toString(), Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
 
     public void goBack(View view) {
         finish();
@@ -304,4 +483,5 @@ public class AdPostForm extends AppCompatActivity {
         BottomAppBarEvent bottomAppBarEvent = new BottomAppBarEvent(AdPostForm.this);
         bottomAppBarEvent.goToMessageListActivity();
     }
+
 }

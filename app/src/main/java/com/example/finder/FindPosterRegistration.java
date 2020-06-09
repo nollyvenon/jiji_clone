@@ -148,6 +148,9 @@ public class FindPosterRegistration extends AppCompatActivity {
             return;
         }
 
+        addFinder.setClickable(true);
+        addFinder.setText(R.string.registering);
+
         Call<AdPoster> call = ApiClient.connect().registerFind(
                 adPoster.getProfileImage(), adPoster.getPhoneNumber(), adPoster.getVerifiedPhoneNumber(),
                 adPoster.getUsername(), adPoster.getPassword(), adPoster.getUserType()
@@ -160,6 +163,9 @@ public class FindPosterRegistration extends AppCompatActivity {
                     //Toast.makeText(FindPosterRegistration.this, "" + response.code(), Toast.LENGTH_LONG).show();
                     return;
                 }
+
+                addFinder.setClickable(true);
+                addFinder.setText(R.string.register);
 
                 AdPoster ad = response.body();
                 assert ad != null;

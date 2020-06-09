@@ -11,6 +11,7 @@ public class Ads {
     private String rating;
     private String review;
     private String image;
+    public String profileImage;
     private String title;
     private String price;
     private String benefit;
@@ -22,6 +23,8 @@ public class Ads {
     private String createdAt;
     private String auth;
     private String businessName;
+    private String attachment;
+    private String awardedId;
 
     public Ads(String description, String title, String price, String views, String likes, String id) {
         this.description = description;
@@ -36,6 +39,17 @@ public class Ads {
         this.businessName = businessName;
         this.rating = rating;
         this.review = review;
+        this.image = image;
+        this.adId = adId;
+        this.views = views;
+        this.auth = auth;
+    }
+
+    public Ads(String businessName, String rating, String review, String profileImage, String image, String adId, String views, String auth) {
+        this.businessName = businessName;
+        this.rating = rating;
+        this.review = review;
+        this.profileImage = profileImage;
         this.image = image;
         this.adId = adId;
         this.views = views;
@@ -123,6 +137,14 @@ public class Ads {
         this.image = image;
     }
 
+    public String getProfileImage() {
+        return profileImage;
+    }
+
+    public void setProfileImage(String profileImage) {
+        this.profileImage = profileImage;
+    }
+
     public String getTitle() {
         return title;
     }
@@ -169,5 +191,21 @@ public class Ads {
 
     public void setLiked(String liked) {
         this.liked = liked;
+    }
+
+    public String getAttachment() {
+        return attachment;
+    }
+
+    public void setAttachment(String attachment) {
+        this.attachment = attachment;
+    }
+
+    public String getAwardedId() {
+        return awardedId;
+    }
+
+    public void setAwardedId(String awardedId) {
+        this.awardedId = awardedId;
     }
 }

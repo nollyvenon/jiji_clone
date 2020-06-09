@@ -14,8 +14,8 @@ import com.example.finder.FindProposalFragment;
 
 
 public class FindDetailPagerAdapter extends FragmentPagerAdapter {
-    int tabNumber;
-    Intent intent;
+    private int tabNumber;
+    private Intent intent;
 
     public FindDetailPagerAdapter(@NonNull FragmentManager fm, int behavior, Intent intent) {
         super(fm, behavior);
@@ -39,6 +39,8 @@ public class FindDetailPagerAdapter extends FragmentPagerAdapter {
                 bundle.putString("description", intent.getStringExtra("description"));
                 bundle.putString("name", intent.getStringExtra("name"));
                 bundle.putString("promotion", intent.getStringExtra("promotion"));
+                bundle.putString("attachment", intent.getStringExtra("attachment"));
+                bundle.putString("chatChoice", intent.getStringExtra("chatChoice"));
                 bundle.putString("auth", intent.getStringExtra("auth"));
                 findDetailFragment.setArguments(bundle);
                 return findDetailFragment;

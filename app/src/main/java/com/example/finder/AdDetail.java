@@ -13,6 +13,7 @@ import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -55,11 +56,12 @@ public class AdDetail extends AppCompatActivity {
     private RecyclerView recyclerView;
     private ProgressBar progressBar;
     ImageView profileImage;
-    TextView location, title, businessName, price, views, description, promotions, likes;
+    TextView location, title, businessName, price, views, description, promotions, likes, attachment;
     RatingBar rating;
 
     Intent intent;
-    String auth;
+    String auth = null;
+    private boolean fromBrowser = false;
 
     private ProfileReviewAdapter adapter;
     private Boolean isScrolling = true;
@@ -94,6 +96,21 @@ public class AdDetail extends AppCompatActivity {
 
         showFeedbacks();
         onScrollFeedback();
+
+        if(intent.getStringExtra("back") != null) {
+            fromBrowser = true;
+        }
+
+        findViewById(R.id.share).setOnClickListener(v -> {
+            Intent intent1 = new Intent();
+            intent1.setAction(Intent.ACTION_SEND);
+
+            // change the type of data you need to share,
+            // for image use "image/*"
+            intent1.setType("text/plain");
+            intent1.putExtra(Intent.EXTRA_TEXT, Constants.BASE_URL + "deeplink/ads/" + intent.getStringExtra("id"));
+            startActivity(Intent.createChooser(intent1, "Share"));
+        });
     }
 
     private void initview() {
@@ -107,15 +124,13 @@ public class AdDetail extends AppCompatActivity {
         promotions = findViewById(R.id.promotion);
         likes = findViewById(R.id.likes);
         rating = findViewById(R.id.rating);
-    }
-
-    public void goBack(View view) {
-        finish();
+        attachment = findViewById(R.id.attachment);
     }
 
     private void getUser() {
         DatabaseOpenHelper dbo = new DatabaseOpenHelper(this);
         AdPoster a = dbo.getAdPoster();
+
         auth = a.getAuth() == null ? "" : a.getAuth();
 
         Call<Ads> call = ApiClient.connect().getAdDetail(intent.getStringExtra("id"), auth);
@@ -137,25 +152,33 @@ public class AdDetail extends AppCompatActivity {
                 description.setText(ads.getDescription());
                 promotions.setText(ads.getBenefit());
 
-                double dPrice = Double.parseDouble(ads.getPrice());
+                double dPrice = ads.getPrice() != null ? Double.parseDouble(ads.getPrice()) : 0;
                 NumberFormat format = new DecimalFormat("#,###");
                 String fPrice = format.format(dPrice);
                 price.setText(new StringBuilder().append("N").append(fPrice));
 
                 views.setText(ads.getViews());
                 title.setText(ads.getTitle());
-                rating.setRating(Float.parseFloat(ads.getRating()));
+                rating.setRating(ads.getRating() != null ? Float.parseFloat(ads.getRating()) : 0);
                 likes.setText(ads.getLikes());
 
-                businessName.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent intent = new Intent(AdDetail.this, Profile.class);
-                        intent.putExtra("id", ads.getAdId());
-                        intent.putExtra("auth", ads.getAuth());
-                        startActivity(intent);
-                    }
+                businessName.setOnClickListener(v -> {
+                    Intent intent = new Intent(AdDetail.this, Profile.class);
+                    intent.putExtra("id", ads.getAdId());
+                    intent.putExtra("auth", ads.getAuth());
+                    startActivity(intent);
                 });
+
+                if(ads.getAttachment() != null && !ads.getAttachment().equals("")) {
+                    //attachment.setText(ads.getAttachment());
+                    attachment.setVisibility(View.VISIBLE);
+                    attachment.setOnClickListener(v -> {
+                        String googleDocsUrl = "http://docs.google.com/viewer?url=" + Constants.BASE_URL + ads.getAttachment();
+                        Intent intent = new Intent(Intent.ACTION_VIEW);
+                        intent.setDataAndType(Uri.parse(googleDocsUrl), "text/html");
+                        startActivity(intent);
+                    });
+                }
 
                 if (ads.getLiked() != null && !ads.getLiked().isEmpty()) {
                     likes.getCompoundDrawables()[0].setTint(getApplicationContext().getResources().getColor(R.color.duskYellow));
@@ -168,12 +191,9 @@ public class AdDetail extends AppCompatActivity {
                 if (auth.equals(ads.getAuth()) && !auth.equals("")) {
                     ImageView del = findViewById(R.id.delete);
                     del.setVisibility(View.VISIBLE);
-                    del.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            BottomAppBarEvent.isRegistered(AdDetail.this);
-                            deleteAd(v);
-                        }
+                    del.setOnClickListener(v -> {
+                        BottomAppBarEvent.isRegistered(AdDetail.this);
+                        deleteAd(v);
                     });
                 }
 
@@ -182,28 +202,22 @@ public class AdDetail extends AppCompatActivity {
                     TextView startChat2 = findViewById(R.id.contact_dealer);
                     startChat.setVisibility(View.VISIBLE);
                     startChat2.setVisibility(View.VISIBLE);
-                    startChat.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            BottomAppBarEvent.isRegistered(AdDetail.this);
-                            Intent intent = new Intent(AdDetail.this, MessagePanel.class);
-                            intent.putExtra("aid", ads.getAdId());
-                            intent.putExtra("fid", ads.getFindId());
-                            intent.putExtra("uniqueId", ads.getAdId() + "-" + ads.getFindId());
-                            startActivity(intent);
-                        }
+                    startChat.setOnClickListener(v -> {
+                        BottomAppBarEvent.isRegistered(AdDetail.this);
+                        Intent intent = new Intent(AdDetail.this, MessagePanel.class);
+                        intent.putExtra("aid", ads.getAdId());
+                        intent.putExtra("fid", ads.getFindId());
+                        intent.putExtra("uniqueId", ads.getAdId() + "-" + ads.getFindId());
+                        startActivity(intent);
                     });
 
-                    startChat2.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            BottomAppBarEvent.isRegistered(AdDetail.this);
-                            Intent intent = new Intent(AdDetail.this, MessagePanel.class);
-                            intent.putExtra("aid", ads.getAdId());
-                            intent.putExtra("fid", ads.getFindId());
-                            intent.putExtra("uniqueId", ads.getAdId() + "-" + ads.getFindId());
-                            startActivity(intent);
-                        }
+                    startChat2.setOnClickListener(v -> {
+                        BottomAppBarEvent.isRegistered(AdDetail.this);
+                        Intent intent = new Intent(AdDetail.this, MessagePanel.class);
+                        intent.putExtra("aid", ads.getAdId());
+                        intent.putExtra("fid", ads.getFindId());
+                        intent.putExtra("uniqueId", ads.getAdId() + "-" + ads.getFindId());
+                        startActivity(intent);
                     });
                 }
 
@@ -216,6 +230,7 @@ public class AdDetail extends AppCompatActivity {
     }
 
     private void showFeedbacks() {
+        if(intent.getStringExtra("id") == null) return;
         Call<List<Feedback>> call =  ApiClient.connect().getAdFeedback(intent.getStringExtra("id"), adCount);
         call.enqueue(new Callback<List<Feedback>>() {
             @Override
@@ -266,12 +281,9 @@ public class AdDetail extends AppCompatActivity {
                 if(isScrolling) {
                     if ((currentItems + scrollOutItems) >= totalItems ) {
                         isScrolling = false;
-                        new Handler().postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                adCount = adCount + 10;
-                                showFeedbacks();
-                            }
+                        new Handler().postDelayed(() -> {
+                            adCount = adCount + 10;
+                            showFeedbacks();
                         }, 5000);
                     }
                 }
@@ -280,6 +292,7 @@ public class AdDetail extends AppCompatActivity {
     }
 
     public void goToFeedbackForm(View view) {
+        if(auth.equals("")) return;
         Intent intent = new Intent(this, FeedbackForm.class);
         intent.putExtra("id", this.intent.getStringExtra("id"));
         startActivity(intent);
@@ -289,8 +302,10 @@ public class AdDetail extends AppCompatActivity {
         BottomAppBarEvent.isRegistered(this);
         DatabaseOpenHelper dbo = new DatabaseOpenHelper(this);
         AdPoster a = dbo.getAdPoster();
-        auth = a.getAuth();
 
+        if(a.getAuth() == null) return;
+
+        auth = a.getAuth() == null ? "" : a.getAuth();
         Call<Ads> call = ApiClient.connect().likeAd(intent.getStringExtra("id"), auth);
         call.enqueue(new Callback<Ads>() {
             @SuppressLint("NewApi")
@@ -325,42 +340,54 @@ public class AdDetail extends AppCompatActivity {
     public void deleteAd(View view) {
         AlertDialog.Builder builder = new AlertDialog.Builder(AdDetail.this);
         builder.setMessage("Delete this Ad?")
-                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        Call<Ads> call = ApiClient.connect().deleteAd(intent.getStringExtra("id"));
-                        call.enqueue(new Callback<Ads>() {
-                            @Override
-                            public void onResponse(@NonNull Call<Ads> call, @NonNull Response<Ads> response) {
-                                if (!response.isSuccessful()) {
-                                    Toast.makeText(AdDetail.this, "" + response.code(), Toast.LENGTH_LONG).show();
-                                    return;
-                                }
-
-                                final Ads ads = response.body();
-                                assert ads != null;
-
-                                if (Boolean.parseBoolean(ads.getStatus())) {
-                                    Intent intent = new Intent(AdDetail.this, MainActivity.class);
-                                    startActivity(intent);
-                                }
-
+                .setPositiveButton("Yes", (dialog, id) -> {
+                    Call<Ads> call = ApiClient.connect().deleteAd(intent.getStringExtra("id"));
+                    call.enqueue(new Callback<Ads>() {
+                        @Override
+                        public void onResponse(@NonNull Call<Ads> call, @NonNull Response<Ads> response) {
+                            if (!response.isSuccessful()) {
+                                Toast.makeText(AdDetail.this, "" + response.code(), Toast.LENGTH_LONG).show();
+                                return;
                             }
 
-                            @Override
-                            public void onFailure(@NonNull Call<Ads> call, @NonNull Throwable t) {
+                            final Ads ads = response.body();
+                            assert ads != null;
+
+                            if (Boolean.parseBoolean(ads.getStatus())) {
+                                Intent intent = new Intent(AdDetail.this, MainActivity.class);
+                                startActivity(intent);
                             }
-                        });
-                    }
+
+                        }
+
+                        @Override
+                        public void onFailure(@NonNull Call<Ads> call, @NonNull Throwable t) {
+                        }
+                    });
                 })
-                .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        dialog.cancel();
-                    }
-                });
+                .setNegativeButton("No", (dialog, id) -> dialog.cancel());
         AlertDialog alertDialog =  builder.create();
         alertDialog.show();
     }
 
+    public void goBack(View view) {
+        if(fromBrowser) {
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
+            return;
+        }
+        finish();
+    }
+
+    @Override
+    public void onBackPressed() {
+        if(fromBrowser) {
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
+            return;
+        }
+        finish();
+    }
 
     public void goToHomeActivity(View view) {
         BottomAppBarEvent bottomAppBarEvent = new BottomAppBarEvent(AdDetail.this);

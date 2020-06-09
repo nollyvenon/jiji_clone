@@ -51,7 +51,7 @@ public class AllFind extends AppCompatActivity {
         });
 
         TextView pageName = findViewById(R.id.page_name);
-        pageName.setText("Finds");
+        pageName.setText(R.string.finds);
 
         RecyclerView findView = findViewById(R.id.find_list);
         findsRecyclerViewAdapter = new FindsRecyclerViewAdapter(AllFind.this, findsList);
@@ -99,25 +99,27 @@ public class AllFind extends AppCompatActivity {
         Call<List<Finds>> call = ApiClient.connect().getFinds(adCount);
         call.enqueue(new Callback<List<Finds>>() {
             @Override
-            public void onResponse(Call<List<Finds>> call, Response<List<Finds>> response) {
+            public void onResponse(@NonNull Call<List<Finds>> call, @NonNull Response<List<Finds>> response) {
                 if(!response.isSuccessful()) {
                     Toast.makeText(AllFind.this, response.code(), Toast.LENGTH_LONG).show();
                     return;
                 }
 
                 List<Finds> finds = response.body();
+                assert finds != null;
                 if(finds.size() == 0) progressBar.setVisibility(View.INVISIBLE);
 
                 for(Finds find : finds) {
-                    findsList.add(new Finds(find.getId(), find.getPrice(), find.getDescription(), find.getTitle(),
-                            find.getCategory(), find.getBenefit(), find.getCreatedAt(), find.getBidEnd(), find.getAuth()));
+                    findsList.add(new Finds(find.getId(), find.getPrice(), find.getDescription(), find.getTitle(), find.getChatChoice(),
+                            find.getCategory(), find.getBenefit(), find.getCreatedAt(), find.getAttachment(),
+                            find.getBidEnd(), find.getAuth()));
                 }
 
                 findsRecyclerViewAdapter.setData(findsList);
             }
 
             @Override
-            public void onFailure(Call<List<Finds>> call, Throwable t) {
+            public void onFailure(@NonNull Call<List<Finds>> call, @NonNull Throwable t) {
 
             }
         });

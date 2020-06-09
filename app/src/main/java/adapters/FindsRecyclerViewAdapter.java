@@ -1,44 +1,37 @@
 package adapters;
 
 import android.content.Context;
-        import android.content.Intent;
-        import android.view.LayoutInflater;
-        import android.view.View;
-        import android.view.ViewGroup;
+import android.content.Intent;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-        import androidx.cardview.widget.CardView;
-        import androidx.recyclerview.widget.RecyclerView;
+import androidx.cardview.widget.CardView;
+import androidx.recyclerview.widget.RecyclerView;
 
-        import com.example.finder.FindDetail;
-        import com.example.finder.R;
+import com.example.finder.FindDetail;
+import com.example.finder.R;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.List;
 
-import Database.DatabaseOpenHelper;
-import data.AdPoster;
 import data.Finds;
 
 public class FindsRecyclerViewAdapter extends RecyclerView.Adapter<FindsRecyclerViewAdapter.ViewHolder> {
 
     private Context context;
     private List<Finds> data;
-    private DatabaseOpenHelper dbo;
-    private AdPoster adPoster;
 
     public FindsRecyclerViewAdapter(Context context, List<Finds> data) {
         this.context = context;
         this.data = data;
-
-        dbo = new DatabaseOpenHelper(context);
-        adPoster = dbo.getAdPoster();
     }
 
-    public void setData(List<Finds> data){
+    public void setData(List<Finds> data) {
         this.data = data;
         notifyDataSetChanged();
     }
@@ -54,11 +47,12 @@ public class FindsRecyclerViewAdapter extends RecyclerView.Adapter<FindsRecycler
 
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
-        String des = data.get(position).getDescription().substring(0, 50);
-        holder.description.setText(des + "...");
+        String des = data.get(position).getDescription();
+        des = des.length() > 50 ? des.substring(0, 50) : des;
+        holder.description.setText(String.format("%s...", des));
         holder.title.setText(data.get(position).getTitle());
 
-        if(!data.get(position).getPrice().equals("")) {
+        if (!data.get(position).getPrice().equals("")) {
             NumberFormat format = new DecimalFormat("#,###");
             String fPrice = format.format(Double.valueOf(data.get(position).getPrice()));
             holder.price.setText(new StringBuilder().append("N").append(fPrice));
@@ -66,22 +60,21 @@ public class FindsRecyclerViewAdapter extends RecyclerView.Adapter<FindsRecycler
             holder.price.setVisibility(View.GONE);
         }
 
-        holder.viewDetail.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(context, FindDetail.class);
-                intent.putExtra("id", data.get(position).getId());
-                intent.putExtra("title", data.get(position).getTitle());
-                intent.putExtra("price", data.get(position).getPrice());
-                intent.putExtra("description", data.get(position).getDescription());
-                intent.putExtra("name", data.get(position).getFinderName());
-                intent.putExtra("timeLeft", data.get(position).getCreatedAt());
-                intent.putExtra("bidEnd", data.get(position).getBidEnd());
-                intent.putExtra("category", data.get(position).getCategory());
-                intent.putExtra("promotion", data.get(position).getBenefit());
-                intent.putExtra("auth", data.get(position).getAuth());
-                context.startActivity(intent);
-            }
+        holder.viewDetail.setOnClickListener(v -> {
+            Intent intent = new Intent(context, FindDetail.class);
+            intent.putExtra("id", data.get(position).getId());
+            intent.putExtra("title", data.get(position).getTitle());
+            intent.putExtra("price", data.get(position).getPrice());
+            intent.putExtra("description", data.get(position).getDescription());
+            intent.putExtra("name", data.get(position).getFinderName());
+            intent.putExtra("timeLeft", data.get(position).getCreatedAt());
+            intent.putExtra("bidEnd", data.get(position).getBidEnd());
+            intent.putExtra("category", data.get(position).getCategory());
+            intent.putExtra("promotion", data.get(position).getBenefit());
+            intent.putExtra("attachment", data.get(position).getAttachment());
+            intent.putExtra("chatChoice", data.get(position).getChatChoice());
+            intent.putExtra("auth", data.get(position).getAuth());
+            context.startActivity(intent);
         });
     }
 

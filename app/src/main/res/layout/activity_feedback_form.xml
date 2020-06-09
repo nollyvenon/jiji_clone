@@ -142,7 +142,7 @@
                     android:background="@color/light_grey"
                     android:fontFamily="sans-serif"
                     android:gravity="start"
-                    android:hint="@string/enter_your_benefit_here"
+                    android:hint="@string/enter_your_feedback_here"
                     android:inputType="textMultiLine"
                     android:lines="4"
                     android:maxLines="4"
@@ -151,6 +151,7 @@
                     android:textSize="16sp" />
 
                 <com.google.android.material.button.MaterialButton
+                    android:id="@+id/send_feedback_btn"
                     android:onClick="sendFeedback"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

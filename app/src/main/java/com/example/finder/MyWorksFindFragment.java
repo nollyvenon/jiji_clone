@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -53,8 +54,6 @@ public class MyWorksFindFragment extends Fragment {
         DatabaseOpenHelper dbo = new DatabaseOpenHelper(getContext());
         a = dbo.getAdPoster();
 
-        this.showFinds();
-
         // Inflate the layout for this fragment
         LinearLayout linearLayout = (LinearLayout) inflater.inflate(R.layout.fragment_my_works_find, container, false);
         recyclerView = linearLayout.findViewById(R.id.my_work_finds);
@@ -66,7 +65,7 @@ public class MyWorksFindFragment extends Fragment {
         return linearLayout;
     }
 
-    private void showFinds() {
+    private void showFinds(final View view) {
         assert getArguments() != null;
         String auth = getArguments().getString("auth") == null ? a.getAuth() : getArguments().getString("auth");
 
@@ -84,8 +83,14 @@ public class MyWorksFindFragment extends Fragment {
                 if(finds.size() == 0) progressBar.setVisibility(View.INVISIBLE);
 
                 for(Finds find : finds) {
-                    findsList.add(new Finds(find.getId(), find.getPrice(), find.getDescription(), find.getTitle(),
-                            find.getCategory(), find.getBenefit(), find.getCreatedAt(), find.getBidEnd(), find.getAuth()));
+                    findsList.add(new Finds(find.getId(), find.getPrice(), find.getDescription(), find.getTitle(), find.getChatChoice(),
+                            find.getCategory(), find.getBenefit(), find.getCreatedAt(), find.getAttachment(),
+                            find.getBidEnd(), find.getAuth()));
+                }
+
+                if(findsList.size() == 0) {
+                    RelativeLayout rl = view.findViewById(R.id.no_content);
+                    rl.setVisibility(View.VISIBLE);
                 }
 
                 adapter.setData(findsList);
@@ -100,10 +105,12 @@ public class MyWorksFindFragment extends Fragment {
     }
 
     @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull final View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
         progressBar = view.findViewById(R.id.progress_circular);
+
+        this.showFinds(view);
 
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -128,7 +135,7 @@ public class MyWorksFindFragment extends Fragment {
                             @Override
                             public void run() {
                                 adCount = adCount + 10;
-                                showFinds();
+                                showFinds(view);
                             }
                         }, 5000);
                     }

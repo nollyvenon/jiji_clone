@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RatingBar;
@@ -16,6 +17,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.tabs.TabItem;
 import com.google.android.material.tabs.TabLayout;
 
 import Database.DatabaseOpenHelper;
@@ -32,7 +34,7 @@ import retrofit2.Response;
 public class Profile extends AppCompatActivity {
 
     CircleImageView profileImage;
-    TextView location, username, businessName;
+    TextView location, businessName;
     RatingBar rating;
 
     Intent intent;
@@ -55,18 +57,14 @@ public class Profile extends AppCompatActivity {
         auth = dba.getAuth();
 
         ImageView search = findViewById(R.id.search);
-        search.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                BottomAppBarEvent.goToSearchActivity(Profile.this);
-            }
-        });
+        search.setOnClickListener(v -> BottomAppBarEvent.goToSearchActivity(Profile.this));
 
         initview();
         intent = getIntent();
         getUser();
 
         final ViewPager viewPager = findViewById(R.id.profile_pager);
+
         ProfilePagerAdapter pagerAdapter = new ProfilePagerAdapter(getSupportFragmentManager(), tabLayout.getTabCount(), intent);
         viewPager.setAdapter(pagerAdapter);
 
@@ -88,6 +86,11 @@ public class Profile extends AppCompatActivity {
         });
 
         viewPager.addOnPageChangeListener( new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+        if (intent.getStringExtra("id") != null) {
+            //TabLayout findTab = findViewById(R.id.profile_tab_layout);
+            ((ViewGroup) tabLayout.getChildAt(0)).getChildAt(2).setVisibility(View.GONE);
+            ((ViewGroup) tabLayout.getChildAt(0)).getChildAt(3).setVisibility(View.GONE);
+        }
     }
 
     private void initview() {
@@ -130,27 +133,18 @@ public class Profile extends AppCompatActivity {
                 businessName.setText(adPoster.getBusinessName());
                 rating.setRating(Float.parseFloat(adPoster.getRating()));
 
-                if(auth.equals(adPoster.getAuth())) {
+                if(a.getAuth() != null && adPoster.getAuth() != null && auth.equals(adPoster.getAuth())) {
 
-                    ImageView edit = findViewById(R.id.edit);
+                    TextView edit = findViewById(R.id.edit);
                     edit.setVisibility(View.VISIBLE);
-                    edit.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            editProfile(adPoster.getAuth());
-                        }
-                    });
+                    edit.setOnClickListener(v -> editProfile(adPoster.getAuth()));
                 }
 
-                if(!auth.equals(adPoster.getAuth())) {
+                assert auth != null;
+                if(a.getAuth() != null && adPoster.getAuth() != null && !auth.equals(adPoster.getAuth())) {
                     Button startChat = findViewById(R.id.start_chat);
                     startChat.setVisibility(View.VISIBLE);
-                    startChat.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            goToMessagePanel(adPoster.getAuth());
-                        }
-                    });
+                    startChat.setOnClickListener(v -> goToMessagePanel(adPoster.getAuth()));
                 }
 
             }

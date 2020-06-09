@@ -1,12 +1,16 @@
 package com.example.finder;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.GridLayout;
@@ -40,6 +44,7 @@ public class MessagePanel extends AppCompatActivity {
     MessagePanelAdapter adapter;
     List<Messages> messagesList;
     AdPoster adPoster;
+    ProgressDialog progDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,22 +53,19 @@ public class MessagePanel extends AppCompatActivity {
         TextView pageName = findViewById(R.id.page_name);
         pageName.setText(R.string.chats);
 
-        ImageView bottomBarImg = findViewById(R.id.img_msg_bottom_bar);
-        TextView bottomBarTitle = findViewById(R.id.title_msg_bottom_bar);
-        bottomBarImg.setColorFilter(getResources().getColor(R.color.colorPrimary));
-        bottomBarTitle.setTextColor(getResources().getColor(R.color.colorPrimary));
-
         DatabaseOpenHelper dbo = new DatabaseOpenHelper(this);
         adPoster = dbo.getAdPoster();
 
         message = findViewById(R.id.message);
         send = findViewById(R.id.send);
 
-        ImageView search = findViewById(R.id.search);
-        search.setOnClickListener(new View.OnClickListener() {
+        MaterialButton jobFinished = findViewById(R.id.job_finished);
+        jobFinished.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                BottomAppBarEvent.goToSearchActivity(MessagePanel.this);
+                Intent intent = getIntent();
+                String adId = intent.getStringExtra("aid");
+                sendFeedback(adId);
             }
         });
 
@@ -79,6 +81,55 @@ public class MessagePanel extends AppCompatActivity {
             }
         });
 
+    }
+
+    private void sendFeedback(String adId) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(MessagePanel.this);
+        builder.setMessage("Are you through with the project?")
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        progDialog = ProgressDialog.show(MessagePanel.this, "Loading", "Please wait...", true);
+                        progDialog.setCancelable(false);
+                        chatFinish(adId);
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                    }
+                });
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+    }
+
+    private void chatFinish(String adId) {
+        Intent intent = getIntent();
+
+        Call<Messages> call = ApiClient.connect().chatFinish(intent.getStringExtra("uniqueId"));
+        call.enqueue(new Callback<Messages>() {
+            @Override
+            public void onResponse(@NonNull Call<Messages> call, @NonNull Response<Messages> response) {
+                if (!response.isSuccessful()) {
+                    Toast.makeText(MessagePanel.this, "" + response.code(), Toast.LENGTH_LONG).show();
+                    return;
+                }
+
+                Messages messages = response.body();
+                assert messages != null;
+                progDialog.dismiss();
+                if (Boolean.parseBoolean(messages.getStatus())) {
+                    Intent intent = new Intent(MessagePanel.this, FeedbackForm.class);
+                    intent.putExtra("id", adId);
+                    intent.putExtra("type", "msg");
+                    startActivity(intent);
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<Messages> call, @NonNull Throwable t) {
+                //Toast.makeText(MessagePanel.this, t.toString(), Toast.LENGTH_LONG).show();
+            }
+        });
     }
 
     public void goBack(View view) {
@@ -121,7 +172,7 @@ public class MessagePanel extends AppCompatActivity {
         String adId = intent.getStringExtra("aid");
         String findId = intent.getStringExtra("fid");
 
-        if(messageText.isEmpty()) return;
+        if (messageText.isEmpty()) return;
 
         Call<Messages> call = ApiClient.connect().addMessage(
                 messageText, adId + "-" + findId, findId, adId, adPoster.getAuth()

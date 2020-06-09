@@ -47,7 +47,8 @@ public class AdsRecyclerViewAdapter extends RecyclerView.Adapter<AdsRecyclerView
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
-        String des = data.get(position).getDescription().substring(0, 50);
+        String des = data.get(position).getDescription();
+        des = des.length() > 50 ? des.substring(0, 50) : des;
         holder.description.setText(des + "...");
         holder.price.setText(new StringBuilder().append("N").append(data.get(position).getPrice()).toString());
         holder.title.setText(data.get(position).getTitle());
@@ -63,14 +64,11 @@ public class AdsRecyclerViewAdapter extends RecyclerView.Adapter<AdsRecyclerView
 
         //holder.views.setText(data.get(position).getViews());
 
-        holder.viewDetail.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(context, AdDetail.class);
-                intent.putExtra("id", data.get(position).getId());
-                intent.putExtra("auth", data.get(position).getAuth());
-                context.startActivity(intent);
-            }
+        holder.viewDetail.setOnClickListener(v -> {
+            Intent intent = new Intent(context, AdDetail.class);
+            intent.putExtra("id", data.get(position).getId());
+            intent.putExtra("auth", data.get(position).getAuth());
+            context.startActivity(intent);
         });
     }
 

@@ -171,6 +171,27 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
+                android:text="@string/email"
+                android:textColor="@color/white"
+                android:textFontWeight="700" />
+
+            <EditText
+                android:id="@+id/email"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:background="@drawable/edit_text_middle"
+                android:hint="@string/customer_yahoo_com"
+                tools:ignore="Autofill"
+                android:textSize="14sp"
+                android:inputType="textEmailAddress"
+                android:padding="10dp" />
+
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
                 android:text="@string/description_of_what_you_do_30_words"
                 android:textColor="@color/white"
                 android:textFontWeight="700" />
@@ -307,6 +328,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:background="@drawable/reg_login_button"
+                android:backgroundTint="@color/colorPrimaryDark"
                 android:foreground="?android:attr/selectableItemBackground"
                 android:text="@string/register"
                 android:textAllCaps="true"

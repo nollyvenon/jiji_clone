@@ -34,7 +34,7 @@
                 <com.google.android.material.tabs.TabItem
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/finds"/>
+                    android:text="@string/browse"/>
 
             </com.google.android.material.tabs.TabLayout>
 
@@ -59,6 +59,16 @@
         android:background="@color/colorPrimary">
 
         <ImageView
+            android:id="@+id/back_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:layout_marginStart="8dp"
+            android:tint="@color/white"
+            android:onClick="goBack"
+            android:src="@drawable/icon_arrow_left" />
+
+        <ImageView
             android:id="@+id/search"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -81,24 +91,24 @@
 
     </androidx.appcompat.widget.Toolbar>
 
-    <com.google.android.material.bottomappbar.BottomAppBar
-        android:id="@+id/bottom_appbar"
-        style="@style/Widget.MaterialComponents.BottomAppBar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        app:backgroundTint="@color/white"
-        app:fabAlignmentMode="center"
-        app:fabCradleMargin="5dp"
-        app:fabCradleRoundedCornerRadius="10dp"
-        app:fabCradleVerticalOffset="5dp"
-        app:hideOnScroll="true">
+<!--    <com.google.android.material.bottomappbar.BottomAppBar-->
+<!--        android:id="@+id/bottom_appbar"-->
+<!--        style="@style/Widget.MaterialComponents.BottomAppBar"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_gravity="bottom"-->
+<!--        app:backgroundTint="@color/white"-->
+<!--        app:fabAlignmentMode="center"-->
+<!--        app:fabCradleMargin="5dp"-->
+<!--        app:fabCradleRoundedCornerRadius="10dp"-->
+<!--        app:fabCradleVerticalOffset="5dp"-->
+<!--        app:hideOnScroll="true">-->
 
-        <include
-            layout="@layout/bottom_app_bar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+<!--        <include-->
+<!--            layout="@layout/bottom_app_bar"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content" />-->
 
-    </com.google.android.material.bottomappbar.BottomAppBar>
+<!--    </com.google.android.material.bottomappbar.BottomAppBar>-->
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

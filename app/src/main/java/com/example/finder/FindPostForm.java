@@ -1,13 +1,24 @@
 package com.example.finder;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.database.Cursor;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.OpenableColumns;
+import android.util.Base64;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -15,6 +26,11 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -30,8 +46,9 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class FindPostForm extends AppCompatActivity {
+    private static final int FILE_PICKER_REQUEST_CODE = 1;
     EditText description, price, title;
-    String categoryText;
+    String categoryText, fileString, chatChoiceText;
     HashMap<Integer, String> checkedList;
     List<String> categoryList;
 
@@ -68,7 +85,7 @@ public class FindPostForm extends AppCompatActivity {
         categorySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if(parent.getItemAtPosition(position).equals("Select Category")) {
+                if (parent.getItemAtPosition(position).equals("Select Category")) {
                 } else {
                     categoryText = parent.getItemAtPosition(position).toString();
                 }
@@ -76,7 +93,28 @@ public class FindPostForm extends AppCompatActivity {
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
+                categoryText = "";
+            }
+        });
 
+        List<String> chatChoice = new ArrayList<>();
+        chatChoice.add("No");
+        chatChoice.add("Yes");
+
+        Spinner chatChoiceSpinner = findViewById(R.id.chat_choice);
+        ArrayAdapter<String> chatChoiceAdapter = new ArrayAdapter<>(this, R.layout.support_simple_spinner_dropdown_item, chatChoice);
+        chatChoiceAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        chatChoiceSpinner.setAdapter(chatChoiceAdapter);
+
+        chatChoiceSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                chatChoiceText = parent.getItemAtPosition(position).toString();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                chatChoiceText = parent.getItemAtPosition(0).toString();
             }
         });
 
@@ -117,7 +155,7 @@ public class FindPostForm extends AppCompatActivity {
                 List<CategoryListData> categories = response.body();
 
                 assert categories != null;
-                for(CategoryListData category : categories) {
+                for (CategoryListData category : categories) {
                     categoryList.add(category.getName());
                 }
             }
@@ -135,12 +173,84 @@ public class FindPostForm extends AppCompatActivity {
         price = findViewById(R.id.price);
     }
 
-    public void addFind(View view) {
+    public void launchPicker(View view) {
+        ActivityCompat.requestPermissions(FindPostForm.this,
+                new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                FILE_PICKER_REQUEST_CODE);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+
+        if (requestCode == FILE_PICKER_REQUEST_CODE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+                intent.setType("application/pdf/*");
+                startActivityForResult(intent, FILE_PICKER_REQUEST_CODE);
+            } else {
+                Toast.makeText(this, "Permission to access file storage not granted", Toast.LENGTH_LONG).show();
+            }
+            return;
+        }
+
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == FILE_PICKER_REQUEST_CODE && resultCode == RESULT_OK) {
+            assert data != null;
+            Uri uri = data.getData();
+            String uriString = data.toString();
+            File file = new File(uriString);
+            String path = file.getAbsolutePath();
+            String fileName = null;
+
+            if (uriString.contains("content://")) {
+                assert uri != null;
+                try (Cursor cursor = this.getContentResolver().query(uri, null, null, null, null)) {
+                    if (cursor != null && cursor.moveToFirst()) {
+                        fileName = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
+                    }
+                }
+            } else if (uriString.startsWith("file://")) {
+                fileName = file.getName();
+            }
+
+            TextView file_name = findViewById(R.id.file_name);
+            file_name.setText(fileName);
+
+            try {
+                assert uri != null;
+                InputStream is = getContentResolver().openInputStream(uri);
+                fileString = pdfToString(is);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private String pdfToString(InputStream inputStream) throws IOException {
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        int bufferSize = 1024;
+        byte[] buffer = new byte[bufferSize];
+        int len = 0;
+        while ((len = inputStream.read(buffer)) != -1) {
+            byteArrayOutputStream.write(buffer, 0, len);
+        }
+
+        return Base64.encodeToString(byteArrayOutputStream.toByteArray(), Base64.DEFAULT);
+    }
+
+    public void addFind(final View view) {
         initForm();
 
         String descriptionText = description.getText().toString();
         String titleText = title.getText().toString();
         String priceText = price.getText().toString();
+        final Button btn = findViewById(R.id.post_find);
         String benefit = "";
 
         if (descriptionText.isEmpty()) {
@@ -158,16 +268,15 @@ public class FindPostForm extends AppCompatActivity {
             return;
         }
 
-//        for (String checked : checkedList.values()) {
-//            benefit = benefit + checked + ",";
-//        }
+        view.setClickable(false);
+        btn.setText(R.string.submitting);
 
         DatabaseOpenHelper dbo = new DatabaseOpenHelper(this);
         AdPoster a = dbo.getAdPoster();
 
         Call<Finds> call = ApiClient.connect().addFind(
                 descriptionText, titleText, priceText, "" /*benefit.substring(0, benefit.length() - 1)*/, categoryText,
-                a.getAuth()
+                fileString, chatChoiceText, a.getAuth()
         );
         call.enqueue(new Callback<Finds>() {
             @Override
@@ -177,12 +286,18 @@ public class FindPostForm extends AppCompatActivity {
                     return;
                 }
 
+                view.setClickable(true);
+                btn.setText("Add Find");
+
                 Finds find = response.body();
                 assert find != null;
                 if (Boolean.parseBoolean(find.getStatus())) {
                     Intent intent = new Intent(FindPostForm.this, MainActivity.class);
                     startActivity(intent);
                 }
+
+                Toast.makeText(FindPostForm.this, "Its possible you have been banned. Check your profile to check if ban stamp exist", Toast.LENGTH_LONG).show();
+
             }
 
             @Override

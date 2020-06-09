@@ -110,6 +110,7 @@ public class MessageList extends AppCompatActivity {
         DatabaseOpenHelper dbo = new DatabaseOpenHelper(this);
         AdPoster adPoster = dbo.getAdPoster();
 
+        if(adPoster.getAuth() == null) return;
         Call<List<Messages>> call = ApiClient.connect().getMessages(adPoster.getAuth(), adCount);
         call.enqueue(new Callback<List<Messages>>() {
             @Override

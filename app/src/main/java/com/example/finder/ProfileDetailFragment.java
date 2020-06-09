@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -58,10 +59,26 @@ public class ProfileDetailFragment extends Fragment {
 
         DatabaseOpenHelper dbo = new DatabaseOpenHelper(getContext());
         AdPoster dba = dbo.getAdPoster();
-        auth = dba.getAuth();
+        auth = dba.getAuth() == null ? "" : dba.getAuth();
 
         this.initview();
         this.getUser();
+
+        view.findViewById(R.id.terms).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getContext(), Terms.class);
+                startActivity(intent);
+            }
+        });
+
+        view.findViewById(R.id.privacy).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getContext(), Privacy.class);
+                startActivity(intent);
+            }
+        });
     }
 
     private void initview() {
@@ -79,11 +96,28 @@ public class ProfileDetailFragment extends Fragment {
         Call<AdPoster> call;
 
         assert getArguments() != null;
+
+        TextView reportUser = view.findViewById(R.id.report_user);
+
         if (getArguments().getString("id") == null) {
+            if(a.getAuth() == null) return;
             call = ApiClient.connect().getUserByAuth(a.getAuth());
         } else {
+            reportUser.setVisibility(View.VISIBLE);
             call = ApiClient.connect().getUserById(getArguments().getString("id"));
         }
+
+        reportUser.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(a.getAuth() == null) return;
+                Intent intent = new Intent(getContext(), ReportUser.class);
+                intent.putExtra("reporterId", a.getAuth());
+                assert getArguments() != null;
+                intent.putExtra("reportedId", getArguments().getString("id"));
+                startActivity(intent);
+            }
+        });
 
         call.enqueue(new Callback<AdPoster>() {
             @Override
@@ -101,6 +135,11 @@ public class ProfileDetailFragment extends Fragment {
 //                username.setText(adPoster.getUsername());
                 businessDescription.setText(adPoster.getBusinessDescription());
                 serviceDescription.setText(adPoster.getServiceDescription());
+                LinearLayout banned = view.findViewById(R.id.banned);
+
+                if(adPoster.getBanStatus().equals("1")) {
+                    banned.setVisibility(View.VISIBLE);
+                }
 
             }
 

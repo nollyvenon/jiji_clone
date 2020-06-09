@@ -148,6 +148,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:background="@drawable/reg_login_button"
+                android:backgroundTint="@color/colorPrimaryDark"
                 android:foreground="?android:attr/selectableItemBackground"
                 android:text="@string/register"
                 android:textAllCaps="true"

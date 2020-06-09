@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -54,8 +55,6 @@ public class ProfileReviewFragment extends Fragment {
         DatabaseOpenHelper dbo = new DatabaseOpenHelper(getContext());
         a = dbo.getAdPoster();
 
-        showFeedbacks();
-
         // Inflate the layout for this fragment
         LinearLayout linearLayout = (LinearLayout) inflater.inflate(R.layout.fragment_profile_review, container, false);
         recyclerView = linearLayout.findViewById(R.id.profile_review);
@@ -67,11 +66,12 @@ public class ProfileReviewFragment extends Fragment {
         return linearLayout;
     }
 
-    private void showFeedbacks() {
+    private void showFeedbacks(final View view) {
         Call<List<Feedback>> call;
 
         assert getArguments() != null;
         if (getArguments().getString("id") == null) {
+            if(a.getAuth() == null) return;
             call = ApiClient.connect().getProfileFeedbackByAuth(a.getAuth(), adCount);
         } else {
             call =  ApiClient.connect().getProfileFeedback(getArguments().getString("id"), adCount);
@@ -95,6 +95,11 @@ public class ProfileReviewFragment extends Fragment {
                             fb.getAdId(), fb.getStatus(), fb.getAuth(), fb.getTitle(), fb.getProfileImage(), fb.getFinderId()));
                 }
 
+                if(fbList.size() == 0) {
+                    RelativeLayout rl = view.findViewById(R.id.no_content);
+                    rl.setVisibility(View.VISIBLE);
+                }
+
                 adapter.setData(fbList);
             }
 
@@ -106,10 +111,12 @@ public class ProfileReviewFragment extends Fragment {
     }
 
     @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull final View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
         progressBar = view.findViewById(R.id.progress_circular);
+
+        showFeedbacks(view);
 
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -134,7 +141,7 @@ public class ProfileReviewFragment extends Fragment {
                             @Override
                             public void run() {
                                 adCount = adCount + 10;
-                                showFeedbacks();
+                                showFeedbacks(view);
                             }
                         }, 5000);
                     }

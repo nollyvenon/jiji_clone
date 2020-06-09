@@ -1,5 +1,6 @@
 package com.example.finder;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
@@ -21,7 +22,7 @@ import retrofit2.Response;
 
 public class FeedbackForm extends AppCompatActivity {
 
-    String adId;
+    String adId, type;
     int rating = 0;
     Button excellence, good, neutral, fair, poor;
 
@@ -32,6 +33,11 @@ public class FeedbackForm extends AppCompatActivity {
 
         Intent intent = getIntent();
         adId = intent.getStringExtra("id");
+        if(intent.getStringExtra("type") != null) {
+            type = intent.getStringExtra("type");
+        } else {
+            type = "";
+        }
 
         excellence = findViewById(R.id.excellence);
         good = findViewById(R.id.good);
@@ -105,48 +111,82 @@ public class FeedbackForm extends AppCompatActivity {
     }
 
     public void sendFeedback(View view) {
+        final Button btn = findViewById(R.id.send_feedback_btn);
         EditText feedback = findViewById(R.id.feedback);
         String feedbackContent = feedback.getText().toString();
 
-            if (rating == 0) {
-                Toast.makeText(this, "Please give a feedback", Toast.LENGTH_LONG).show();
-                return;
-            }
+        if (rating == 0) {
+            Toast.makeText(this, "Please select rating", Toast.LENGTH_LONG).show();
+            return;
+        }
 
-        Toast.makeText(FeedbackForm.this, "" + adId, Toast.LENGTH_LONG).show();
+        view.setClickable(false);
+        btn.setText(R.string.submitting);
 
-            DatabaseOpenHelper dbo = new DatabaseOpenHelper(this);
-            AdPoster a = dbo.getAdPoster();
+        DatabaseOpenHelper dbo = new DatabaseOpenHelper(this);
+        AdPoster a = dbo.getAdPoster();
 
-            Call<Feedback> call = ApiClient.connect().addFeedback(
-                    feedbackContent, rating, adId, a.getAuth()
-            );
-            call.enqueue(new Callback<Feedback>() {
-                @Override
-                public void onResponse(Call<Feedback> call, Response<Feedback> response) {
-                    if (!response.isSuccessful()) {
-                        Toast.makeText(FeedbackForm.this, "" + response.code(), Toast.LENGTH_LONG).show();
+        if(a.getAuth() == null) return;
+
+        Call<Feedback> call = ApiClient.connect().addFeedback(
+                feedbackContent, rating, adId, type, a.getAuth()
+        );
+        call.enqueue(new Callback<Feedback>() {
+            @Override
+            public void onResponse(@NonNull Call<Feedback> call, @NonNull Response<Feedback> response) {
+                if (!response.isSuccessful()) {
+                    Toast.makeText(FeedbackForm.this, "" + response.code(), Toast.LENGTH_LONG).show();
+
+                    view.setClickable(true);
+                    btn.setText(R.string.send_feedback);
+                    return;
+                }
+
+                Feedback ad = response.body();
+                assert ad != null;
+                if (Boolean.parseBoolean(ad.getStatus())) {
+                    Toast.makeText(FeedbackForm.this, "Submitted", Toast.LENGTH_LONG).show();
+                    if(!type.equals("")) {
+                        Intent intent = new Intent(FeedbackForm.this, MainActivity.class);
+                        startActivity(intent);
                         return;
                     }
-
-                    Feedback ad = response.body();
-                    assert ad != null;
-                    if (Boolean.parseBoolean(ad.getStatus())) {
-                       finish();
-                    } else {
-                        Toast.makeText(FeedbackForm.this, "You have added a feedback", Toast.LENGTH_LONG).show();
-                    }
+                    finish();
+                } else {
+                    Toast.makeText(FeedbackForm.this, "You have added a feedback", Toast.LENGTH_LONG).show();
                 }
 
-                @Override
-                public void onFailure(Call<Feedback> call, Throwable t) {
-                    Toast.makeText(FeedbackForm.this, t.toString(), Toast.LENGTH_LONG).show();
-                }
-            });
+                view.setClickable(true);
+                btn.setText(R.string.send_feedback);
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<Feedback> call, @NonNull Throwable t) {
+                Toast.makeText(FeedbackForm.this, t.toString(), Toast.LENGTH_LONG).show();
+                view.setClickable(true);
+                btn.setText(R.string.send_feedback);
+            }
+        });
 
     }
 
     public void goBack(View view) {
+        if(!type.equals("")) {
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
+            return;
+        }
+        finish();
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        if(!type.equals("")) {
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
+            return;
+        }
         finish();
     }
 }

@@ -28,6 +28,7 @@ public interface CrelanceApi {
             @Field("profileImage") String profileImage,
             @Field("location") String location,
             @Field("marketArea") String marketArea,
+            @Field("email") String email,
             @Field("businessYear") String businessYear,
             @Field("businessName") String businessName,
             @Field("businessDescription") String businessDescription,
@@ -93,6 +94,7 @@ public interface CrelanceApi {
             @Field("benefit") String benefit,
             @Field("image") String image,
             @Field("category") String category,
+            @Field("attachment") String attachment,
             @Field("auth") String auth
     );
 
@@ -128,6 +130,8 @@ public interface CrelanceApi {
             @Field("price") String price,
             @Field("benefit") String benefit,
             @Field("category") String category,
+            @Field("attachment") String attachment,
+            @Field("chatChoice") String chatChoice,
             @Field("auth") String auth
     );
 
@@ -136,6 +140,9 @@ public interface CrelanceApi {
 
     @GET("find/fetchRecent")
     Call<List<Finds>> getRecentFinds();
+
+    @GET("find/fetchSingleById/{id}")
+    Call<Finds> getFind(@Path("id") int id);
 
     @GET("find/fetchByAuth/{auth}/{start}")
     Call<List<Finds>> getFindByAuth(@Path("auth") String auth, @Path("start") int start);
@@ -155,11 +162,16 @@ public interface CrelanceApi {
             @Field("description") String description,
             @Field("findId") String findId,
             @Field("benefit") String benefit,
+            @Field("chatChoice") String chatChoice,
+            @Field("category") String category,
             @Field("auth") String auth
     );
 
     @GET("proposal/fetch/{findId}/{count}")
     Call<List<Proposal>> getProposal(@Path("findId") String findId, @Path("count") int count);
+
+    @GET("proposal/award/{findId}/{awardedId}")
+    Call<Proposal> awardJob(@Path("findId") String findId, @Path("awardedId") String awardedId);
 
 
 
@@ -186,6 +198,9 @@ public interface CrelanceApi {
     @GET("message/getUnreadCount/{auth}")
     Call<List<Messages>> getUnreadCount(@Path("auth") String auth);
 
+    @GET("message/chatFinish/{uniqueId}")
+    Call<Messages> chatFinish(@Path("uniqueId") String uniqueId);
+
 
 
 
@@ -202,6 +217,7 @@ public interface CrelanceApi {
             @Field("feedback") String feedback,
             @Field("rating") int rating,
             @Field("adId") String adId,
+            @Field("type") String type,
             @Field("auth") String auth
     );
 
@@ -213,4 +229,16 @@ public interface CrelanceApi {
 
     @GET("feedback/fetchByAd/{adId}/{start}")
     Call<List<Feedback>> getAdFeedback(@Path("adId") String adId, @Path("start") int start);
+
+
+
+
+
+    @FormUrlEncoded
+    @POST("report/add")
+    Call<Feedback> addReport(
+            @Field("report") String feedback,
+            @Field("reportedID") String reportedID,
+            @Field("auth") String auth
+    );
 }

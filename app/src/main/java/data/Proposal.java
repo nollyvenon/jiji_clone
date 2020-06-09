@@ -12,11 +12,14 @@ public class Proposal {
     private String finderId;
     private String adId;
     private String id;
-    private String status;
+    private Boolean status;
     private String auth;
+    private String awardedId;
+    private String fFinderId;
 
     public Proposal(String profileImage, String businessName, String rating, String reviewCount,
-                    String description, String benefit, String id, String findId, String adId, String auth, String finderId) {
+                    String description, String benefit, String id, String findId, String adId,
+                    String auth, String finderId, String awardedId, String fFinderId) {
         this.profileImage = profileImage;
         this.businessName = businessName;
         this.rating = rating;
@@ -28,6 +31,8 @@ public class Proposal {
         this.finderId = finderId;
         this.adId = adId;
         this.auth = auth;
+        this.awardedId = awardedId;
+        this.fFinderId = fFinderId;
     }
 
     public String getFindId() {
@@ -38,7 +43,7 @@ public class Proposal {
         return finderId;
     }
 
-    public String getStatus() {
+    public Boolean getStatus() {
         return status;
     }
 
@@ -76,5 +81,21 @@ public class Proposal {
 
     public String getBenefit() {
         return benefit;
+    }
+
+    public String getAwardedId() {
+        return awardedId;
+    }
+
+    public void setAwardedId(String awardedId) {
+        this.awardedId = awardedId;
+    }
+
+    public String getfFinderId() {
+        return fFinderId;
+    }
+
+    public void setfFinderId(String fFinderId) {
+        this.fFinderId = fFinderId;
     }
 }

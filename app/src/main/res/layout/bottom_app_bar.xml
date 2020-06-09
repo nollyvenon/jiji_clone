@@ -41,7 +41,7 @@
             android:id="@+id/img_msg_bottom_bar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"
+            android:layout_marginStart="5dp"
             android:tint="@color/lightest_black"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:src="@drawable/icon_msg"

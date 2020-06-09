@@ -76,7 +76,7 @@ public class CategoryMemberFragment extends Fragment {
 
                 for(Ads ad : ads) {
                     adsList.add(new Ads(ad.getBusinessName(), ad.getRating(), ad.getReview(),
-                            ad.getImage(), ad.getId(), ad.getViews(), ad.getAuth()));
+                            ad.getProfileImage(), ad.getImage(), ad.getAdId(), ad.getViews(), ad.getAuth()));
                 }
 
                 adapter.setData(adsList);

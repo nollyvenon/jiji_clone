@@ -11,7 +11,8 @@
         android:layout_height="wrap_content"
         android:paddingLeft="8dp"
         android:paddingTop="4dp"
-        android:paddingRight="8dp">
+        android:paddingRight="8dp"
+        android:paddingBottom="70dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -73,6 +74,30 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginTop="20dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Allow same category members to bid?"
+                    android:textSize="16sp"
+                    android:fontFamily="sans-serif"
+                    android:textColor="@color/colorPrimary"
+                    android:textFontWeight="600"/>
+
+                <Spinner
+                    android:id="@+id/chat_choice"
+                    android:layout_width="match_parent"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/edit_text_middle"
+                    android:layout_height="45dp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
                 android:orientation="vertical">
 
@@ -113,18 +138,92 @@
                     android:textColor="@color/colorPrimary"
                     android:textFontWeight="600" />
 
-                <EditText
-                    android:id="@+id/description"
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/textContainer"
                     android:layout_width="match_parent"
-                    android:layout_height="45dp"
-                    android:hint="@string/i_am_searching_for_a_good_furniture_maker"
-                    android:inputType="textMultiLine"
-                    android:maxLength="300"
-                    android:maxLines="4"
-                    android:layout_marginTop="10dp"
-                    android:textSize="16sp"
-                    android:padding="4dp"
-                    android:background="@drawable/edit_text_middle" />
+                    android:layout_height="wrap_content"
+                    app:counterEnabled="true"
+                    app:counterMaxLength="300"
+                    >
+
+                    <EditText
+                        android:id="@+id/description"
+                        android:layout_width="match_parent"
+                        android:layout_height="45dp"
+                        android:inputType="textMultiLine"
+                        android:maxLength="300"
+                        android:maxLines="4"
+                        android:layout_marginTop="10dp"
+                        android:textSize="16sp"
+                        android:padding="4dp"
+                        android:background="@drawable/edit_text_middle" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp">
+
+                    <TextView
+                        android:id="@+id/at"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:fontFamily="sans-serif"
+                        android:text="@string/attachment"
+                        android:textColor="@color/colorPrimary"
+                        android:textFontWeight="600"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginStart="5dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_toEndOf="@id/at"
+                        android:fontFamily="sans-serif"
+                        android:text="@string/optional"
+                        android:textColor="@color/lighter_black"
+                        android:textSize="12sp" />
+
+                    <LinearLayout
+                        android:id="@+id/attachment_wrapper"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="40dp"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/file_name"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="10dp"
+                            android:padding="4dp"
+                            android:textColor="@color/black"
+                            android:layout_marginTop="5dp" />
+
+                        <Button
+                            android:id="@+id/add_attachment"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:onClick="launchPicker"
+                            android:text="@string/add_downloadable_attachment"
+                            android:textColor="@color/white"
+                            android:textSize="12sp"
+                            android:textStyle="bold" />
+
+                    </LinearLayout>
+
+                </RelativeLayout>
 
             </LinearLayout>
 
@@ -156,7 +255,7 @@
 
             <Button
                 android:onClick="addFind"
-                android:id="@+id/post_ad"
+                android:id="@+id/post_find"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"

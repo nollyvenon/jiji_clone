@@ -1,5 +1,6 @@
 package com.example.finder;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -62,7 +63,7 @@ public class Search extends AppCompatActivity {
         Call<List<SearchData>> call = ApiClient.connect().getSearch(searchText);
         call.enqueue(new Callback<List<SearchData>>() {
             @Override
-            public void onResponse(Call<List<SearchData>> call, Response<List<SearchData>> response) {
+            public void onResponse(@NonNull Call<List<SearchData>> call, @NonNull Response<List<SearchData>> response) {
                 if(!response.isSuccessful()) {
                     Toast.makeText(Search.this, response.code(), Toast.LENGTH_LONG).show();
                     return;
@@ -73,7 +74,7 @@ public class Search extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<List<SearchData>> call, Throwable t) {
+            public void onFailure(@NonNull Call<List<SearchData>> call, @NonNull Throwable t) {
                 Toast.makeText(Search.this, t.toString(), Toast.LENGTH_LONG).show();
             }
         });

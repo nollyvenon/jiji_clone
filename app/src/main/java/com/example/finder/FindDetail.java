@@ -16,8 +16,11 @@ import com.google.android.material.tabs.TabLayout;
 
 import adapters.FindDetailPagerAdapter;
 import others.BottomAppBarEvent;
+import others.Constants;
 
 public class FindDetail extends AppCompatActivity {
+
+    private boolean fromBrowser = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,17 +28,12 @@ public class FindDetail extends AppCompatActivity {
         setContentView(R.layout.activity_find_detail);
 
         Intent intent = getIntent();
-        String category = intent.getStringExtra("title");
+        //String category = intent.getStringExtra("title");
         TextView pageName = findViewById(R.id.page_name);
-        pageName.setText(category);
+        pageName.setText(R.string.find_detail);
 
         ImageView search = findViewById(R.id.search);
-        search.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                BottomAppBarEvent.goToSearchActivity(FindDetail.this);
-            }
-        });
+        search.setOnClickListener(v -> BottomAppBarEvent.goToSearchActivity(FindDetail.this));
 
         TabLayout tabLayout = findViewById(R.id.find_detail_tab_layout);
 
@@ -60,7 +58,30 @@ public class FindDetail extends AppCompatActivity {
             }
         });
 
-        viewPager.addOnPageChangeListener( new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+
+        if (intent.getStringExtra("back") != null) {
+            fromBrowser = true;
+        }
+    }
+
+    public void goBack(View view) {
+        if (fromBrowser) {
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
+            return;
+        }
+        finish();
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (fromBrowser) {
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
+            return;
+        }
+        finish();
     }
 
     public void goToHomeActivity(View view) {

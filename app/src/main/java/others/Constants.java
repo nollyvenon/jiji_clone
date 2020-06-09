@@ -7,7 +7,7 @@ public class Constants {
 
     public static final String DBNAME = "crelance";
     public static final String DBTABLE = "user";
-    public static final int VERSION = 2;
+    public static final int VERSION = 3;
     public static final String DBPHONE = "phone";
     public static final String DBID = "id";
     public static final String DBADS = "Ad";

@@ -2,11 +2,13 @@ package com.example.finder;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 
 import android.util.Log;
@@ -29,6 +31,7 @@ import Database.DatabaseOpenHelper;
 import data.AdPoster;
 import data.Finds;
 import data.Proposal;
+import others.Constants;
 import others.TimeDifference;
 import retrofit.ApiClient;
 import retrofit2.Call;
@@ -46,7 +49,7 @@ public class FindDetailFragment extends Fragment {
 
         DatabaseOpenHelper dbo = new DatabaseOpenHelper(getContext());
         AdPoster adPoster = dbo.getAdPoster();
-        auth = adPoster.getAuth();
+        auth = adPoster.getAuth() == null ? "" : adPoster.getAuth();
 
         // Inflate the layout for this fragment
         LinearLayout root = (LinearLayout) inflater.inflate(R.layout.fragment_find_detail, container, false);
@@ -71,15 +74,32 @@ public class FindDetailFragment extends Fragment {
             priceView.setVisibility(View.GONE);
         }
 
-        descriptionView.setText(getArguments().getString("description"));
-
-        if (Objects.equals(getArguments().getString("auth"), adPoster.getAuth())) {
-            delete.setVisibility(View.VISIBLE);
+        String attachmentStr = getArguments().getString("attachment");
+        assert attachmentStr != null;
+        if(getArguments().getString("attachment") != null && !attachmentStr.equals("")) {
+            TextView attachment = root.findViewById(R.id.attachment);
+            CardView attachmentWrapper = root.findViewById(R.id.attachment_wrapper);
+            attachmentWrapper.setVisibility(View.VISIBLE);
+            attachment.setVisibility(View.VISIBLE);
+            attachment.setOnClickListener(v -> {
+                String googleDocsUrl = "http://docs.google.com/viewer?url=" + Constants.BASE_URL + attachmentStr;
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setDataAndType(Uri.parse(googleDocsUrl), "text/html");
+                startActivity(intent);
+            });
         }
 
-        if (!Objects.equals(getArguments().getString("auth"), adPoster.getAuth()) &&
-                adPoster.getAuth() != null && !timeLeft.equals("Bid is closed")) {
-            form.setVisibility(View.VISIBLE);
+        descriptionView.setText(getArguments().getString("description"));
+
+        if(adPoster.getAuth() != null) {
+            if (Objects.equals(getArguments().getString("auth"), adPoster.getAuth())) {
+                delete.setVisibility(View.VISIBLE);
+            }
+
+            if (!Objects.equals(getArguments().getString("auth"), adPoster.getAuth()) &&
+                    adPoster.getAuth() != null && !timeLeft.equals("Bid is closed")) {
+                form.setVisibility(View.VISIBLE);
+            }
         }
 
         return root;
@@ -100,6 +120,21 @@ public class FindDetailFragment extends Fragment {
             }
         });
 
+        view.findViewById(R.id.share).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent();
+                intent.setAction(Intent.ACTION_SEND);
+
+                // change the type of data you need to share,
+                // for image use "image/*"
+                intent.setType("text/plain");
+                assert getArguments() != null;
+                intent.putExtra(Intent.EXTRA_TEXT, Constants.BASE_URL + "deeplink/finds/" + getArguments().getString("id"));
+                startActivity(Intent.createChooser(intent, "Share"));
+            }
+        });
+
         ImageView delete = view.findViewById(R.id.delete);
         delete.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -111,15 +146,23 @@ public class FindDetailFragment extends Fragment {
 
     private void addProposal(String benefit, final String description, final View v) {
 
-        if (description.isEmpty() || benefit.isEmpty()) {
-            Toast.makeText(getContext(), "All fields are compulsory", Toast.LENGTH_LONG).show();
+        if(auth.equals("")) return;
+
+        if (description.isEmpty()) {
+            Toast.makeText(getContext(), "Description field is compulsory", Toast.LENGTH_LONG).show();
             return;
+        }
+
+        if (benefit.isEmpty()) {
+            benefit = "";
         }
 
         assert getArguments() != null;
         Call<Proposal> call = ApiClient.connect().addProposal(
-                description, getArguments().getString("id"), benefit, auth
+                description, getArguments().getString("id"), benefit,
+                getArguments().getString("chatChoice"), getArguments().getString("category"), auth
         );
+
         call.enqueue(new Callback<Proposal>() {
             @Override
             public void onResponse(@NonNull Call<Proposal> call, @NonNull Response<Proposal> response) {
@@ -130,15 +173,15 @@ public class FindDetailFragment extends Fragment {
 
                 Proposal proposal = response.body();
                 assert proposal != null;
-                if (Boolean.parseBoolean(proposal.getStatus())) {
-                    Toast.makeText(getContext(), "Proposal sent!", Toast.LENGTH_LONG).show();
+                if (proposal.getStatus()) {
+                    Toast.makeText(getContext(), "Bid sent!", Toast.LENGTH_LONG).show();
 
                     final EditText description = v.findViewById(R.id.bid_description);
                     final EditText benefit = v.findViewById(R.id.bid_benefit);
                     description.setText("");
                     benefit.setText("");
                 } else {
-                    Toast.makeText(getContext(), "You already added proposal for this find", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getContext(), "You are not qualified to bid", Toast.LENGTH_LONG).show();
                 }
             }
 
