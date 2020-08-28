@@ -16,8 +16,13 @@ import android.util.Base64;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.transition.Transition;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
@@ -43,6 +48,8 @@ public class FindPosterRegistration extends AppCompatActivity {
     private static final int REQUEST_CODE_GALLERY = 999;
     Button uploadImage, addFinder;
     CircleImageView profileImage;
+    Boolean isEdit = false;
+    Intent intent;
 
     EditText username, phoneNumber, password, confirmPassword;
 
@@ -73,6 +80,11 @@ public class FindPosterRegistration extends AppCompatActivity {
                 saveToDB();
             }
         });
+
+        intent = getIntent();
+        if (intent.getStringExtra("hide") != null) {
+            this.setEditText();
+        }
     }
 
     private void initViews() {
@@ -119,7 +131,7 @@ public class FindPosterRegistration extends AppCompatActivity {
     }
 
     private String imageToString() {
-        if(bitmap == null) return "";
+        if (bitmap == null) return "";
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
         byte[] bytes = stream.toByteArray();
@@ -140,16 +152,23 @@ public class FindPosterRegistration extends AppCompatActivity {
             return;
         }
 
-        if (adPoster.getPassword().isEmpty() || !adPoster.getPassword().equals(confirmPassword.getText().toString())) {
-            password.setError("Password does not match");
-            confirmPassword.setError("Password does not match");
-            password.requestFocus();
-            confirmPassword.requestFocus();
-            return;
+        if (!isEdit) {
+            if (adPoster.getPassword().isEmpty() || !adPoster.getPassword().equals(confirmPassword.getText().toString()))
+            {
+                password.setError("Password does not match");
+                confirmPassword.setError("Password does not match");
+                password.requestFocus();
+                confirmPassword.requestFocus();
+                return;
+            }
         }
 
         addFinder.setClickable(true);
-        addFinder.setText(R.string.registering);
+        if (isEdit) {
+            addFinder.setText("Updating...");
+        } else {
+            addFinder.setText(R.string.registering);
+        }
 
         Call<AdPoster> call = ApiClient.connect().registerFind(
                 adPoster.getProfileImage(), adPoster.getPhoneNumber(), adPoster.getVerifiedPhoneNumber(),
@@ -173,8 +192,10 @@ public class FindPosterRegistration extends AppCompatActivity {
                     adPoster.setAuth(ad.getAuth());
                     dbo.updateAdPoster(adPoster);
                     dbo.close();
-                    Intent intent = new Intent(FindPosterRegistration.this, AdPostForm.class);
+                    Intent intent = new Intent(FindPosterRegistration.this, FindPostForm.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_TASK_ON_HOME);
                     startActivity(intent);
+                    FindPosterRegistration.this.finish();
                 }
             }
 
@@ -184,6 +205,48 @@ public class FindPosterRegistration extends AppCompatActivity {
             }
         });
 
+    }
+
+    private void setEditText() {
+        Call<AdPoster> call = ApiClient.connect().getUserByAuth(dbo.getAdPoster().getAuth());
+        call.enqueue(new Callback<AdPoster>() {
+            @Override
+            public void onResponse(@NonNull Call<AdPoster> call, @NonNull Response<AdPoster> response) {
+                if (!response.isSuccessful()) {
+                    Toast.makeText(FindPosterRegistration.this, "" + response.code(), Toast.LENGTH_LONG).show();
+                    return;
+                }
+
+                AdPoster ad = response.body();
+                assert ad != null;
+
+                Glide.with(FindPosterRegistration.this)
+                        .asBitmap()
+                        .load(Constants.BASE_URL + ad.getProfileImage())
+                        .into(new SimpleTarget<Bitmap>() {
+                            @Override
+                            public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+                                bitmap = resource;
+                                profileImage.setImageBitmap(resource);
+                            }
+                        });
+
+                phoneNumber.setText(ad.getPhoneNumber());
+                username.setText(ad.getUsername());
+                addFinder.setText("Update");
+
+                password.setVisibility(View.GONE);
+                confirmPassword.setVisibility(View.GONE);
+                findViewById(R.id.password_title).setVisibility(View.GONE);
+                findViewById(R.id.comfirm_password_title).setVisibility(View.GONE);
+                isEdit = true;
+
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<AdPoster> call, @NonNull Throwable t) {
+            }
+        });
     }
 
     public void goBack(View view) {

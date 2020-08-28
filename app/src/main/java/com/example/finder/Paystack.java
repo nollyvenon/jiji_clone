@@ -30,7 +30,13 @@ public class Paystack extends AppCompatActivity {
             return;
         }
 
-        String url = Constants.BASE_URL + "paystack/auth/" + intent.getStringExtra("auth");
+        String award = "0";
+
+        if(intent.getStringExtra("award").equalsIgnoreCase("1")) {
+            award = "1";
+        }
+
+        String url = Constants.BASE_URL + "paystack/auth/" + intent.getStringExtra("auth") + "/" +award;
 
         WebView webView = findViewById(R.id.webView);
         webView.getSettings().setJavaScriptEnabled(true);

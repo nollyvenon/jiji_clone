@@ -128,12 +128,12 @@ public class ProposalAdapter extends RecyclerView.Adapter<ProposalAdapter.ViewHo
             holder.chat.setOnClickListener(v -> {
                 progDialog = ProgressDialog.show(context, "Loading", "Please wait...", true);
                 progDialog.setCancelable(false);
-                awardJob(data.get(position).getFindId(), data.get(position).getFinderId(), data.get(position).getAdId());
+                awardJob(data.get(position).getFindId(), data.get(position).getFinderId(), data.get(position).getAdId(), data.get(position).getBusinessName());
             });
         }
     }
 
-    private void awardJob(String findId, String finderId, String adId) {
+    private void awardJob(String findId, String finderId, String adId, String businessName) {
         Call<Proposal> call = ApiClient.connect().awardJob(findId, adId);
         call.enqueue(new Callback<Proposal>() {
             @Override
@@ -148,6 +148,7 @@ public class ProposalAdapter extends RecyclerView.Adapter<ProposalAdapter.ViewHo
 
                 if(proposal.getStatus()) {
                     progDialog.dismiss();
+                    Toast.makeText(context, "Job awarded, please wait for "+businessName+" to accept", Toast.LENGTH_LONG).show();
                     Intent intent = new Intent(context, MessagePanel.class);
                     intent.putExtra("aid", adId);
                     intent.putExtra("fid", finderId);
@@ -179,6 +180,7 @@ public class ProposalAdapter extends RecyclerView.Adapter<ProposalAdapter.ViewHo
 
                 if(proposal.getStatus()) {
                     progDialog.dismiss();
+                    Toast.makeText(context, "Job awarded cancelled successfully", Toast.LENGTH_LONG).show();
                     Intent intent = new Intent(context, AllFind.class);
                     context.startActivity(intent);
                 }

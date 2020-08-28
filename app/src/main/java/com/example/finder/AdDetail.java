@@ -96,6 +96,7 @@ public class AdDetail extends AppCompatActivity {
 
         showFeedbacks();
         onScrollFeedback();
+        checkFinds();
 
         if(intent.getStringExtra("back") != null) {
             fromBrowser = true;
@@ -152,10 +153,29 @@ public class AdDetail extends AppCompatActivity {
                 description.setText(ads.getDescription());
                 promotions.setText(ads.getBenefit());
 
-                double dPrice = ads.getPrice() != null ? Double.parseDouble(ads.getPrice()) : 0;
                 NumberFormat format = new DecimalFormat("#,###");
-                String fPrice = format.format(dPrice);
-                price.setText(new StringBuilder().append("N").append(fPrice));
+                double priceOne, priceTwo;
+                String fPrice;
+
+                if (!ads.getPrice().equals("")) {
+                    if (ads.getPrice().contains("-")) {
+                        String[] prices =ads.getPrice().split("-");
+                        priceOne = Double.parseDouble(prices[0]);
+                        priceTwo = Double.parseDouble(prices[1]);
+
+                        String fPriceOne = format.format(priceOne);
+                        String fPriceTwo = format.format(priceTwo);
+
+                        fPrice = new StringBuilder().append("N").append(fPriceOne).append(" - ").append("N").append(fPriceTwo).toString();
+                    } else {
+                        priceOne = Double.parseDouble(ads.getPrice());
+                        String fPriceOne = format.format(priceOne);
+                        fPrice = new StringBuilder().append("N").append(fPriceOne).toString();
+                    }
+                    price.setText(fPrice);
+                } else {
+                    price.setText("N0.00");
+                }
 
                 views.setText(ads.getViews());
                 title.setText(ads.getTitle());
@@ -166,7 +186,9 @@ public class AdDetail extends AppCompatActivity {
                     Intent intent = new Intent(AdDetail.this, Profile.class);
                     intent.putExtra("id", ads.getAdId());
                     intent.putExtra("auth", ads.getAuth());
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_TASK_ON_HOME);
                     startActivity(intent);
+                    AdDetail.this.finish();
                 });
 
                 if(ads.getAttachment() != null && !ads.getAttachment().equals("")) {
@@ -202,6 +224,7 @@ public class AdDetail extends AppCompatActivity {
                     TextView startChat2 = findViewById(R.id.contact_dealer);
                     startChat.setVisibility(View.VISIBLE);
                     startChat2.setVisibility(View.VISIBLE);
+                    findViewById(R.id.feedback).setVisibility(View.VISIBLE);
                     startChat.setOnClickListener(v -> {
                         BottomAppBarEvent.isRegistered(AdDetail.this);
                         Intent intent = new Intent(AdDetail.this, MessagePanel.class);
@@ -354,8 +377,7 @@ public class AdDetail extends AppCompatActivity {
                             assert ads != null;
 
                             if (Boolean.parseBoolean(ads.getStatus())) {
-                                Intent intent = new Intent(AdDetail.this, MainActivity.class);
-                                startActivity(intent);
+                                AdDetail.this.finish();
                             }
 
                         }
@@ -368,6 +390,45 @@ public class AdDetail extends AppCompatActivity {
                 .setNegativeButton("No", (dialog, id) -> dialog.cancel());
         AlertDialog alertDialog =  builder.create();
         alertDialog.show();
+    }
+
+    private void checkFinds() {
+        DatabaseOpenHelper dbo = new DatabaseOpenHelper(this);
+        AdPoster a = dbo.getAdPoster();
+
+        if(a.getAuth() == null) {
+            findViewById(R.id.feedback).setVisibility(View.GONE);
+            findViewById(R.id.contact_dealer).setVisibility(View.GONE);
+            findViewById(R.id.start_chat).setVisibility(View.GONE);
+            return;
+        };
+
+        Call<List<Finds>> call = ApiClient.connect().getFindByAuth(a.getAuth(), 0);
+        call.enqueue(new Callback<List<Finds>>() {
+            @Override
+            public void onResponse(@NonNull Call<List<Finds>> call, @NonNull Response<List<Finds>> response) {
+                if(!response.isSuccessful()) {
+                    //Toast.makeText(getContext(), response.code(), Toast.LENGTH_LONG).show();
+                    return;
+                }
+
+                List<Finds> finds = response.body();
+                assert finds != null;
+                if(finds == null || finds.size() < 1) {
+                    findViewById(R.id.feedback).setVisibility(View.GONE);
+                    findViewById(R.id.contact_dealer).setVisibility(View.GONE);
+                    findViewById(R.id.start_chat).setVisibility(View.GONE);
+                }
+
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<List<Finds>> call, @NonNull Throwable t) {
+                findViewById(R.id.feedback).setVisibility(View.GONE);
+                findViewById(R.id.contact_dealer).setVisibility(View.GONE);
+                findViewById(R.id.start_chat).setVisibility(View.GONE);
+            }
+        });
     }
 
     public void goBack(View view) {

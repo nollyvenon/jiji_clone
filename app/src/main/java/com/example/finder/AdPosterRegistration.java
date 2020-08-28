@@ -49,6 +49,7 @@ public class AdPosterRegistration extends AppCompatActivity {
     private static final int REQUEST_CODE_GALLERY = 999;
     Button uploadImage, addPoster;
     CircleImageView profileImage;
+    Boolean isEdit = false;
 
     EditText location, marketArea, businessYear;
     EditText username, businessName, businessDescription, serviceDescription, email;
@@ -64,6 +65,8 @@ public class AdPosterRegistration extends AppCompatActivity {
         AdPoster a = dbo.getAdPoster();
         adPoster.setAuth(a.getAuth());
         adPoster.setVerifiedPhoneNumber(a.getVerifiedPhoneNumber());
+
+        findViewById(R.id.bottom_appbar).setVisibility(View.GONE);
 
         uploadImage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -83,6 +86,7 @@ public class AdPosterRegistration extends AppCompatActivity {
 
         intent = getIntent();
         if (intent.getStringExtra("hide") != null) {
+            isEdit = true;
             this.setEditText();
         }
     }
@@ -128,6 +132,7 @@ public class AdPosterRegistration extends AppCompatActivity {
                 pwd.setVisibility(View.INVISIBLE);
                 TextView cpwd = findViewById(R.id.cpwd);
                 cpwd.setVisibility(View.INVISIBLE);
+                addPoster.setText("Update");
 
                 LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) addPoster.getLayoutParams();
                 params.topMargin = -250;
@@ -158,6 +163,8 @@ public class AdPosterRegistration extends AppCompatActivity {
         accountNumber = findViewById(R.id.account_number);
         password = findViewById(R.id.password);
         confirmPassword = findViewById(R.id.comfirm_password);
+        findViewById(R.id.account_number_title).setVisibility(View.GONE);
+        accountNumber.setVisibility(View.GONE);
     }
 
     @Override
@@ -217,7 +224,12 @@ public class AdPosterRegistration extends AppCompatActivity {
 
         this.validate(adPoster);
         addPoster.setClickable(false);
-        addPoster.setText(R.string.registering);
+
+        if(isEdit) {
+            addPoster.setText("Updating...");
+        } else {
+            addPoster.setText(R.string.registering);
+        }
 
         Call<AdPoster> call = ApiClient.connect().register(
                 adPoster.getProfileImage(), adPoster.getLocation(), adPoster.getMarketArea(), adPoster.getEmail(),

@@ -57,7 +57,8 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         } else {
             holder.sender.setText(data.get(position).getBusinessName());
         }
-        holder.date.setText(TimeDifference.getDiffTwo(data.get(position).getCreatedAt()));
+        //holder.date.setText(TimeDifference.getDiffTwo(data.get(position).getCreatedAt()));
+        holder.date.setText("Chat now");
         holder.content.setText(data.get(position).getMessage());
         holder.delete.setOnClickListener(new View.OnClickListener() {
             @Override

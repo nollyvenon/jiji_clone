@@ -58,8 +58,8 @@ public interface CrelanceApi {
     @GET("user/userByAuth/{auth}")
     Call<AdPoster> getUserByAuth(@Path("auth") String auth);
 
-    @GET("user/userById/{id}")
-    Call<AdPoster> getUserById(@Path("id") String id);
+    @GET("user/userById/{id}/{auth}")
+    Call<AdPoster> getUserById(@Path("id") String id, @Path("auth") String auth);
 
 
 
@@ -172,6 +172,12 @@ public interface CrelanceApi {
 
     @GET("proposal/award/{findId}/{awardedId}")
     Call<Proposal> awardJob(@Path("findId") String findId, @Path("awardedId") String awardedId);
+
+    @GET("proposal/fetchAwarded/{findId}")
+    Call<List<Proposal>> fetchAwarded(@Path("findId") String findId);
+
+    @GET("proposal/fetchAwardedCount/{auth}")
+    Call<Proposal> fetchAwardedCount(@Path("auth") String auth);
 
 
 

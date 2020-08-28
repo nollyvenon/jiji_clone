@@ -46,7 +46,7 @@ public class MessageList extends AppCompatActivity {
         setContentView(R.layout.activity_message_list);
         TextView pageName = findViewById(R.id.page_name);
         pageName.setText("Messages");
-
+        findViewById(R.id.bottom_appbar).setVisibility(View.GONE);
 
         ImageView bottomBarImg = findViewById(R.id.img_msg_bottom_bar);
         TextView bottomBarTitle = findViewById(R.id.title_msg_bottom_bar);

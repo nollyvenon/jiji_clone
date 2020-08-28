@@ -52,10 +52,29 @@ public class FindsRecyclerViewAdapter extends RecyclerView.Adapter<FindsRecycler
         holder.description.setText(String.format("%s...", des));
         holder.title.setText(data.get(position).getTitle());
 
+        holder.price.setText(new StringBuilder().append("N").append(data.get(position).getPrice()).toString());
+        holder.title.setText(data.get(position).getTitle());
+
+        NumberFormat format = new DecimalFormat("#,###");
+        double priceOne, priceTwo;
+        String fPrice;
+
         if (!data.get(position).getPrice().equals("")) {
-            NumberFormat format = new DecimalFormat("#,###");
-            String fPrice = format.format(Double.valueOf(data.get(position).getPrice()));
-            holder.price.setText(new StringBuilder().append("N").append(fPrice));
+            if (data.get(position).getPrice().contains("-")) {
+                String[] prices = data.get(position).getPrice().split("-");
+                priceOne = Double.parseDouble(prices[0]);
+                priceTwo = Double.parseDouble(prices[1]);
+
+                String fPriceOne = format.format(priceOne);
+                String fPriceTwo = format.format(priceTwo);
+
+                fPrice = new StringBuilder().append("N").append(fPriceOne).append(" - ").append("N").append(fPriceTwo).toString();
+            } else {
+                priceOne = Double.parseDouble(data.get(position).getPrice());
+                String fPriceOne = format.format(priceOne);
+                fPrice = new StringBuilder().append("N").append(fPriceOne).toString();
+            }
+            holder.price.setText(fPrice);
         } else {
             holder.price.setVisibility(View.GONE);
         }

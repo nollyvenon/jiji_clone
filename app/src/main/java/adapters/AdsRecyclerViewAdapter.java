@@ -53,11 +53,26 @@ public class AdsRecyclerViewAdapter extends RecyclerView.Adapter<AdsRecyclerView
         holder.price.setText(new StringBuilder().append("N").append(data.get(position).getPrice()).toString());
         holder.title.setText(data.get(position).getTitle());
 
-        double dPrice = Double.parseDouble(data.get(position).getPrice());
         NumberFormat format = new DecimalFormat("#,###");
-        String fPrice = format.format(dPrice);
-        if(!data.get(position).getPrice().equals("")) {
-            holder.price.setText(new StringBuilder().append("N").append(fPrice));
+        double priceOne, priceTwo;
+        String fPrice;
+
+        if (!data.get(position).getPrice().equals("")) {
+            if (data.get(position).getPrice().contains("-")) {
+                String[] prices = data.get(position).getPrice().split("-");
+                priceOne = Double.parseDouble(prices[0]);
+                priceTwo = Double.parseDouble(prices[1]);
+
+                String fPriceOne = format.format(priceOne);
+                String fPriceTwo = format.format(priceTwo);
+
+                fPrice = new StringBuilder().append("N").append(fPriceOne).append(" - ").append("N").append(fPriceTwo).toString();
+            } else {
+                priceOne = Double.parseDouble(data.get(position).getPrice());
+                String fPriceOne = format.format(priceOne);
+                fPrice = new StringBuilder().append("N").append(fPriceOne).toString();
+            }
+            holder.price.setText(fPrice);
         } else {
             holder.price.setVisibility(View.GONE);
         }

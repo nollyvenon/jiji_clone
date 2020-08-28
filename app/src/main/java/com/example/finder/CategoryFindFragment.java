@@ -67,6 +67,8 @@ public class CategoryFindFragment extends Fragment {
         MaterialButton findsBtn = linearLayout.findViewById(R.id.finds_btn);
 
         adsBtn.setOnClickListener(v -> {
+            adCount = 0;
+            adsList.clear();
             adsBtn.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
             adsBtn.setTextColor(getResources().getColor(R.color.white));
             findsBtn.setBackgroundColor(getResources().getColor(R.color.white));
@@ -75,6 +77,7 @@ public class CategoryFindFragment extends Fragment {
         });
 
         findsBtn.setOnClickListener(v -> {
+            adCount = 0;
             findsList = new ArrayList<>();
             findsBtn.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
             findsBtn.setTextColor(getResources().getColor(R.color.white));
@@ -115,6 +118,7 @@ public class CategoryFindFragment extends Fragment {
                 findView.setAdapter(adapter);
 
                 currentView = "finds";
+                progressBar.setVisibility(View.INVISIBLE);
             }
 
             @Override
@@ -153,6 +157,7 @@ public class CategoryFindFragment extends Fragment {
                 findView.setAdapter(adsRecyclerViewAdapter);
 
                 currentView = "ads";
+                progressBar.setVisibility(View.INVISIBLE);
             }
 
             @Override

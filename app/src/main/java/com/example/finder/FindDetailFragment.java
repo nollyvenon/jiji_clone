@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,6 +26,8 @@ import com.google.android.material.button.MaterialButton;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 import Database.DatabaseOpenHelper;
@@ -42,6 +45,10 @@ import retrofit2.Response;
 public class FindDetailFragment extends Fragment {
 
     private String auth;
+    private List<Proposal> proposals1 = new ArrayList<>();
+    LinearLayout root;
+    LinearLayout form;
+    CardView awardedPremiumView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -52,13 +59,14 @@ public class FindDetailFragment extends Fragment {
         auth = adPoster.getAuth() == null ? "" : adPoster.getAuth();
 
         // Inflate the layout for this fragment
-        LinearLayout root = (LinearLayout) inflater.inflate(R.layout.fragment_find_detail, container, false);
+        root = (LinearLayout) inflater.inflate(R.layout.fragment_find_detail, container, false);
         TextView titleView = root.findViewById(R.id.title);
         TextView timeLeftView = root.findViewById(R.id.time_left);
         TextView priceView = root.findViewById(R.id.price);
         TextView descriptionView = root.findViewById(R.id.description);
         ImageView delete = root.findViewById(R.id.delete);
-        LinearLayout form = root.findViewById(R.id.proposal_form);
+         awardedPremiumView = root.findViewById(R.id.award_premium_wrapper);
+        form = root.findViewById(R.id.proposal_form);
 
         assert getArguments() != null;
         String timeLeft = TimeDifference.getDiff(getArguments().getString("bidEnd"));
@@ -67,16 +75,34 @@ public class FindDetailFragment extends Fragment {
         timeLeftView.setText(timeLeft);
 
         NumberFormat format = new DecimalFormat("#,###");
-        if(!Objects.equals(getArguments().getString("price"), "")) {
-            String fPrice = format.format(Double.valueOf(Objects.requireNonNull(getArguments().getString("price"))));
-            priceView.setText(new StringBuilder().append("N").append(fPrice));
+        double priceOne, priceTwo;
+        String fPrice;
+
+        String argPrice = getArguments().getString("price");
+
+        if (!argPrice.equals("")) {
+            if (argPrice.contains("-")) {
+                String[] prices = argPrice.split("-");
+                priceOne = Double.parseDouble(prices[0]);
+                priceTwo = Double.parseDouble(prices[1]);
+
+                String fPriceOne = format.format(priceOne);
+                String fPriceTwo = format.format(priceTwo);
+
+                fPrice = new StringBuilder().append("N").append(fPriceOne).append(" - ").append("N").append(fPriceTwo).toString();
+            } else {
+                priceOne = Double.parseDouble(argPrice);
+                String fPriceOne = format.format(priceOne);
+                fPrice = new StringBuilder().append("N").append(fPriceOne).toString();
+            }
+            priceView.setText(fPrice);
         } else {
-            priceView.setVisibility(View.GONE);
+            priceView.setText("N0.00");
         }
 
         String attachmentStr = getArguments().getString("attachment");
         assert attachmentStr != null;
-        if(getArguments().getString("attachment") != null && !attachmentStr.equals("")) {
+        if (getArguments().getString("attachment") != null && !attachmentStr.equals("")) {
             TextView attachment = root.findViewById(R.id.attachment);
             CardView attachmentWrapper = root.findViewById(R.id.attachment_wrapper);
             attachmentWrapper.setVisibility(View.VISIBLE);
@@ -91,14 +117,15 @@ public class FindDetailFragment extends Fragment {
 
         descriptionView.setText(getArguments().getString("description"));
 
-        if(adPoster.getAuth() != null) {
+        if (adPoster.getAuth() != null) {
             if (Objects.equals(getArguments().getString("auth"), adPoster.getAuth())) {
                 delete.setVisibility(View.VISIBLE);
             }
 
-            if (!Objects.equals(getArguments().getString("auth"), adPoster.getAuth()) &&
-                    adPoster.getAuth() != null && !timeLeft.equals("Bid is closed")) {
-                form.setVisibility(View.VISIBLE);
+            if (!timeLeft.equalsIgnoreCase("Bid is closed")) {
+                if (!Objects.equals(getArguments().getString("auth"), adPoster.getAuth()) && !timeLeft.isEmpty()) {
+                    form.setVisibility(View.VISIBLE);
+                }
             }
         }
 
@@ -111,6 +138,7 @@ public class FindDetailFragment extends Fragment {
         final EditText description = view.findViewById(R.id.bid_description);
         final EditText benefit = view.findViewById(R.id.bid_benefit);
         MaterialButton submit = view.findViewById(R.id.submit);
+        fetchAwarded(getArguments().getString("id"));
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -135,18 +163,92 @@ public class FindDetailFragment extends Fragment {
             }
         });
 
+        awardedPremiumView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getContext(), Paystack.class);
+                intent.putExtra("award", "1");
+                intent.putExtra("auth", auth);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_TASK_ON_HOME);
+                startActivity(intent);
+                getActivity().finish();
+                return;
+            }
+        });
+
         ImageView delete = view.findViewById(R.id.delete);
         delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                deletefind();
+                deleteFind();
+            }
+        });
+    }
+
+    private void fetchAwardedCount() {
+        Call<Proposal> call = ApiClient.connect().fetchAwardedCount(auth);
+        call.enqueue(new Callback<Proposal>() {
+            @Override
+            public void onResponse(@NonNull Call<Proposal> call, @NonNull Response<Proposal> response) {
+                if (!response.isSuccessful()) {
+                    Toast.makeText(getContext(), "" + response.code(), Toast.LENGTH_LONG).show();
+                    return;
+                }
+
+                Proposal proposal = response.body();
+                assert proposal != null;
+                if (!proposal.getStatus()) {
+                    if (proposal.getAwardedCount() > 2) {
+                        form.setVisibility(View.GONE);
+                        awardedPremiumView.setVisibility(View.VISIBLE);
+                        return;
+                    }
+                }
+                form.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<Proposal> call, @NonNull Throwable t) {
+                //Toast.makeText(getContext(), t.toString(), Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+    private void fetchAwarded(String findId) {
+        Call<List<Proposal>> call = ApiClient.connect().fetchAwarded(findId);
+        call.enqueue(new Callback<List<Proposal>>() {
+            @Override
+            public void onResponse(@NonNull Call<List<Proposal>> call, @NonNull Response<List<Proposal>> response) {
+                if (!response.isSuccessful()) {
+                    Toast.makeText(getContext(), "" + response.code(), Toast.LENGTH_LONG).show();
+                    return;
+                }
+
+                proposals1.clear();
+                proposals1 = response.body();
+                assert proposals1 != null;
+
+                if (proposals1 == null || proposals1.size() < 1) {
+                    fetchAwardedCount();
+                    return;
+                }
+                TextView awarded = root.findViewById(R.id.awarded_name);
+                awarded.setText("Job awarded to " + proposals1.get(0).getBusinessName());
+                awarded.setVisibility(View.VISIBLE);
+                form.setVisibility(View.GONE);
+
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<List<Proposal>> call, @NonNull Throwable t) {
+                //Toast.makeText(getContext(), t.toString(), Toast.LENGTH_LONG).show();
             }
         });
     }
 
     private void addProposal(String benefit, final String description, final View v) {
 
-        if(auth.equals("")) return;
+        if (auth.equals("")) return;
 
         if (description.isEmpty()) {
             Toast.makeText(getContext(), "Description field is compulsory", Toast.LENGTH_LONG).show();
@@ -180,8 +282,9 @@ public class FindDetailFragment extends Fragment {
                     final EditText benefit = v.findViewById(R.id.bid_benefit);
                     description.setText("");
                     benefit.setText("");
+                    fetchAwarded(getArguments().getString("id"));
                 } else {
-                    Toast.makeText(getContext(), "You are not qualified to bid", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getContext(), "You are not qualified to bid for this work", Toast.LENGTH_LONG).show();
                 }
             }
 
@@ -191,7 +294,7 @@ public class FindDetailFragment extends Fragment {
         });
     }
 
-    private void deletefind() {
+    private void deleteFind() {
         AlertDialog.Builder builder = new AlertDialog.Builder(Objects.requireNonNull(getContext()));
         builder.setMessage("Delete this Find?")
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {

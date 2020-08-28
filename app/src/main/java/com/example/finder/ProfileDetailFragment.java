@@ -104,7 +104,7 @@ public class ProfileDetailFragment extends Fragment {
             call = ApiClient.connect().getUserByAuth(a.getAuth());
         } else {
             reportUser.setVisibility(View.VISIBLE);
-            call = ApiClient.connect().getUserById(getArguments().getString("id"));
+            call = ApiClient.connect().getUserById(getArguments().getString("id"), a.getAuth());
         }
 
         reportUser.setOnClickListener(new View.OnClickListener() {
@@ -134,7 +134,13 @@ public class ProfileDetailFragment extends Fragment {
 //                businessYear.setText(adPoster.getBusinessYear() + " of business experience");
 //                username.setText(adPoster.getUsername());
                 businessDescription.setText(adPoster.getBusinessDescription());
+                if(adPoster.getUserType().equalsIgnoreCase(Constants.FINDS)) {
+                    view.findViewById(R.id.about_card).setVisibility(View.GONE);
+                    view.findViewById(R.id.service_card).setVisibility(View.GONE);
+                }
+
                 serviceDescription.setText(adPoster.getServiceDescription());
+
                 LinearLayout banned = view.findViewById(R.id.banned);
 
                 if(adPoster.getBanStatus().equals("1")) {

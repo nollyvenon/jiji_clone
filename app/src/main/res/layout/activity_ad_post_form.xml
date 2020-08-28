@@ -148,17 +148,46 @@
                     android:textFontWeight="600"
                     android:textSize="16sp" />
 
-                <EditText
-                    android:id="@+id/ad_price"
+                <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="45dp"
-                    android:layout_marginTop="10dp"
-                    android:background="@drawable/edit_text_middle"
-                    android:hint="@string/hint_price"
-                    android:inputType="number"
-                    android:maxLength="12"
-                    android:padding="4dp"
-                    android:textSize="16sp" />
+                    android:layout_height="wrap_content">
+
+                    <EditText
+                        android:id="@+id/ad_price_1"
+                        android:layout_width="150dp"
+                        android:layout_height="45dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_alignParentStart="true"
+                        android:background="@drawable/edit_text_middle"
+                        android:hint="@string/price_range_one"
+                        android:inputType="number"
+                        android:maxLength="12"
+                        android:padding="4dp"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:layout_width="20dp"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="sans-serif"
+                        android:text="-"
+                        android:layout_centerInParent="true"
+                        android:textColor="@color/colorPrimary"
+                        android:textFontWeight="600"
+                        android:textSize="16sp" />
+
+                    <EditText
+                        android:id="@+id/ad_price_2"
+                        android:layout_width="150dp"
+                        android:layout_height="45dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_alignParentEnd="true"
+                        android:background="@drawable/edit_text_middle"
+                        android:hint="@string/price_range_two"
+                        android:inputType="number"
+                        android:maxLength="12"
+                        android:padding="4dp"
+                        android:textSize="16sp" />
+                </RelativeLayout>
 
             </LinearLayout>
 
@@ -265,7 +294,7 @@
                         android:id="@+id/attachment_wrapper"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="40dp"
+                        android:layout_marginTop="20dp"
                         android:orientation="vertical">
 
                         <TextView
@@ -362,25 +391,5 @@
         layout="@layout/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
-
-    <com.google.android.material.bottomappbar.BottomAppBar
-        android:id="@+id/bottom_appbar"
-        style="@style/Widget.MaterialComponents.BottomAppBar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        app:backgroundTint="@color/white"
-        app:fabAlignmentMode="center"
-        app:fabCradleMargin="5dp"
-        app:fabCradleRoundedCornerRadius="10dp"
-        app:fabCradleVerticalOffset="5dp"
-        app:hideOnScroll="true">
-
-        <include
-            layout="@layout/bottom_app_bar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
-    </com.google.android.material.bottomappbar.BottomAppBar>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

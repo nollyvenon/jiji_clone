@@ -45,6 +45,7 @@ public class MessagePanel extends AppCompatActivity {
     List<Messages> messagesList;
     AdPoster adPoster;
     ProgressDialog progDialog;
+    Timer timer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,7 +72,7 @@ public class MessagePanel extends AppCompatActivity {
 
         fetchMessages();
 
-        Timer timer = new Timer();
+        timer = new Timer();
         timer.scheduleAtFixedRate(new MyTimerTask(), 2000, 4000);
 
         send.setOnClickListener(new View.OnClickListener() {
@@ -132,7 +133,16 @@ public class MessagePanel extends AppCompatActivity {
         });
     }
 
+    @Override
+    public void onBackPressed() {
+        timer.cancel();
+        timer.purge();
+        super.onBackPressed();
+    }
+
     public void goBack(View view) {
+        timer.cancel();
+        timer.purge();
         finish();
     }
 

@@ -47,7 +47,7 @@ import retrofit2.Response;
 
 public class FindPostForm extends AppCompatActivity {
     private static final int FILE_PICKER_REQUEST_CODE = 1;
-    EditText description, price, title;
+    EditText description, priceOne, priceTwo, title;
     String categoryText, fileString, chatChoiceText;
     HashMap<Integer, String> checkedList;
     List<String> categoryList;
@@ -59,10 +59,10 @@ public class FindPostForm extends AppCompatActivity {
         TextView pageName = findViewById(R.id.page_name);
         pageName.setText("Tell us what you need done");
 
-        ImageView bottomBarImg = findViewById(R.id.img_find_bottom_bar);
-        TextView bottomBarTitle = findViewById(R.id.title_find_bottom_bar);
-        bottomBarImg.setColorFilter(getResources().getColor(R.color.colorPrimary));
-        bottomBarTitle.setTextColor(getResources().getColor(R.color.colorPrimary));
+//        ImageView bottomBarImg = findViewById(R.id.img_find_bottom_bar);
+//        TextView bottomBarTitle = findViewById(R.id.title_find_bottom_bar);
+//        bottomBarImg.setColorFilter(getResources().getColor(R.color.colorPrimary));
+//        bottomBarTitle.setTextColor(getResources().getColor(R.color.colorPrimary));
 
         ImageView search = findViewById(R.id.search);
         search.setOnClickListener(new View.OnClickListener() {
@@ -170,7 +170,8 @@ public class FindPostForm extends AppCompatActivity {
     public void initForm() {
         description = findViewById(R.id.description);
         title = findViewById(R.id.title);
-        price = findViewById(R.id.price);
+        priceOne = findViewById(R.id.find_price_1);
+        priceTwo = findViewById(R.id.find_price_2);
     }
 
     public void launchPicker(View view) {
@@ -249,9 +250,15 @@ public class FindPostForm extends AppCompatActivity {
 
         String descriptionText = description.getText().toString();
         String titleText = title.getText().toString();
-        String priceText = price.getText().toString();
+        String priceTextOne = priceOne.getText().toString();
+        String priceTextTwo = priceTwo.getText().toString();
         final Button btn = findViewById(R.id.post_find);
         String benefit = "";
+
+        String priceText = priceTextOne;
+        if(!priceTextTwo.equalsIgnoreCase("")) {
+            priceText = priceTextOne + "-" +priceTextTwo;
+        }
 
         if (descriptionText.isEmpty()) {
             Toast.makeText(this, "Description field is compulsory", Toast.LENGTH_LONG).show();
@@ -293,7 +300,10 @@ public class FindPostForm extends AppCompatActivity {
                 assert find != null;
                 if (Boolean.parseBoolean(find.getStatus())) {
                     Intent intent = new Intent(FindPostForm.this, MainActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_TASK_ON_HOME);
                     startActivity(intent);
+                    FindPostForm.this.finish();
+                    return;
                 }
 
                 Toast.makeText(FindPostForm.this, "Its possible you have been banned. Check your profile to check if ban stamp exist", Toast.LENGTH_LONG).show();

@@ -115,7 +115,24 @@
                     android:layout_below="@id/company_name"
                     android:layout_toEndOf="@id/profile_image"
                     android:layout_marginTop="8dp"
-                    android:rating="4.8" />
+                    android:rating="0.0" />
+
+                <TextView
+                    android:id="@+id/views"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/company_name"
+                    android:layout_toEndOf="@id/rating"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginStart="30dp"
+                    android:drawableStart="@drawable/icon_view"
+                    android:drawablePadding="3dp"
+                    android:drawableTint="@color/white"
+                    android:fontFamily="sans-serif"
+                    android:textColor="@color/white"
+                    android:textFontWeight="600"
+                    android:textSize="14sp"
+                    tools:targetApi="m" />
 
                 <TextView
                     android:id="@+id/location"

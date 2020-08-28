@@ -11,7 +11,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RatingBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -20,9 +22,12 @@ import com.google.android.material.button.MaterialButton;
 import com.google.android.material.tabs.TabItem;
 import com.google.android.material.tabs.TabLayout;
 
+import java.util.List;
+
 import Database.DatabaseOpenHelper;
 import adapters.ProfilePagerAdapter;
 import data.AdPoster;
+import data.Finds;
 import de.hdodenhof.circleimageview.CircleImageView;
 import others.BottomAppBarEvent;
 import others.Constants;
@@ -34,7 +39,7 @@ import retrofit2.Response;
 public class Profile extends AppCompatActivity {
 
     CircleImageView profileImage;
-    TextView location, businessName;
+    TextView location, businessName, views;
     RatingBar rating;
 
     Intent intent;
@@ -44,6 +49,9 @@ public class Profile extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
+        findViewById(R.id.bottom_appbar).setVisibility(View.GONE);
+
+        checkFinds();
 
         TabLayout tabLayout = findViewById(R.id.profile_tab_layout);
 
@@ -88,8 +96,9 @@ public class Profile extends AppCompatActivity {
         viewPager.addOnPageChangeListener( new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         if (intent.getStringExtra("id") != null) {
             //TabLayout findTab = findViewById(R.id.profile_tab_layout);
-            ((ViewGroup) tabLayout.getChildAt(0)).getChildAt(2).setVisibility(View.GONE);
-            ((ViewGroup) tabLayout.getChildAt(0)).getChildAt(3).setVisibility(View.GONE);
+//            ((ViewGroup) tabLayout.getChildAt(0)).getChildAt(2).setVisibility(View.GONE);
+//            ((ViewGroup) tabLayout.getChildAt(0)).getChildAt(3).setVisibility(View.GONE);
+            findViewById(R.id.bottom_appbar).setVisibility(View.GONE);
         }
     }
 
@@ -98,6 +107,7 @@ public class Profile extends AppCompatActivity {
         location = findViewById(R.id.location);
         businessName = findViewById(R.id.company_name);
         rating = findViewById(R.id.rating);
+        views = findViewById(R.id.views);
     }
 
     private void getUser() {
@@ -109,7 +119,7 @@ public class Profile extends AppCompatActivity {
         if (intent.getStringExtra("id") == null) {
             call = ApiClient.connect().getUserByAuth(a.getAuth());
         } else {
-            call = ApiClient.connect().getUserById(intent.getStringExtra("id"));
+            call = ApiClient.connect().getUserById(intent.getStringExtra("id"), a.getAuth());
         }
 
         call.enqueue(new Callback<AdPoster>() {
@@ -132,6 +142,19 @@ public class Profile extends AppCompatActivity {
                 location.setText(adPoster.getLocation());
                 businessName.setText(adPoster.getBusinessName());
                 rating.setRating(Float.parseFloat(adPoster.getRating()));
+                views.setText(adPoster.getProfileView());
+
+                if(adPoster.getUserType().equalsIgnoreCase(Constants.FINDS)) {
+                    rating.setVisibility(View.GONE);
+                    views.setVisibility(View.GONE);
+                    location.setVisibility(View.GONE);
+                    businessName.setText(adPoster.getUsername());
+
+                    RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+                    params.setMargins(190,50,10,10);
+                    businessName.setLayoutParams(params);
+
+                }
 
                 if(a.getAuth() != null && adPoster.getAuth() != null && auth.equals(adPoster.getAuth())) {
 
@@ -151,7 +174,41 @@ public class Profile extends AppCompatActivity {
 
             @Override
             public void onFailure(@NonNull Call<AdPoster> call, @NonNull Throwable t) {
-                Toast.makeText(Profile.this, t.toString(), Toast.LENGTH_LONG).show();
+               // Toast.makeText(Profile.this, t.toString(), Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+    private void checkFinds() {
+        DatabaseOpenHelper dbo = new DatabaseOpenHelper(this);
+        AdPoster a = dbo.getAdPoster();
+
+        if(a.getAuth() == null) {
+            findViewById(R.id.start_chat).setVisibility(View.GONE);
+            return;
+        };
+
+        auth = a.getAuth() == null ? "" : a.getAuth();
+        Call<List<Finds>> call = ApiClient.connect().getFindByAuth(auth, 0);
+        call.enqueue(new Callback<List<Finds>>() {
+            @Override
+            public void onResponse(@NonNull Call<List<Finds>> call, @NonNull Response<List<Finds>> response) {
+                if(!response.isSuccessful()) {
+                    //Toast.makeText(getContext(), response.code(), Toast.LENGTH_LONG).show();
+                    return;
+                }
+
+                List<Finds> finds = response.body();
+                assert finds != null;
+                if(finds == null || finds.size() < 1) {
+                    findViewById(R.id.start_chat).setVisibility(View.GONE);
+                }
+
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<List<Finds>> call, @NonNull Throwable t) {
+                findViewById(R.id.start_chat).setVisibility(View.GONE);
             }
         });
     }
@@ -171,6 +228,7 @@ public class Profile extends AppCompatActivity {
             Intent i =  new Intent(this, FindPosterRegistration.class);
             i.putExtra("auth", auth);
             i.putExtra("userType", Constants.FINDS);
+            i.putExtra("hide", "hide");
             startActivity(i);
         } else {
             Intent i =  new Intent(this, AdPosterRegistration.class);

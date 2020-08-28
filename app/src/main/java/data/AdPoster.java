@@ -23,6 +23,7 @@ public class AdPoster {
     private String isPremium;
     private String email;
     private String banStatus;
+    private String profileView;
 
     public String getRating() {
         return rating;
@@ -218,5 +219,13 @@ public class AdPoster {
 
     public void setBanStatus(String banStatus) {
         this.banStatus = banStatus;
+    }
+
+    public String getProfileView() {
+        return profileView;
+    }
+
+    public void setProfileView(String profileView) {
+        this.profileView = profileView;
     }
 }

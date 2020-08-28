@@ -147,7 +147,7 @@ public class PhoneNumberVerification extends AppCompatActivity {
     private void sendVerificationCode() {
         String noCodeTel = editTextTel.getText().toString();
         String num = "+" + PhoneNumberVerification.code[countryPosition] + noCodeTel;
-        if (countryPosition == 0 || noCodeTel.startsWith("+")) {
+        if (noCodeTel.startsWith("+")) {
             editTextTel.setError("Pick a country And Telephone must not contain country code");
             return;
         } else {
@@ -208,6 +208,7 @@ public class PhoneNumberVerification extends AppCompatActivity {
     }
 
     public static String[] country = new String[]{
+            "Nigeria",
             "Afghanistan",
             "Albania",
             "Algeria",
@@ -361,7 +362,6 @@ public class PhoneNumberVerification extends AppCompatActivity {
             "New Zealand ",
             "Nicaragua ",
             "Niger ",
-            "Nigeria",
             "Niue ",
             "North Korea",
             "Northern Mariana Islands",
@@ -449,7 +449,8 @@ public class PhoneNumberVerification extends AppCompatActivity {
             "Zambia",
             "Zimbabwe"};
 
-    public static String[] code = new String[]{"93",
+    public static String[] code = new String[]{
+            "234","93",
             "355", "213", "1-684", "376",
             "244", "1-264", "672", "1-268", "54", "374", "297", "61", "43", "994", "1-242", "973", "880", "1-246", "375", "32",
             "501", "229", "1-441", "975", "591", "387", "267", "55", "246", "1-284","673","359","226","257","855","237","1","238",
@@ -528,7 +529,6 @@ public class PhoneNumberVerification extends AppCompatActivity {
             "64",
             "505",
             "227",
-            "234",
             "683",
             "850",
             "1-670",
@@ -634,13 +634,17 @@ public class PhoneNumberVerification extends AppCompatActivity {
             if (ad.getUserType().equals(Constants.FINDS) || ad.getUserType().equals(Constants.ADS)) {
                 saveToDB();
                 Intent intent = new Intent(getApplicationContext(), FindPostForm.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_TASK_ON_HOME);
                 startActivity(intent);
+                this.finish();
             }
         }
 
         if (!Boolean.parseBoolean(ad.getStatus())) {
             Intent intent = new Intent(getApplicationContext(), FindPosterRegistration.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_TASK_ON_HOME);
             startActivity(intent);
+            this.finish();
         }
     }
 
@@ -650,17 +654,23 @@ public class PhoneNumberVerification extends AppCompatActivity {
             if (ad.getUserType().equals(Constants.ADS)) {
                 saveToDB();
                 Intent intent = new Intent(getApplicationContext(), AdPostForm.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_TASK_ON_HOME);
                 startActivity(intent);
+                this.finish();
             } else if ((ad.getUserType().equals(Constants.FINDS) && ad.getBusinessName().isEmpty()) || !Boolean.parseBoolean(ad.getStatus())) {
                 Intent intent = new Intent(getApplicationContext(), AdPosterRegistration.class);
                 intent.putExtra("username", "ad.getUsername()");
                 intent.putExtra("phoneNumber", ad.getPhoneNumber());
                 intent.putExtra("hide", "hide");
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_TASK_ON_HOME);
                 startActivity(intent);
+                this.finish();
             }
         } else {
             Intent intent = new Intent(getApplicationContext(), AdPosterRegistration.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_TASK_ON_HOME);
             startActivity(intent);
+            this.finish();
         }
     }
 

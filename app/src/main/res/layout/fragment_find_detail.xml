@@ -109,6 +109,18 @@
                         android:textColor="@color/lighter_black"
                         android:textSize="16sp" />
 
+                    <TextView
+                        android:id="@+id/awarded_name"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:layout_below="@id/description"
+                        android:fontFamily="sans-serif"
+                        android:padding="8dp"
+                        android:visibility="gone"
+                        android:textColor="@color/lighter_black"
+                        android:textSize="16sp" />
+
                 </RelativeLayout>
 
             </androidx.cardview.widget.CardView>
@@ -153,6 +165,29 @@
                     android:padding="8dp"
                     android:text="@string/share"
                     android:textColor="@color/lighter_black"
+                    android:textSize="14sp" />
+
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/award_premium_wrapper"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:layout_marginTop="10dp">
+
+                <TextView
+                    android:id="@+id/award_premium"
+                    android:background="@color/red"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:drawableStart="@drawable/icon_error"
+                    android:drawablePadding="3dp"
+                    android:fontFamily="sans-serif"
+                    android:padding="8dp"
+                    android:textAlignment="center"
+                    android:text="Exceeded 3 awarded jobs, click to upgrade"
+                    android:textColor="@color/white"
                     android:textSize="14sp" />
 
             </androidx.cardview.widget.CardView>

@@ -16,6 +16,7 @@ public class Proposal {
     private String auth;
     private String awardedId;
     private String fFinderId;
+    private int awardedCount;
 
     public Proposal(String profileImage, String businessName, String rating, String reviewCount,
                     String description, String benefit, String id, String findId, String adId,
@@ -34,6 +35,13 @@ public class Proposal {
         this.awardedId = awardedId;
         this.fFinderId = fFinderId;
     }
+
+
+    public Proposal(Boolean status, int awardedCount) {
+        this.status = status;
+        this.awardedCount = awardedCount;
+    }
+
 
     public String getFindId() {
         return findId;
@@ -97,5 +105,13 @@ public class Proposal {
 
     public void setfFinderId(String fFinderId) {
         this.fFinderId = fFinderId;
+    }
+
+    public int getAwardedCount() {
+        return awardedCount;
+    }
+
+    public void setAwardedCount(int awardedCount) {
+        this.awardedCount = awardedCount;
     }
 }

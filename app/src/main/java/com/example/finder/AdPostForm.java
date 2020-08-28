@@ -76,7 +76,7 @@ public class AdPostForm extends AppCompatActivity {
     public static final int FILE_PICKER_REQUEST_CODE = 1;
     AdPoster adPoster;
 
-    EditText description, price, title;
+    EditText description, priceOne, priceTwo, title;
     String categoryText, fileString, adsVisibilityText;
     HashMap<Integer, String> checkedList;
     List<String> categoryList;
@@ -88,10 +88,10 @@ public class AdPostForm extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ad_post_form);
 
-        ImageView bottomBarImg = findViewById(R.id.img_ad_bottom_bar);
-        TextView bottomBarTitle = findViewById(R.id.title_ad_bottom_bar);
-        bottomBarImg.setColorFilter(getResources().getColor(R.color.colorPrimary));
-        bottomBarTitle.setTextColor(getResources().getColor(R.color.colorPrimary));
+//        ImageView bottomBarImg = findViewById(R.id.img_ad_bottom_bar);
+//        TextView bottomBarTitle = findViewById(R.id.title_ad_bottom_bar);
+//        bottomBarImg.setColorFilter(getResources().getColor(R.color.colorPrimary));
+//        bottomBarTitle.setTextColor(getResources().getColor(R.color.colorPrimary));
 
         TextView pageName = findViewById(R.id.page_name);
         pageName.setText(R.string.post_service);
@@ -226,7 +226,8 @@ public class AdPostForm extends AppCompatActivity {
     public void initForm() {
         description = findViewById(R.id.ad_description);
         title = findViewById(R.id.ad_title);
-        price = findViewById(R.id.ad_price);
+        priceOne = findViewById(R.id.ad_price_1);
+        priceTwo = findViewById(R.id.ad_price_2);
     }
 
     public void addAd(final View view) {
@@ -234,7 +235,8 @@ public class AdPostForm extends AppCompatActivity {
 
         String descriptionText = description.getText().toString();
         String titleText = title.getText().toString();
-        String priceText = price.getText().toString();
+        String priceTextOne = priceOne.getText().toString();
+        String priceTextTwo = priceTwo.getText().toString();
         StringBuilder benefit = new StringBuilder();
 
         final Button btn = findViewById(R.id.post_ad);
@@ -264,6 +266,11 @@ public class AdPostForm extends AppCompatActivity {
         DatabaseOpenHelper dbo = new DatabaseOpenHelper(this);
         AdPoster a = dbo.getAdPoster();
 
+        String priceText = priceTextOne;
+        if(!priceTextTwo.equalsIgnoreCase("")) {
+            priceText = priceTextOne + "-" +priceTextTwo;
+        }
+
         Call<Ads> call = ApiClient.connect().addAd(
                 descriptionText, titleText, priceText, benefit.toString(), imageToString(), categoryText, fileString,
                 a.getAuth()
@@ -284,22 +291,29 @@ public class AdPostForm extends AppCompatActivity {
                 if (ad.getStatus().equals("exceeded")) {
                     Toast.makeText(AdPostForm.this, "You have exceeded you Ad limit, Upgrade to premium", Toast.LENGTH_LONG).show();
                     Intent intent = new Intent(AdPostForm.this, Paystack.class);
+                    intent.putExtra("award", "0");
                     intent.putExtra("auth", a.getAuth());
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_TASK_ON_HOME);
                     startActivity(intent);
+                    AdPostForm.this.finish();
                     return;
                 }
 
                 if (ad.getStatus().equals("banned")) {
                     Toast.makeText(AdPostForm.this, "Your account has been banned", Toast.LENGTH_LONG).show();
                     Intent intent = new Intent(AdPostForm.this, MainActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_TASK_ON_HOME);
                     startActivity(intent);
+                    AdPostForm.this.finish();
                     return;
                 }
 
                 if (ad.getStatus().equals("true")) {
                     Toast.makeText(AdPostForm.this, "Ad submitted successfully", Toast.LENGTH_LONG).show();
                     Intent intent = new Intent(AdPostForm.this, MainActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_TASK_ON_HOME);
                     startActivity(intent);
+                    AdPostForm.this.finish();
                     return;
                 }
 
@@ -441,7 +455,9 @@ public class AdPostForm extends AppCompatActivity {
                 if (adPoster.getIsPremium().equals("0")) {
                     Intent intent = new Intent(AdPostForm.this, Paystack.class);
                     intent.putExtra("auth", a.getAuth());
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_TASK_ON_HOME);
                     startActivity(intent);
+                    AdPostForm.this.finish();
                 } else {
                     adsVisibilityText = parent.getItemAtPosition(0).toString();
                 }

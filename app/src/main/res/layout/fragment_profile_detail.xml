@@ -13,6 +13,7 @@
         android:padding="4dp">
 
         <androidx.cardview.widget.CardView
+            android:id="@+id/about_card"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/white">
@@ -42,6 +43,7 @@
         </androidx.cardview.widget.CardView>
 
         <androidx.cardview.widget.CardView
+            android:id="@+id/service_card"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"

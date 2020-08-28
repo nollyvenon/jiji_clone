@@ -65,7 +65,11 @@ public class MessagePanelAdapter extends RecyclerView.Adapter<MessagePanelAdapte
             params.setMargins(0, 5, 80, 5);
             holder.wrap.setLayoutParams(params);
         } else {
-            holder.sender.setText(data.get(position).getBusinessName());
+            if(data.get(position).getBusinessName().isEmpty()) {
+                holder.sender.setText(data.get(position).getUsername());
+            } else {
+                holder.sender.setText(data.get(position).getBusinessName());
+            }
             params.setMargins(80, 5, 0, 5);
             holder.wrap.setLayoutParams(params);
         }

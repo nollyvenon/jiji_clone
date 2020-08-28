@@ -52,6 +52,7 @@ public class ProfileReviewAdapter extends RecyclerView.Adapter<ProfileReviewAdap
         holder.clientName.setText(data.get(position).getUsername());
         holder.rating.setRating(Float.parseFloat(data.get(position).getRating()));
         holder.jobTitle.setText(data.get(position).getTitle());
+        holder.jobTitle.setVisibility(View.GONE);
         holder.date.setText(TimeDifference.getDiffTwo(data.get(position).getCreatedAt()));
 
         holder.expand.setOnClickListener(new View.OnClickListener() {

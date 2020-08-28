@@ -27,9 +27,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="10dp"
-                android:drawableStart="@drawable/icon_location"
+                android:drawableStart="@drawable/icon_location_black"
                 android:drawablePadding="3dp"
-                android:drawableTint="@color/lighter_black"
                 android:fontFamily="sans-serif"
                 android:textColor="@color/lighter_black"
                 android:textSize="14sp"
@@ -98,7 +97,8 @@
                         android:onClick="goToFeedbackForm"
                         android:text="@string/leave_a_feedback"
                         android:textColor="@color/colorPrimary"
-                        android:textSize="15sp" />
+                        android:textSize="15sp"
+                        android:visibility="gone" />
 
                     <TextView
                         android:id="@+id/contact_dealer"
@@ -360,9 +360,8 @@
                         android:layout_height="wrap_content"
                         android:layout_below="@id/company_name"
                         android:layout_marginTop="5dp"
-                        android:drawableStart="@drawable/icon_view"
+                        android:drawableStart="@drawable/icon_view_white"
                         android:drawablePadding="3dp"
-                        android:drawableTint="@color/white"
                         android:fontFamily="sans-serif"
                         android:textColor="@color/white"
                         android:textFontWeight="600"
