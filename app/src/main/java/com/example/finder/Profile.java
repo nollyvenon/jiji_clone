@@ -71,6 +71,7 @@ public class Profile extends AppCompatActivity {
         intent = getIntent();
         getUser();
 
+        profileImage.setImageResource(R.drawable.avatar);
         final ViewPager viewPager = findViewById(R.id.profile_pager);
 
         ProfilePagerAdapter pagerAdapter = new ProfilePagerAdapter(getSupportFragmentManager(), tabLayout.getTabCount(), intent);
@@ -133,14 +134,10 @@ public class Profile extends AppCompatActivity {
                 final AdPoster adPoster = response.body();
                 assert adPoster != null;
 
-                if(adPoster.getProfileImage().equals("")) {
-                    profileImage.setImageResource(R.drawable.avatar);
-                } else {
-                    Glide.with(Profile.this).load(Constants.BASE_URL + adPoster.getProfileImage()).into(profileImage);
-                }
+                Glide.with(Profile.this).load(Constants.BASE_URL + adPoster.getProfileImage()).into(profileImage);
 
                 location.setText(adPoster.getLocation());
-                businessName.setText(adPoster.getBusinessName());
+                businessName.setText(adPoster.getUsername());
                 rating.setRating(Float.parseFloat(adPoster.getRating()));
                 views.setText(adPoster.getProfileView());
 

@@ -112,7 +112,7 @@ public class FindProposalFragment extends Fragment {
                 assert proposals1 != null;
 
                 for (Proposal p : proposals1) {
-                    proposals.add(new Proposal(p.getProfileImage(), p.getBusinessName(), p.getRating(), p.getReviewCount(),
+                    proposals.add(new Proposal(p.getProfileImage(), p.getBusinessName(), p.getUsername(), p.getRating(), p.getReviewCount(),
                                     p.getDescription(), p.getBenefit(), p.getId(), p.getFindId(), p.getAdId(), p.getAuth(),
                             p.getFinderId(), p.getAwardedId(), String.valueOf(fFinderId)));
                 }

@@ -75,7 +75,7 @@ public class CategoryMemberFragment extends Fragment {
                 if(ads.size() == 0) progressBar.setVisibility(View.INVISIBLE);
 
                 for(Ads ad : ads) {
-                    adsList.add(new Ads(ad.getBusinessName(), ad.getRating(), ad.getReview(),
+                    adsList.add(new Ads(ad.getUsername(), ad.getRating(), ad.getReview(),
                             ad.getProfileImage(), ad.getImage(), ad.getAdId(), ad.getViews(), ad.getAuth()));
                 }
 

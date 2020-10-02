@@ -68,7 +68,7 @@ public class ProposalAdapter extends RecyclerView.Adapter<ProposalAdapter.ViewHo
 
         Glide.with(context).load(Constants.BASE_URL + data.get(position).getProfileImage()).into(holder.profileImage);
         holder.description.setText(data.get(position).getDescription());
-        holder.businessName.setText(data.get(position).getBusinessName());
+        holder.businessName.setText(data.get(position).getUsername());
         holder.rating.setRating(Float.parseFloat(data.get(position).getRating()));
         holder.reviewCount.setText("(" + data.get(position).getReviewCount() + ")");
         holder.benefit.setText(data.get(position).getBenefit());

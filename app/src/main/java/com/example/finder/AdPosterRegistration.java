@@ -4,14 +4,18 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.FileProvider;
 
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
@@ -24,10 +28,15 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import Database.DatabaseOpenHelper;
@@ -46,10 +55,16 @@ public class AdPosterRegistration extends AppCompatActivity {
     Bitmap bitmap;
     Intent intent;
 
+    Uri outputFileUri;
+    int TAKE_PHOTO_CODE = 888;
+    public static int count = 0;
+
+    private static final int REQUEST_IMAGE_CAPTURE = 777;
     private static final int REQUEST_CODE_GALLERY = 999;
     Button uploadImage, addPoster;
     CircleImageView profileImage;
     Boolean isEdit = false;
+    String currentPhotoPath;
 
     EditText location, marketArea, businessYear;
     EditText username, businessName, businessDescription, serviceDescription, email;
@@ -68,27 +83,46 @@ public class AdPosterRegistration extends AppCompatActivity {
 
         findViewById(R.id.bottom_appbar).setVisibility(View.GONE);
 
-        uploadImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ActivityCompat.requestPermissions(AdPosterRegistration.this,
-                        new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
-                        REQUEST_CODE_GALLERY);
-            }
-        });
+        uploadImage.setOnClickListener(v -> dispatchTakePictureIntent());
 
-        addPoster.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                saveToDB();
-            }
-        });
+        addPoster.setOnClickListener(v -> saveToDB(v));
 
         intent = getIntent();
         if (intent.getStringExtra("hide") != null) {
             isEdit = true;
             this.setEditText();
         }
+    }
+
+    private void dispatchTakePictureIntent() {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        // Ensure that there's a camera activity to handle the intent
+        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+
+            final String dir = getExternalFilesDir(Environment.DIRECTORY_PICTURES) + "/picFolder/";
+            File newdir = new File(dir);
+            if (!newdir.exists()) {
+                newdir.mkdir();
+            }
+
+            count++;
+            String file = dir + count + ".jpg";
+            File newfile = new File(file);
+            try {
+                newfile.createNewFile();
+            } catch (IOException e) {
+            }
+
+            // Continue only if the File was successfully created
+            //if (photoFile != null) {
+            outputFileUri = FileProvider.getUriForFile(this,
+                        "com.example.finder.fileprovider",
+                        newfile);
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, outputFileUri);
+                startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+            //}
+        }
+
     }
 
     private void setEditText() {
@@ -150,7 +184,6 @@ public class AdPosterRegistration extends AppCompatActivity {
         profileImage = findViewById(R.id.profile_image);
         addPoster = findViewById(R.id.save_ad_poster);
 
-        profileImage = findViewById(R.id.profile_image);
         location = findViewById(R.id.location);
         marketArea = findViewById(R.id.market_area);
         businessYear = findViewById(R.id.business_year);
@@ -167,30 +200,33 @@ public class AdPosterRegistration extends AppCompatActivity {
         accountNumber.setVisibility(View.GONE);
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        if (requestCode == REQUEST_CODE_GALLERY) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                Intent intent = new Intent(Intent.ACTION_PICK);
-                intent.setType("image/*");
-                startActivityForResult(intent, REQUEST_CODE_GALLERY);
-            } else {
-                Toast.makeText(this, "Permission to access file storage not granted", Toast.LENGTH_LONG).show();
-            }
-            return;
-        }
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-    }
+//    @Override
+//    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+//        if (requestCode == REQUEST_CODE_GALLERY) {
+//            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+//                Intent intent = new Intent(Intent.ACTION_PICK);
+//                intent.setType("image/*");
+//                startActivityForResult(intent, REQUEST_CODE_GALLERY);
+//            } else {
+//                Toast.makeText(this, "Permission to access file storage not granted", Toast.LENGTH_LONG).show();
+//            }
+//            return;
+//        }
+//        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+//    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_CODE_GALLERY && resultCode == RESULT_OK && data != null) {
-            Uri uri = data.getData();
+
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+            Uri uri = outputFileUri;
             try {
                 assert uri != null;
                 InputStream inputStream = getContentResolver().openInputStream(uri);
                 bitmap = BitmapFactory.decodeStream(inputStream);
+                bitmap = getResizedBitmap(bitmap, 200, 120);
+
                 profileImage.setImageBitmap(bitmap);
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
@@ -202,12 +238,32 @@ public class AdPosterRegistration extends AppCompatActivity {
         if (bitmap == null) return "";
 
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 85, stream);
         byte[] bytes = stream.toByteArray();
         return Base64.encodeToString(bytes, Base64.DEFAULT);
     }
 
-    public void saveToDB() {
+    public Bitmap getResizedBitmap(Bitmap bm, int newHeight, int newWidth) {
+        int width = bm.getWidth();
+        int height = bm.getHeight();
+
+        float scaleWidth = ((float) newWidth) / width;
+        float scaleHeight = ((float) newHeight) / height;
+
+        Matrix matrix = new Matrix();
+        if (bm.getWidth() > bm.getHeight()) {
+            matrix.postRotate(90);
+        }
+
+        matrix.postScale(scaleWidth, scaleHeight);
+        //bm = Bitmap.createBitmap(bm , 0, 0, bm.getWidth(), bm.getHeight(), matrix, true);
+        Bitmap resizedBitmap = Bitmap.createBitmap(bm, 0, 0, width, height, matrix, false);
+
+        return resizedBitmap;
+
+    }
+
+    public void saveToDB(View v) {
         adPoster.setProfileImage(imageToString());
         adPoster.setLocation(location.getText().toString());
         adPoster.setMarketArea(marketArea.getText().toString());
@@ -225,7 +281,7 @@ public class AdPosterRegistration extends AppCompatActivity {
         this.validate(adPoster);
         addPoster.setClickable(false);
 
-        if(isEdit) {
+        if (isEdit) {
             addPoster.setText("Updating...");
         } else {
             addPoster.setText(R.string.registering);
@@ -257,12 +313,14 @@ public class AdPosterRegistration extends AppCompatActivity {
                     dbo.close();
                     Intent i;
                     if (intent.getStringExtra("hide") != null) {
-                        i = new Intent(AdPosterRegistration.this, Profile.class);
-                        i.putExtra("id", String.valueOf(ad.getId()));
-                    } else {
-                        i = new Intent(AdPosterRegistration.this, AdPostForm.class);
+                        finish();
+//                        i = new Intent(AdPosterRegistration.this, Profile.class);
+//                        i.putExtra("id", String.valueOf(ad.getId()));
+//                    } else {
+//                        i = new Intent(AdPosterRegistration.this, AdPostForm.class);
                     }
-                    startActivity(i);
+                    //startActivity(i);
+                    Toast.makeText(AdPosterRegistration.this, "Profile Data saved", Toast.LENGTH_LONG).show();
                 }
             }
 

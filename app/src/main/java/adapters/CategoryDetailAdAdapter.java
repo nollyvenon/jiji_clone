@@ -55,7 +55,7 @@ public class CategoryDetailAdAdapter extends RecyclerView.Adapter<CategoryDetail
         } else {
             Glide.with(context.getApplicationContext()).load(Constants.BASE_URL + data.get(position).getProfileImage()).into(holder.profileImage);
         }
-        holder.companyName.setText(data.get(position).getBusinessName());
+        holder.companyName.setText(data.get(position).getUsername());
         holder.rating.setRating(Float.parseFloat(data.get(position).getRating()));
 
         holder.wrap.setOnClickListener(new View.OnClickListener() {

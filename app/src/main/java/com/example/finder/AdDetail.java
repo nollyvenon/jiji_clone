@@ -149,7 +149,7 @@ public class AdDetail extends AppCompatActivity {
 
                 Glide.with(AdDetail.this).load(Constants.BASE_URL + ads.getImage()).into(profileImage);
                 location.setText(ads.getLocation());
-                businessName.setText(ads.getBusinessName());
+                businessName.setText(ads.getUsername());
                 description.setText(ads.getDescription());
                 promotions.setText(ads.getBenefit());
 
@@ -159,7 +159,7 @@ public class AdDetail extends AppCompatActivity {
 
                 if (!ads.getPrice().equals("")) {
                     if (ads.getPrice().contains("-")) {
-                        String[] prices =ads.getPrice().split("-");
+                        String[] prices = ads.getPrice().split("-");
                         priceOne = Double.parseDouble(prices[0]);
                         priceTwo = Double.parseDouble(prices[1]);
 

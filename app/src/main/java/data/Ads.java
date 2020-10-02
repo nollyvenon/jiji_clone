@@ -6,7 +6,7 @@ public class Ads {
     private String findId;
     private String adId;
     private String description;
-    private String companyName;
+    private String username;
     private String location;
     private String rating;
     private String review;
@@ -45,8 +45,8 @@ public class Ads {
         this.auth = auth;
     }
 
-    public Ads(String businessName, String rating, String review, String profileImage, String image, String adId, String views, String auth) {
-        this.businessName = businessName;
+    public Ads(String username, String rating, String review, String profileImage, String image, String adId, String views, String auth) {
+        this.username = username;
         this.rating = rating;
         this.review = review;
         this.profileImage = profileImage;
@@ -97,12 +97,12 @@ public class Ads {
         this.description = description;
     }
 
-    public String getCompanyName() {
-        return companyName;
+    public String getUsername() {
+        return username;
     }
 
-    public void setCompanyName(String companyName) {
-        this.companyName = companyName;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getLocation() {

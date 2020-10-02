@@ -98,7 +98,7 @@ public class MainActivity extends AppCompatActivity {
             public void run() {
                 handler.post(slidee);
             }
-        }, 2000, 4000);
+        }, 2000, 5000);
 
         timer.scheduleAtFixedRate(new RecentAdFind(), 2000, 10000);
 

@@ -4,6 +4,7 @@ public class Proposal {
 
     private String profileImage;
     private String businessName;
+    private String username;
     private String rating;
     private String reviewCount;
     private String description;
@@ -18,10 +19,11 @@ public class Proposal {
     private String fFinderId;
     private int awardedCount;
 
-    public Proposal(String profileImage, String businessName, String rating, String reviewCount,
+    public Proposal(String profileImage, String businessName, String username, String rating, String reviewCount,
                     String description, String benefit, String id, String findId, String adId,
                     String auth, String finderId, String awardedId, String fFinderId) {
         this.profileImage = profileImage;
+        this.username = username;
         this.businessName = businessName;
         this.rating = rating;
         this.reviewCount = reviewCount;
@@ -73,6 +75,10 @@ public class Proposal {
 
     public String getBusinessName() {
         return businessName;
+    }
+
+    public String getUsername() {
+        return username;
     }
 
     public String getRating() {
