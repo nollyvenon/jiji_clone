@@ -126,4 +126,5 @@
     <string name="job_finished">Job Finished?</string>
     <string name="price_range_two">10000</string>
     <string name="price_range_one">6000</string>
+    <string name="notification_error_ssl_cert_invalid">The web page is not secured, proceed?</string>
 </resources>

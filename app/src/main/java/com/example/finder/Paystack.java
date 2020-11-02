@@ -1,8 +1,10 @@
 package com.example.finder;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.http.SslError;
 import android.os.Bundle;
@@ -59,8 +61,23 @@ public class Paystack extends AppCompatActivity {
             }
 
             @Override
-            public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
-                handler.proceed(); // Ignore SSL certificate errors
+            public void onReceivedSslError(WebView view, final SslErrorHandler handler, SslError error) {
+                final AlertDialog.Builder builder = new AlertDialog.Builder(Paystack.this);
+                builder.setMessage(R.string.notification_error_ssl_cert_invalid);
+                builder.setPositiveButton("continue", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        handler.proceed();
+                    }
+                });
+                builder.setNegativeButton("cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        handler.cancel();
+                    }
+                });
+                final AlertDialog dialog = builder.create();
+                dialog.show();
             }
 
             @Override
