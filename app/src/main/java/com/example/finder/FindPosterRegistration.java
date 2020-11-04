@@ -13,6 +13,7 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Base64;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -65,21 +66,11 @@ public class FindPosterRegistration extends AppCompatActivity {
 
         this.initViews();
 
-        uploadImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ActivityCompat.requestPermissions(FindPosterRegistration.this,
-                        new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
-                        REQUEST_CODE_GALLERY);
-            }
-        });
+        uploadImage.setOnClickListener(v -> ActivityCompat.requestPermissions(FindPosterRegistration.this,
+                new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                REQUEST_CODE_GALLERY));
 
-        addFinder.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                saveToDB();
-            }
-        });
+        addFinder.setOnClickListener(v -> saveToDB());
 
         intent = getIntent();
         if (intent.getStringExtra("hide") != null) {
@@ -133,13 +124,12 @@ public class FindPosterRegistration extends AppCompatActivity {
     private String imageToString() {
         if (bitmap == null) return "";
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 75, stream);
         byte[] bytes = stream.toByteArray();
         return Base64.encodeToString(bytes, Base64.DEFAULT);
     }
 
     public void saveToDB() {
-
         adPoster.setProfileImage(imageToString());
         adPoster.setPhoneNumber(phoneNumber.getText().toString());
         adPoster.setUsername(username.getText().toString());
@@ -163,7 +153,7 @@ public class FindPosterRegistration extends AppCompatActivity {
             }
         }
 
-        addFinder.setClickable(true);
+        addFinder.setClickable(false);
         if (isEdit) {
             addFinder.setText("Updating...");
         } else {

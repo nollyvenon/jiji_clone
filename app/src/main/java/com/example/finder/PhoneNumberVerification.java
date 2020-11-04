@@ -2,9 +2,15 @@ package com.example.finder;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -43,11 +49,13 @@ public class PhoneNumberVerification extends AppCompatActivity {
     FirebaseAuth mAuth;
     String codeSent, userType, phoneNumber, countryText;
     private int countryPosition = 0;
+    ProgressDialog dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_phone_number_verification);
+        dialog = new ProgressDialog(PhoneNumberVerification.this);
 
         FirebaseApp.initializeApp(this);
         mAuth = FirebaseAuth.getInstance();
@@ -160,22 +168,8 @@ public class PhoneNumberVerification extends AppCompatActivity {
             return;
         }
 
-        if (phoneNumber.length() < 10) {
-            editTextTel.setError("Enter a valid phone number");
-            editTextTel.requestFocus();
-            return;
-        }
-
-        activateSMS.setVisibility(View.INVISIBLE);
-        editTextTel.setVisibility(View.INVISIBLE);
-        subInfoText.setVisibility(View.INVISIBLE);
-        Spinner countrySpinner = findViewById(R.id.country_list);
-        countrySpinner.setVisibility(View.INVISIBLE);
-
-
-        infoText.setText(R.string.phone_verification_info);
-        sendCode.setVisibility(View.VISIBLE);
-        editTextCode.setVisibility(View.VISIBLE);
+        dialog.setMessage("Loading...");
+        dialog.show();
 
         PhoneAuthProvider.getInstance().verifyPhoneNumber(
                 phoneNumber,        // Phone number to verify
@@ -188,12 +182,24 @@ public class PhoneNumberVerification extends AppCompatActivity {
     PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallbacks = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
         @Override
         public void onVerificationCompleted(@NonNull PhoneAuthCredential phoneAuthCredential) {
+            dialog.dismiss();
+            activateSMS.setVisibility(View.INVISIBLE);
+            editTextTel.setVisibility(View.INVISIBLE);
+            subInfoText.setVisibility(View.INVISIBLE);
+            Spinner countrySpinner = findViewById(R.id.country_list);
+            countrySpinner.setVisibility(View.INVISIBLE);
+
+            infoText.setText(R.string.phone_verification_info);
+            sendCode.setVisibility(View.VISIBLE);
+            editTextCode.setVisibility(View.VISIBLE);
+
             signInWithPhoneAuthCredential(phoneAuthCredential);
         }
 
         @Override
         public void onVerificationFailed(@NonNull FirebaseException e) {
-
+            Toast.makeText(PhoneNumberVerification.this, e.getMessage(), Toast.LENGTH_LONG).show();
+            dialog.dismiss();
         }
 
         @Override
