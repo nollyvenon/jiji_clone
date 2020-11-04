@@ -35,7 +35,7 @@
                 <category android:name="android.intent.category.DEFAULT" />
 
                 <data
-                    android:host="crelance.onyxdatasystems.com"
+                    android:host="nairarefill.com"
                     android:scheme="http" />
             </intent-filter>
         </activity>

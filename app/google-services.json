@@ -8,43 +8,6 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:646521529998:android:eeed9f0332e8cbd8588bdf",
-        "android_client_info": {
-          "package_name": "com.example.crelance"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "646521529998-0niqvjneu6htqi2t3q8qh39ragioqn2n.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.example.crelance",
-            "certificate_hash": "942c19624ceac3acb77f6bdafc5a447b922ec857"
-          }
-        },
-        {
-          "client_id": "646521529998-00ce57qsiorfcohmp2c7eua6bqtqihse.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyDTNSDsQ1GNaZW1do9KM7LnE1XjnWbyyzM"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "646521529998-00ce57qsiorfcohmp2c7eua6bqtqihse.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
-        }
-      }
-    },
-    {
-      "client_info": {
         "mobilesdk_app_id": "1:646521529998:android:14f101d8819bd755588bdf",
         "android_client_info": {
           "package_name": "com.example.finder"
