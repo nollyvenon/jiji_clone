@@ -14,13 +14,12 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.finder.MessagePanel;
-import com.example.finder.R;
+import com.jonnyup.nairarefill.MessagePanel;
+import com.jonnyup.nairarefill.R;
 
 import java.util.List;
 
 import data.Messages;
-import others.TimeDifference;
 import retrofit.ApiClient;
 import retrofit2.Call;
 import retrofit2.Callback;

@@ -1,7 +1,6 @@
 package adapters;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,9 +10,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.finder.R;
+import com.jonnyup.nairarefill.R;
 
-import java.util.Arrays;
 import java.util.List;
 
 import Database.DatabaseOpenHelper;

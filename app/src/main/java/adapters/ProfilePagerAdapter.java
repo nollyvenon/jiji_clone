@@ -8,10 +8,10 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 
-import com.example.finder.MyWorksAdFragment;
-import com.example.finder.MyWorksFindFragment;
-import com.example.finder.ProfileDetailFragment;
-import com.example.finder.ProfileReviewFragment;
+import com.jonnyup.nairarefill.MyWorksAdFragment;
+import com.jonnyup.nairarefill.MyWorksFindFragment;
+import com.jonnyup.nairarefill.ProfileDetailFragment;
+import com.jonnyup.nairarefill.ProfileReviewFragment;
 
 public class ProfilePagerAdapter extends FragmentPagerAdapter {
 

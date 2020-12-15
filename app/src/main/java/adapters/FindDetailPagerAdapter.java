@@ -2,15 +2,14 @@ package adapters;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 
-import com.example.finder.FindDetailFragment;
-import com.example.finder.FindProposalFragment;
+import com.jonnyup.nairarefill.FindDetailFragment;
+import com.jonnyup.nairarefill.FindProposalFragment;
 
 
 public class FindDetailPagerAdapter extends FragmentPagerAdapter {

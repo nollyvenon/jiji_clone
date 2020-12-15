@@ -6,34 +6,27 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
-import android.util.Log;
-import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
 
-import com.example.finder.AdPostForm;
-import com.example.finder.AdPosterRegistration;
-import com.example.finder.FindPostForm;
-import com.example.finder.FindPosterRegistration;
-import com.example.finder.MainActivity;
-import com.example.finder.MessageList;
-import com.example.finder.MessagePanel;
-import com.example.finder.PhoneNumberVerification;
-import com.example.finder.Profile;
-import com.example.finder.R;
-import com.example.finder.Search;
+import com.jonnyup.nairarefill.AdPostForm;
+import com.jonnyup.nairarefill.AdPosterRegistration;
+import com.jonnyup.nairarefill.FindPostForm;
+import com.jonnyup.nairarefill.MainActivity;
+import com.jonnyup.nairarefill.MessageList;
+import com.jonnyup.nairarefill.MessagePanel;
+import com.jonnyup.nairarefill.PhoneNumberVerification;
+import com.jonnyup.nairarefill.Profile;
+import com.jonnyup.nairarefill.R;
+import com.jonnyup.nairarefill.Search;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import Database.DatabaseOpenHelper;
 import data.AdPoster;
-import data.FindPoster;
 import data.Messages;
-import data.VerifiedPhoneNumber;
 import retrofit.ApiClient;
 import retrofit2.Call;
 import retrofit2.Callback;

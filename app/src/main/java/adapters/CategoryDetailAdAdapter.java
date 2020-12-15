@@ -2,7 +2,6 @@ package adapters;
 
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,8 +14,8 @@ import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.example.finder.Profile;
-import com.example.finder.R;
+import com.jonnyup.nairarefill.Profile;
+import com.jonnyup.nairarefill.R;
 
 import java.util.List;
 

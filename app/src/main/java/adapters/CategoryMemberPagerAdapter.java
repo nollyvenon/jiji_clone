@@ -9,8 +9,8 @@ import androidx.fragment.app.FragmentManager;
 
 import androidx.fragment.app.FragmentPagerAdapter;
 
-import com.example.finder.CategoryFindFragment;
-import com.example.finder.CategoryMemberFragment;
+import com.jonnyup.nairarefill.CategoryFindFragment;
+import com.jonnyup.nairarefill.CategoryMemberFragment;
 
 public class CategoryMemberPagerAdapter extends FragmentPagerAdapter {
     private int tabNumber;

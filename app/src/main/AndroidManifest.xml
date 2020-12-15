@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.example.finder">
+    package="com.jonnyup.nairarefill">
 
     <uses-feature android:name="android.hardware.camera" android:required="true" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -18,7 +18,7 @@
         android:usesCleartextTraffic="true">
         <provider
             android:name="androidx.core.content.FileProvider"
-            android:authorities="com.example.finder.fileprovider"
+            android:authorities="com.jonnyup.nairarefill.fileprovider"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data
@@ -27,7 +27,7 @@
         </provider>
 
 
-        <activity android:name=".DeepLink">
+        <activity android:name="com.jonnyup.nairarefill.DeepLink">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -39,43 +39,43 @@
                     android:scheme="http" />
             </intent-filter>
         </activity>
-        <activity android:name=".Terms" />
-        <activity android:name=".Privacy" />
-        <activity android:name=".Paystack" />
-        <activity android:name=".ReportUser" />
-        <activity android:name=".FeedbackForm" />
-        <activity android:name=".Search" />
-        <activity android:name=".AllAds" />
-        <activity android:name=".AllFind" />
+        <activity android:name="com.jonnyup.nairarefill.Terms" />
+        <activity android:name="com.jonnyup.nairarefill.Privacy" />
+        <activity android:name="com.jonnyup.nairarefill.Paystack" />
+        <activity android:name="com.jonnyup.nairarefill.ReportUser" />
+        <activity android:name="com.jonnyup.nairarefill.FeedbackForm" />
+        <activity android:name="com.jonnyup.nairarefill.Search" />
+        <activity android:name="com.jonnyup.nairarefill.AllAds" />
+        <activity android:name="com.jonnyup.nairarefill.AllFind" />
         <activity
-            android:name=".MessagePanel"
+            android:name="com.jonnyup.nairarefill.MessagePanel"
             android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name=".MessageList"
+            android:name="com.jonnyup.nairarefill.MessageList"
             android:windowSoftInputMode="stateHidden" />
-        <activity android:name=".AdDetail" />
-        <activity android:name=".Profile" />
-        <activity android:name=".CategoryMembers" />
+        <activity android:name="com.jonnyup.nairarefill.AdDetail" />
+        <activity android:name="com.jonnyup.nairarefill.Profile" />
+        <activity android:name="com.jonnyup.nairarefill.CategoryMembers" />
         <activity
-            android:name=".FindDetail"
-            android:windowSoftInputMode="stateHidden" />
-        <activity
-            android:name=".FindPostForm"
+            android:name="com.jonnyup.nairarefill.FindDetail"
             android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name=".AdPostForm"
+            android:name="com.jonnyup.nairarefill.FindPostForm"
             android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name=".FindPosterRegistration"
+            android:name="com.jonnyup.nairarefill.AdPostForm"
+            android:windowSoftInputMode="stateHidden" />
+        <activity
+            android:name="com.jonnyup.nairarefill.FindPosterRegistration"
             android:windowSoftInputMode="stateHidden" />
         <activity
             android:screenOrientation="portrait"
-            android:name=".AdPosterRegistration"
+            android:name="com.jonnyup.nairarefill.AdPosterRegistration"
             android:windowSoftInputMode="stateHidden" />
-        <activity android:name=".PhoneNumberVerification" />
-        <activity android:name=".CategoryList" />
+        <activity android:name="com.jonnyup.nairarefill.PhoneNumberVerification" />
+        <activity android:name="com.jonnyup.nairarefill.CategoryList" />
         <activity
-            android:name=".MainActivity"
+            android:name="com.jonnyup.nairarefill.MainActivity"
             android:theme="@style/splashTheme"
             android:windowSoftInputMode="stateHidden">
             <intent-filter>
