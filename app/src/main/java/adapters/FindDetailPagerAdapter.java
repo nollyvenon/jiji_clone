@@ -8,8 +8,8 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 
-import com.jonnyup.nairarefill.FindDetailFragment;
-import com.jonnyup.nairarefill.FindProposalFragment;
+import com.johnnyup.nairarefill.FindDetailFragment;
+import com.johnnyup.nairarefill.FindProposalFragment;
 
 
 public class FindDetailPagerAdapter extends FragmentPagerAdapter {

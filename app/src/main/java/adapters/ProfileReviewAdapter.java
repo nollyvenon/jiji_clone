@@ -12,7 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.jonnyup.nairarefill.R;
+import com.johnnyup.nairarefill.R;
 
 import java.util.List;
 

@@ -8,17 +8,17 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:840073697591:android:ef3a157fa2104e298ca2b2",
+        "mobilesdk_app_id": "1:840073697591:android:ddb1d16f68fb5dbf8ca2b2",
         "android_client_info": {
-          "package_name": "com.jonnyup.nairarefill"
+          "package_name": "com.johnnyup.nairarefill"
         }
       },
       "oauth_client": [
         {
-          "client_id": "840073697591-l6o44jg9tdfev93t45iptjg78hnarmqu.apps.googleusercontent.com",
+          "client_id": "840073697591-2h5vtfarauia4c2rl8mmb93dont83lon.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.jonnyup.nairarefill",
+            "package_name": "com.johnnyup.nairarefill",
             "certificate_hash": "942c19624ceac3acb77f6bdafc5a447b922ec857"
           }
         },

@@ -11,16 +11,16 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
 
-import com.jonnyup.nairarefill.AdPostForm;
-import com.jonnyup.nairarefill.AdPosterRegistration;
-import com.jonnyup.nairarefill.FindPostForm;
-import com.jonnyup.nairarefill.MainActivity;
-import com.jonnyup.nairarefill.MessageList;
-import com.jonnyup.nairarefill.MessagePanel;
-import com.jonnyup.nairarefill.PhoneNumberVerification;
-import com.jonnyup.nairarefill.Profile;
-import com.jonnyup.nairarefill.R;
-import com.jonnyup.nairarefill.Search;
+import com.johnnyup.nairarefill.AdPostForm;
+import com.johnnyup.nairarefill.AdPosterRegistration;
+import com.johnnyup.nairarefill.FindPostForm;
+import com.johnnyup.nairarefill.MainActivity;
+import com.johnnyup.nairarefill.MessageList;
+import com.johnnyup.nairarefill.MessagePanel;
+import com.johnnyup.nairarefill.PhoneNumberVerification;
+import com.johnnyup.nairarefill.Profile;
+import com.johnnyup.nairarefill.R;
+import com.johnnyup.nairarefill.Search;
 
 import java.util.List;
 

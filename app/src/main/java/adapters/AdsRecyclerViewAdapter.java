@@ -12,8 +12,8 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.jonnyup.nairarefill.AdDetail;
-import com.jonnyup.nairarefill.R;
+import com.johnnyup.nairarefill.AdDetail;
+import com.johnnyup.nairarefill.R;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.jonnyup.nairarefill">
+    package="com.johnnyup.nairarefill">
 
     <uses-feature android:name="android.hardware.camera" android:required="true" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -18,7 +18,7 @@
         android:usesCleartextTraffic="true">
         <provider
             android:name="androidx.core.content.FileProvider"
-            android:authorities="com.jonnyup.nairarefill.fileprovider"
+            android:authorities="com.johnnyup.nairarefill.fileprovider"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data
@@ -27,7 +27,7 @@
         </provider>
 
 
-        <activity android:name="com.jonnyup.nairarefill.DeepLink">
+        <activity android:name="com.johnnyup.nairarefill.DeepLink">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -39,43 +39,43 @@
                     android:scheme="http" />
             </intent-filter>
         </activity>
-        <activity android:name="com.jonnyup.nairarefill.Terms" />
-        <activity android:name="com.jonnyup.nairarefill.Privacy" />
-        <activity android:name="com.jonnyup.nairarefill.Paystack" />
-        <activity android:name="com.jonnyup.nairarefill.ReportUser" />
-        <activity android:name="com.jonnyup.nairarefill.FeedbackForm" />
-        <activity android:name="com.jonnyup.nairarefill.Search" />
-        <activity android:name="com.jonnyup.nairarefill.AllAds" />
-        <activity android:name="com.jonnyup.nairarefill.AllFind" />
+        <activity android:name="com.johnnyup.nairarefill.Terms" />
+        <activity android:name="com.johnnyup.nairarefill.Privacy" />
+        <activity android:name="com.johnnyup.nairarefill.Paystack" />
+        <activity android:name="com.johnnyup.nairarefill.ReportUser" />
+        <activity android:name="com.johnnyup.nairarefill.FeedbackForm" />
+        <activity android:name="com.johnnyup.nairarefill.Search" />
+        <activity android:name="com.johnnyup.nairarefill.AllAds" />
+        <activity android:name="com.johnnyup.nairarefill.AllFind" />
         <activity
-            android:name="com.jonnyup.nairarefill.MessagePanel"
+            android:name="com.johnnyup.nairarefill.MessagePanel"
             android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name="com.jonnyup.nairarefill.MessageList"
+            android:name="com.johnnyup.nairarefill.MessageList"
             android:windowSoftInputMode="stateHidden" />
-        <activity android:name="com.jonnyup.nairarefill.AdDetail" />
-        <activity android:name="com.jonnyup.nairarefill.Profile" />
-        <activity android:name="com.jonnyup.nairarefill.CategoryMembers" />
+        <activity android:name="com.johnnyup.nairarefill.AdDetail" />
+        <activity android:name="com.johnnyup.nairarefill.Profile" />
+        <activity android:name="com.johnnyup.nairarefill.CategoryMembers" />
         <activity
-            android:name="com.jonnyup.nairarefill.FindDetail"
-            android:windowSoftInputMode="stateHidden" />
-        <activity
-            android:name="com.jonnyup.nairarefill.FindPostForm"
+            android:name="com.johnnyup.nairarefill.FindDetail"
             android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name="com.jonnyup.nairarefill.AdPostForm"
+            android:name="com.johnnyup.nairarefill.FindPostForm"
             android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name="com.jonnyup.nairarefill.FindPosterRegistration"
+            android:name="com.johnnyup.nairarefill.AdPostForm"
+            android:windowSoftInputMode="stateHidden" />
+        <activity
+            android:name="com.johnnyup.nairarefill.FindPosterRegistration"
             android:windowSoftInputMode="stateHidden" />
         <activity
             android:screenOrientation="portrait"
-            android:name="com.jonnyup.nairarefill.AdPosterRegistration"
+            android:name="com.johnnyup.nairarefill.AdPosterRegistration"
             android:windowSoftInputMode="stateHidden" />
-        <activity android:name="com.jonnyup.nairarefill.PhoneNumberVerification" />
-        <activity android:name="com.jonnyup.nairarefill.CategoryList" />
+        <activity android:name="com.johnnyup.nairarefill.PhoneNumberVerification" />
+        <activity android:name="com.johnnyup.nairarefill.CategoryList" />
         <activity
-            android:name="com.jonnyup.nairarefill.MainActivity"
+            android:name="com.johnnyup.nairarefill.MainActivity"
             android:theme="@style/splashTheme"
             android:windowSoftInputMode="stateHidden">
             <intent-filter>

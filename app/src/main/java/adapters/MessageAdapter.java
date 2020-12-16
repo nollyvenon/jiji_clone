@@ -14,8 +14,8 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.jonnyup.nairarefill.MessagePanel;
-import com.jonnyup.nairarefill.R;
+import com.johnnyup.nairarefill.MessagePanel;
+import com.johnnyup.nairarefill.R;
 
 import java.util.List;
 

@@ -10,7 +10,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.jonnyup.nairarefill.R;
+import com.johnnyup.nairarefill.R;
 
 import java.util.List;
 

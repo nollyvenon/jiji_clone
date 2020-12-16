@@ -17,10 +17,10 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.jonnyup.nairarefill.AllFind;
-import com.jonnyup.nairarefill.MessagePanel;
-import com.jonnyup.nairarefill.Profile;
-import com.jonnyup.nairarefill.R;
+import com.johnnyup.nairarefill.AllFind;
+import com.johnnyup.nairarefill.MessagePanel;
+import com.johnnyup.nairarefill.Profile;
+import com.johnnyup.nairarefill.R;
 import com.google.android.material.button.MaterialButton;
 
 import java.util.List;

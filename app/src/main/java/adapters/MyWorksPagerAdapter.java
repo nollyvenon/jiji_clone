@@ -5,8 +5,8 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 
-import com.jonnyup.nairarefill.MyWorksAdFragment;
-import com.jonnyup.nairarefill.MyWorksFindFragment;
+import com.johnnyup.nairarefill.MyWorksAdFragment;
+import com.johnnyup.nairarefill.MyWorksFindFragment;
 
 public class MyWorksPagerAdapter extends FragmentPagerAdapter {
     int tabNumber;
