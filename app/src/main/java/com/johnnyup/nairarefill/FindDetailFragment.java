@@ -99,7 +99,6 @@ public class FindDetailFragment extends Fragment {
         }
 
         String attachmentStr = getArguments().getString("attachment");
-        assert attachmentStr != null;
         if (getArguments().getString("attachment") != null && !attachmentStr.equals("")) {
             TextView attachment = root.findViewById(R.id.attachment);
             CardView attachmentWrapper = root.findViewById(R.id.attachment_wrapper);
