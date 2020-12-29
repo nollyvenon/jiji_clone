@@ -108,7 +108,7 @@ public class AdPosterRegistration extends AppCompatActivity {
             // Continue only if the File was successfully created
             //if (photoFile != null) {
             outputFileUri = FileProvider.getUriForFile(this,
-                        "com.example.finder.fileprovider",
+                        "com.johnnyup.nairarefill.fileprovider",
                         newfile);
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, outputFileUri);
                 startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
